@@ -53,6 +53,11 @@ public enum MitubeErrorCode implements ErrorCode{
 
     INVALID_LOCAL_DATETIME(HttpStatus.BAD_REQUEST, "잘못된 LocalDateTime 형식입니다.", 10700),
 
+    INVALID_COMMENT_CONTENT(HttpStatus.BAD_REQUEST, "댓글 내용 형식에 맞지 않습니다.", 10800),
+    INVALID_COMMENT_VIDEO(HttpStatus.BAD_REQUEST, "댓글 비디오 형식에 맞지 않습니다.", 10801),
+    INVALID_COMMENT_USER(HttpStatus.BAD_REQUEST, "댓글 유저 형식에 맞지 않습니다.", 10802),
+    NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "댓글을 찾을 수 없습니다.", 10803),
+
     UNKNOWN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 에러가 발생했습니다.", 99999),;
 
     private final HttpStatus httpStatus;

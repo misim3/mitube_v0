@@ -11,13 +11,15 @@ import java.util.List;
 @Builder
 public class VideoResponse {
 
+    private Long videoId;
+
     private String title;
 
     private String description;
 
     private String category;
 
-    private String nickname;
+    private Long userId;
 
     private String videoUrl;
 
@@ -30,9 +32,10 @@ public class VideoResponse {
     public static List<VideoResponse> convertVideos(List<Video> videos) {
         return videos.stream()
             .map(video -> VideoResponse.builder()
+                    .videoId(video.getId())
                     .title(video.getTitle())
                     .description(video.getDescription())
-                    .nickname(video.getUser().getNickname())
+                    .userId(video.getUser().getId())
                     .category(VideoCategory.getNameByCode(video.getCategoryId()))
                     .videoUrl(video.getVideoFile().getPath())
                     .views(video.getViews())

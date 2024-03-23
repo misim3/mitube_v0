@@ -1,11 +1,13 @@
 package com.misim.controller;
 
+import com.misim.controller.model.Response.CommentResponse;
 import com.misim.controller.model.Response.StartWatchingVideoResponse;
 import com.misim.controller.model.Response.UploadVideosResponse;
 import com.misim.controller.model.Request.CreateVideoRequest;
 import com.misim.exception.CommonResponse;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
+import com.misim.service.CommentService;
 import com.misim.service.VideoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,6 +17,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class VideoController {
 
     private final VideoService videoService;
+    private final CommentService commentService;
     
     @Operation(summary = "동영상 업로드", description = "새로운 동영상을 업로드합니다.")
     @ApiResponses(value = {
@@ -76,6 +82,13 @@ public class VideoController {
     public CommonResponse<StartWatchingVideoResponse> startWatchingVideo(@PathVariable Long videoId, @RequestParam Long userId) {
 
         StartWatchingVideoResponse response = videoService.startWatchingVideo(videoId, userId);
+
+        // 추후에 동영상 실행 플레이어? 같은 기능도 추가해야 한다.
+
+        // 댓글도 함께 보내줘야 한다.
+        Slice<CommentResponse> responseSlice = commentService.getComments(videoId, 0);
+
+        response.setCommentResponses(responseSlice);
 
         return CommonResponse
                 .<StartWatchingVideoResponse>builder()
