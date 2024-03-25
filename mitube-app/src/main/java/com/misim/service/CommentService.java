@@ -5,6 +5,7 @@ import com.misim.controller.model.Response.CommentListResponse;
 import com.misim.controller.model.Response.CommentResponse;
 import com.misim.controller.model.Response.CreateCommentResponse;
 import com.misim.entity.Comment;
+import com.misim.entity.Video;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import com.misim.repository.CommentRepository;
@@ -37,7 +38,7 @@ public class CommentService {
         // 댓글 검색
         Pageable pageable = PageRequest.of(page, 10);
 
-        Slice<Comment> pages = commentRepository.findAll(pageable);
+        Slice<Comment> pages = commentRepository.findByVideoId(videoId, pageable);
 
         // 댓글 Id로 대댓글 검색
 //        List<CommentResponse> commentResponses = pages.map(p -> CommentResponse.builder()
@@ -69,9 +70,12 @@ public class CommentService {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_COMMENT);
         }
 
+        Video video = videoRepository.findById(request.getVideoId())
+                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
+
         Comment comment = Comment.builder()
                 .content(request.getContent())
-                .videoId(request.getVideoId())
+                .video(video)
                 .userId(request.getUserId())
                 .parentCommentId(request.getParentCommentId())
                 .build();

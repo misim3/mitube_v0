@@ -19,16 +19,18 @@ public class Comment extends BaseTimeEntity {
     @Setter
     private String content;
 
-    private Long videoId;
+    // 단방향 매핑
+    @ManyToOne
+    private Video video;
 
     private Long parentCommentId;
 
     private Long userId;
 
     @Builder
-    public Comment(String content, Long videoId, Long parentCommentId, Long userId) {
+    public Comment(String content, Video video, Long parentCommentId, Long userId) {
         this.content = content;
-        this.videoId = videoId;
+        this.video = video;
         this.parentCommentId = parentCommentId;
         this.userId = userId;
     }
