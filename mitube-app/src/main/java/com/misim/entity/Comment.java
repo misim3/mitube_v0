@@ -25,13 +25,14 @@ public class Comment extends BaseTimeEntity {
 
     private Long parentCommentId;
 
-    private Long userId;
+    @ManyToOne
+    private User user;
 
     @Builder
-    public Comment(String content, Video video, Long parentCommentId, Long userId) {
+    public Comment(String content, Video video, Long parentCommentId, User user) {
         this.content = content;
         this.video = video;
         this.parentCommentId = parentCommentId;
-        this.userId = userId;
+        this.user = user;
     }
 }

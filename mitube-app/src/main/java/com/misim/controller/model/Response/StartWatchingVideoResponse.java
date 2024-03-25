@@ -10,5 +10,5 @@ public class StartWatchingVideoResponse {
 
     private Long watchingTime;
 
-    private Slice<CommentResponse> commentResponses;
+    private CommentListResponse commentListResponse;
 }

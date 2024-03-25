@@ -1,5 +1,6 @@
 package com.misim.controller;
 
+import com.misim.controller.model.Response.CommentListResponse;
 import com.misim.controller.model.Response.CommentResponse;
 import com.misim.controller.model.Response.StartWatchingVideoResponse;
 import com.misim.controller.model.Response.UploadVideosResponse;
@@ -17,8 +18,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -83,12 +82,9 @@ public class VideoController {
 
         StartWatchingVideoResponse response = videoService.startWatchingVideo(videoId, userId);
 
-        // 추후에 동영상 실행 플레이어? 같은 기능도 추가해야 한다.
+        CommentListResponse commentListResponse = commentService.getParentComments(videoId, 0);
 
-        // 댓글도 함께 보내줘야 한다.
-        Slice<CommentResponse> responseSlice = commentService.getComments(videoId, 0);
-
-        response.setCommentResponses(responseSlice);
+        response.setCommentListResponse(commentListResponse);
 
         return CommonResponse
                 .<StartWatchingVideoResponse>builder()

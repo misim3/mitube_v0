@@ -8,11 +8,8 @@ import com.misim.exception.CommonResponse;
 import com.misim.service.CommentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @Tag(name = "댓글 API", description = "댓글 정보 관련 API")
@@ -25,11 +22,21 @@ public class CommentController {
 
 
     @GetMapping("/{videoId}")
-    public CommonResponse<Slice<CommentResponse>> getComments(@PathVariable Long videoId, @RequestParam int page) {
+    public CommonResponse<CommentListResponse> getParentComments(@PathVariable Long videoId, @RequestParam int page) {
 
-        Slice<CommentResponse> comments = commentService.getComments(videoId, page);
+        CommentListResponse comments = commentService.getParentComments(videoId, page);
 
-        return CommonResponse.<Slice<CommentResponse>>builder()
+        return CommonResponse.<CommentListResponse>builder()
+                .body(comments)
+                .build();
+    }
+
+    @GetMapping("/{videoId}/{parentCommentId}")
+    public CommonResponse<CommentListResponse> getChildComments(@PathVariable Long videoId, @PathVariable Long parentCommentId, @RequestParam int page) {
+
+        CommentListResponse comments = commentService.getChildComments(videoId, parentCommentId, page);
+
+        return CommonResponse.<CommentListResponse>builder()
                 .body(comments)
                 .build();
     }

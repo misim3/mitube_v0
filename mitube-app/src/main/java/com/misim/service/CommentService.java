@@ -5,6 +5,7 @@ import com.misim.controller.model.Response.CommentListResponse;
 import com.misim.controller.model.Response.CommentResponse;
 import com.misim.controller.model.Response.CreateCommentResponse;
 import com.misim.entity.Comment;
+import com.misim.entity.User;
 import com.misim.entity.Video;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
@@ -18,8 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +28,7 @@ public class CommentService {
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
 
-    public Slice<CommentResponse> getComments(Long videoId, int page) {
+    public CommentListResponse getParentComments(Long videoId, int page) {
 
         if (!videoRepository.existsById(videoId)) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO);
@@ -38,22 +37,33 @@ public class CommentService {
         // 댓글 검색
         Pageable pageable = PageRequest.of(page, 10);
 
-        Slice<Comment> pages = commentRepository.findByVideoId(videoId, pageable);
+        Slice<Comment> pages = commentRepository.findByVideoIdAndParentCommentIdIsNull(videoId, pageable);
 
-        // 댓글 Id로 대댓글 검색
-//        List<CommentResponse> commentResponses = pages.map(p -> CommentResponse.builder()
-//                .childComments(commentRepository.findTopTenByParentCommentId(p.getId()))
-//                .writerNickname(userRepository.findById(p.getUserId()))
-//                .content(p.getContent())
-//                .build());
-        
-        // 댓글과 대댓글 합치기
-//        List<CommentResponse> list = null;
-
-        return pages.map(p -> CommentResponse.builder()
+        return CommentListResponse.builder()
+                .commentResponses(pages.map(p -> CommentResponse.builder()
                         .content(p.getContent())
-                        .writerNickname(String.valueOf(p.getUserId()))
-                        .build());
+                        .writerNickname(p.getUser().getNickname())
+                        .build()))
+                .build();
+    }
+
+    public CommentListResponse getChildComments(Long videoId, Long parentCommentId, int page) {
+
+        if (!videoRepository.existsById(videoId)) {
+            throw new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO);
+        }
+
+        // 댓글 검색
+        Pageable pageable = PageRequest.of(page, 10);
+
+        Slice<Comment> pages = commentRepository.findCommentsByVideoIdAndParentCommentId(videoId, parentCommentId, pageable);
+
+        return CommentListResponse.builder()
+                .commentResponses(pages.map(p -> CommentResponse.builder()
+                        .content(p.getContent())
+                        .writerNickname(p.getUser().getNickname())
+                        .build()))
+                .build();
     }
 
     public CreateCommentResponse createComments(CreateCommentRequest request) {
@@ -73,10 +83,13 @@ public class CommentService {
         Video video = videoRepository.findById(request.getVideoId())
                 .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
 
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_USER));
+
         Comment comment = Comment.builder()
                 .content(request.getContent())
                 .video(video)
-                .userId(request.getUserId())
+                .user(user)
                 .parentCommentId(request.getParentCommentId())
                 .build();
 

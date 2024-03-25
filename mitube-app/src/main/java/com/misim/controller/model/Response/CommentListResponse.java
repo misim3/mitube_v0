@@ -3,6 +3,7 @@ package com.misim.controller.model.Response;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
@@ -10,5 +11,5 @@ import java.util.List;
 @Builder
 public class CommentListResponse {
 
-    private List<CommentResponse> commentResponses;
+    private Slice<CommentResponse> commentResponses;
 }

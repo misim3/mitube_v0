@@ -12,6 +12,4 @@ public class CommentResponse {
     private String content;
 
     private String writerNickname;
-
-    private List<CommentResponse> childComments;
 }
