@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
@@ -27,6 +28,9 @@ public enum VideoCategory {
     private final String name;
     private final int code;
 
+    @Getter
+    private static final List<String> categoryList = Arrays.stream(VideoCategory.values()).map(VideoCategory::getName).toList();
+
     public static Boolean existByCode(int code) {
         return Arrays.stream(VideoCategory.values())
                 .anyMatch(c -> c.getCode() == code);
@@ -39,4 +43,5 @@ public enum VideoCategory {
                 .map(VideoCategory::getName)
                 .orElse(null);
     }
+
 }

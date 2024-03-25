@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -16,9 +17,7 @@ public class HomeService {
     public HomeResponse getHome(Long userId) {
 
         return HomeResponse.builder()
-                .categoryList(Arrays.stream(VideoCategory.values())
-                        .map(VideoCategory::getName)
-                        .toList())
+                .categoryList(VideoCategory.getCategoryList())
                 .hotVideoList(videoService.getHotVideos())
                 .newVideoList(videoService.getNewVideos())
                 .watchingVideoList(videoService.getWatchingVideos(userId))
