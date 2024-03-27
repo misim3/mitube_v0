@@ -12,10 +12,10 @@ import lombok.Setter;
 @Setter
 public class VerifySMSRequest extends VerificationDto {
 
-    @Schema(name = "phoneNumber", description = "전화번호", example = "01012345678", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(name = "phoneNumber", description = "전화번호", example = "01012345678", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
     private String phoneNumber;
 
-    @Schema(name = "requestTime", description = "클라이언트 요청 시각", example = "yyyy-MM-dd HH:mm:ss", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(name = "requestTime", description = "클라이언트 요청 시각", example = "yyyy-MM-dd HH:mm:ss", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
     private String requestTime;
 
 

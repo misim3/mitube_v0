@@ -20,8 +20,8 @@ public class ViewRepository {
         this.zSetOperations = redisTemplate.opsForZSet();
     }
 
-    public void save(View view, Long score) {
-        zSetOperations.add(REDIS_KEY, view, score);
+    public void save(View view, Long numberOfViews) {
+        zSetOperations.add(REDIS_KEY, view, numberOfViews);
     }
 
     public Set<View> findHotTen() {

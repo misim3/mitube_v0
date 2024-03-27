@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 public class TermDetailResponse extends TermResponse{
 
-    @Schema(description = "약관 내용")
+    @Schema(name = "content", description = "약관 내용", example = "개인 정보 보호법 ...", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
     private String content;
 
     @Builder(builderMethodName = "detailBuidler")
