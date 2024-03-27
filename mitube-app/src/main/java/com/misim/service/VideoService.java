@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -180,9 +181,12 @@ public class VideoService {
 
         List<Video> videos = videoRepository.findTopTen();
 
+        // 유료 회원 여부 판단해서 광고
+        
         return VideoResponse.convertVideos(videos);
     }
 
+    // 이 부분에 대한 깊은 고민이 필요하다.
     public List<VideoResponse> getHotVideos() {
 
         // redis template, sorted hash
@@ -205,6 +209,11 @@ public class VideoService {
 
     public List<VideoResponse> getWatchingVideos(Long userId) {
 
+        // 로그인하지 않은 사용자가 요청한 경우, 빈 리스트 반환
+        if (userId == null) {
+            return new ArrayList<>();
+        }
+
         if (!userRepository.existsById(userId)) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_USER);
         }
@@ -221,6 +230,11 @@ public class VideoService {
     }
 
     public List<VideoResponse> getSubscribingChannelNewVideos(Long userId) {
+
+        // 로그인하지 않은 사용자가 요청한 경우, 빈 리스트 반환
+        if (userId == null) {
+            return new ArrayList<>();
+        }
 
         if (!userRepository.existsById(userId)) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_USER);
