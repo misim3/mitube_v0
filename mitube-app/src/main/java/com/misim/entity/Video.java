@@ -30,7 +30,7 @@ public class Video extends BaseTimeEntity{
 
     private Integer categoryId;
 
-    // 연관관계 설정 가능
+    @Setter
     private Long views;
 
     // 연관관계 설정 가능

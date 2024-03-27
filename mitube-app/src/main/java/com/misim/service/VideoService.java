@@ -20,11 +20,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,6 +37,7 @@ public class VideoService {
     private final UserRepository userRepository;
     private final WatchingInfoRepository watchingInfoRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final ViewRepository viewRepository;
 
     public String uploadVideos(MultipartFile file) {
 
@@ -127,9 +126,17 @@ public class VideoService {
 
     public StartWatchingVideoResponse startWatchingVideo (Long videoId, Long userId) {
 
-        if (!videoRepository.existsById(videoId)) {
-            throw new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO);
-        }
+        Video video = videoRepository.findById(videoId)
+                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
+
+        View view = View.builder()
+                .videoId(videoId)
+                .build();
+
+        video.setViews(video.getViews() + 1);
+
+        videoRepository.save(video);
+        viewRepository.save(view, video.getViews());
 
         if (watchingInfoRepository.existsByUserIdAndVideoId(userId, videoId)) {
 
@@ -141,6 +148,7 @@ public class VideoService {
 
             return StartWatchingVideoResponse.builder()
                     .watchingTime(watchingInfo.getWatchingTime())
+                    .views(video.getViews())
                     .build();
 
         } else {
@@ -155,6 +163,7 @@ public class VideoService {
 
             return StartWatchingVideoResponse.builder()
                     .watchingTime(watchingInfo.getWatchingTime())
+                    .views(video.getViews())
                     .build();
         }
     }
@@ -186,23 +195,13 @@ public class VideoService {
         return VideoResponse.convertVideos(videos);
     }
 
-    // 이 부분에 대한 깊은 고민이 필요하다.
     public List<VideoResponse> getHotVideos() {
 
-        // redis template, sorted hash
-        // 가장 최근 시청 정보 중 100개를 가져와서 인기도 측정
+        Set<View> viewSet = viewRepository.findHotTen();
 
-        List<WatchingInfo> watchingInfos = watchingInfoRepository.findLastTopHundred();
+        List<Long> videoIds = viewSet.stream().map(View::getVideoId).toList();
 
-        List<Long> top10VideoIds = watchingInfos.stream()
-                .collect(Collectors.groupingBy(WatchingInfo::getVideoId, Collectors.counting()))
-                .entrySet().stream()
-                .sorted(Map.Entry.<Long, Long>comparingByValue().reversed())
-                .limit(10)
-                .map(Map.Entry::getKey)
-                .toList();
-
-        List<Video> videos = videoRepository.findAllById(top10VideoIds);
+        List<Video> videos = videoRepository.findAllById(videoIds);
 
         return VideoResponse.convertVideos(videos);
     }

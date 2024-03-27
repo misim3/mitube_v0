@@ -11,4 +11,6 @@ public class StartWatchingVideoResponse {
     private Long watchingTime;
 
     private CommentListResponse commentListResponse;
+
+    private Long views;
 }

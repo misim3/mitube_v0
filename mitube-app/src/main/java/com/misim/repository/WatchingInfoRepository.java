@@ -41,23 +41,11 @@ public class WatchingInfoRepository {
                 .toList();
     }
 
-    public void deleteById(Long userId, Long videoId) {
-        hashOperations.delete(REDIS_KEY, generateHashKey(userId, videoId));
-    }
-
     private String generateHashKey(WatchingInfo watchingInfo) {
         return generateHashKey(watchingInfo.getUserId(), watchingInfo.getVideoId());
     }
 
     private String generateHashKey(Long userId, Long videoId) {
         return userId + ":" + videoId;
-    }
-
-    public List<WatchingInfo> findLastTopHundred() {
-        return hashOperations.entries(REDIS_KEY).values()
-                .stream()
-                .sorted(Comparator.comparing(WatchingInfo::getModifiedDate).reversed())
-                .limit(100)
-                .toList();
     }
 }
