@@ -14,26 +14,26 @@ import java.util.List;
 @Schema(description = "유저 DTO")
 public class SignUpUserRequest implements Checker {
 
-    @Schema(name = "email", description = "User 이메일", example = "hongkildong@example.com", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "email", description = "User 이메일", example = "hongkildong@example.com", requiredMode = Schema.RequiredMode.REQUIRED)
     private String email;
 
-    @Schema(name = "password", description = "User 비밀번호", example = "Qwer1234%", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "password", description = "User 비밀번호", example = "Qwer1234%", requiredMode = Schema.RequiredMode.REQUIRED)
     private String password;
 
-    @Schema(name = "confirmPassword", description = "User 확인 비밀번호", example = "Qwer1234%", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "confirmPassword", description = "User 확인 비밀번호", example = "Qwer1234%", requiredMode = Schema.RequiredMode.REQUIRED)
     private String confirmPassword;
 
-    @Schema(name = "nickname", description = "User 닉네임", example = "hongkildong", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "nickname", description = "User 닉네임", example = "hongkildong", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nickname;
 
-    @Schema(name = "phoneNumber", description = "User 전화번호", example = "01012345678", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "phoneNumber", description = "User 전화번호", example = "01012345678", requiredMode = Schema.RequiredMode.REQUIRED)
     private String phoneNumber;
 
-    @Schema(name = "code", description = "User 토큰", example = "AIHR==", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "code", description = "User 토큰", example = "AIHR==", requiredMode = Schema.RequiredMode.REQUIRED)
     private String token;
 
     // 리스트
-    @Schema(name = "checkedTerms", description = "체크된 약관 제목", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "checkedTerms", description = "체크된 약관 제목", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<String> checkedTermTitles;
 
     @Override

@@ -11,19 +11,19 @@ import lombok.Setter;
 @Setter
 public class CreateVideoRequest implements Checker {
 
-    @Schema(name = "title", description = "동영상 제목", example = "Hello world!", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "title", description = "동영상 제목", example = "Hello world!", requiredMode = Schema.RequiredMode.REQUIRED)
     private String title;
 
-    @Schema(name = "description", description = "동영상 설명", example = "프로그래밍의 시작", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "description", description = "동영상 설명", example = "프로그래밍의 시작", requiredMode = Schema.RequiredMode.REQUIRED)
     private String description;
 
-    @Schema(name = "nickname", description = "동영상 소유자 닉네임", example = "hongkildong", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "nickname", description = "동영상 소유자 닉네임", example = "hongkildong", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nickname;
 
-    @Schema(name = "token", description = "동영상 파일 토큰", example = "HAK+==", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "token", description = "동영상 파일 토큰", example = "HAK+==", requiredMode = Schema.RequiredMode.REQUIRED)
     private String token;
 
-    @Schema(name = "categoryId", description = "동영상 카테고리 식별 정보", example = "1", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "categoryId", description = "동영상 카테고리 식별 정보", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer categoryId;
 
     @Override

@@ -8,10 +8,10 @@ import lombok.Getter;
 @Schema(description = "약관 정보 반환 DTO")
 public class TermResponse {
 
-    @Schema(name = "title", description = "약관 제목", example = "개인 정보 수신 동의", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "title", description = "약관 제목", example = "개인 정보 수신 동의", requiredMode = Schema.RequiredMode.REQUIRED)
     private String title;
 
-    @Schema(name = "isRequired", description = "필수 약관 여부", example = "true", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "isRequired", description = "필수 약관 여부", example = "true", requiredMode = Schema.RequiredMode.REQUIRED)
     private Boolean isRequired;
 
     @Builder

@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class FindNicknameRequest implements Checker {
 
-    @Schema(name = "token", description = "토큰", example = "AIHR==", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "token", description = "토큰", example = "AIHR==", requiredMode = Schema.RequiredMode.REQUIRED)
     private String token;
     
     @Override

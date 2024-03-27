@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class ResetPasswordRequest extends VerificationDto {
 
-    @Schema(name = "nickname", description = "닉네임", example = "hongkildong", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "nickname", description = "닉네임", example = "hongkildong", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nickname;
 
     @Override

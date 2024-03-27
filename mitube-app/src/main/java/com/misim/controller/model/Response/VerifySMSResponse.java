@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class VerifySMSResponse {
 
-    @Schema(name = "token", description = "SMS 인증 토큰", example = "AHKW+==", requiredMode = Schema.RequiredMode.REQUIRED, nullable = false)
+    @Schema(name = "token", description = "SMS 인증 토큰", example = "AHKW+==", requiredMode = Schema.RequiredMode.REQUIRED)
     private String token;
 }
