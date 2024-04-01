@@ -13,7 +13,6 @@ import com.misim.repository.CommentRepository;
 import com.misim.repository.UserRepository;
 import com.misim.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
