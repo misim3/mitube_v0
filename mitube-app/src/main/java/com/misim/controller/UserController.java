@@ -20,8 +20,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-
 @Tag(name = "유저 API", description = "유저 정보 관련 API")
 @RestController
 @RequiredArgsConstructor
@@ -32,7 +30,6 @@ public class UserController {
     private final SmsService smsService;
     private final VerificationTokenService verificationTokenService;
 
-    // 유저 정보 등록 - 과정 gmarket 기반으로 하자.
     // 약관 동의 -> 본인 인증 -> 유저 정보 기입 후 등록 버튼 클릭
     @Operation(summary = "회원 가입", description = "새로운 회원을 등록합니다.")
     @Parameter(name = "UserDto", description = "User 회원 가입을 위한 데이터.")
@@ -116,6 +113,8 @@ public class UserController {
     })
     @PostMapping("/help/resetPassword")
     public void resetPassword(@RequestBody ResetPasswordRequest request) {
+
+        request.check();
 
         userService.resetUserPassword(request.getNickname(), request.getCode());
     }
