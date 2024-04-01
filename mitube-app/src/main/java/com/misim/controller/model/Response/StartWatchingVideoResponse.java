@@ -16,4 +16,7 @@ public class StartWatchingVideoResponse {
 
     @Schema(name = "views", description = "동영상 시청 횟수", example = "10000", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long views;
+
+    // 비디오 전용 스토리지
+    private String videoLink;
 }

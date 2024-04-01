@@ -20,10 +20,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -210,7 +208,7 @@ public class VideoService {
 
         // 로그인하지 않은 사용자가 요청한 경우, 빈 리스트 반환
         if (userId == null) {
-            return new ArrayList<>();
+            return null;
         }
 
         if (!userRepository.existsById(userId)) {
@@ -232,7 +230,7 @@ public class VideoService {
 
         // 로그인하지 않은 사용자가 요청한 경우, 빈 리스트 반환
         if (userId == null) {
-            return new ArrayList<>();
+            return null;
         }
 
         if (!userRepository.existsById(userId)) {
