@@ -58,10 +58,13 @@ public enum MitubeErrorCode implements ErrorCode{
     INVALID_COMMENT_USER(HttpStatus.BAD_REQUEST, "댓글 유저 형식에 맞지 않습니다.", 10802),
     NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "댓글을 찾을 수 없습니다.", 10803),
 
-
     INVALID_SUBSCRIPTION_OWNER(HttpStatus.BAD_REQUEST, "채널 소유자 형식에 맞지 않습니다.", 10900),
     INVALID_SUBSCRIPTION_SUBSCRIBER(HttpStatus.BAD_REQUEST, "구독자 형식에 맞지 않습니다.", 10901),
 
+    INVALID_REACTION_UNCHECK(HttpStatus.BAD_REQUEST, "체크되지 않은 타입을 해제하려 합니다.", 11000),
+    INVALID_REACTION_TYPE(HttpStatus.BAD_REQUEST, "리액션 타입 형식에 맞지 않습니다.", 11001),
+    INVALID_REACTION_VIDEO(HttpStatus.BAD_REQUEST, "리액션 동영상 형식에 맞지 않습니다.", 11002),
+    INVALID_REACTION_USER(HttpStatus.BAD_REQUEST, "리액션 유저 형식에 맞지 않습니다.", 11003),
 
     UNKNOWN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 에러가 발생했습니다.", 99999),;
 

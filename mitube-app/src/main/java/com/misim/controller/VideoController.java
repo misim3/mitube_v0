@@ -1,5 +1,6 @@
 package com.misim.controller;
 
+import com.misim.controller.model.Request.ReactionRequest;
 import com.misim.controller.model.Response.CommentListResponse;
 import com.misim.controller.model.Response.CommentResponse;
 import com.misim.controller.model.Response.StartWatchingVideoResponse;
@@ -9,6 +10,7 @@ import com.misim.exception.CommonResponse;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import com.misim.service.CommentService;
+import com.misim.service.ReactionService;
 import com.misim.service.VideoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -30,6 +32,7 @@ public class VideoController {
 
     private final VideoService videoService;
     private final CommentService commentService;
+    private final ReactionService reactionService;
     
     @Operation(summary = "동영상 업로드", description = "새로운 동영상을 업로드합니다.")
     @ApiResponses(value = {
@@ -104,5 +107,22 @@ public class VideoController {
     public void completeWatchingVideo(@PathVariable Long videoId, @RequestParam Long userId, @RequestParam Long watchingTime) {
 
         videoService.updateWatchingVideoInfo(videoId, userId, watchingTime);
+    }
+
+    @PostMapping("/check/reaction")
+    public void checkVideo(@RequestBody ReactionRequest request) {
+
+        request.check();
+
+        reactionService.checking(request.getType(), request.getUserId(), request.getVideoId());
+    }
+
+
+    @PostMapping("/uncheck/reaction")
+    public void uncheckVideo(@RequestBody ReactionRequest request) {
+
+        request.check();
+
+        reactionService.unchecking(request.getType(), request.getUserId(), request.getVideoId());
     }
 }
