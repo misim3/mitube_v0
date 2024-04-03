@@ -18,6 +18,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -27,41 +30,51 @@ public class CommentService {
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
 
-    public CommentListResponse getParentComments(Long videoId, int page) {
+    public CommentListResponse getParentComments(Long videoId, Long idx, String scrollDirection) {
 
         if (!videoRepository.existsById(videoId)) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO);
         }
 
-        // 댓글 검색
-        Pageable pageable = PageRequest.of(page, 10);
+        List<Comment> comments = new ArrayList<>();
 
-        Slice<Comment> pages = commentRepository.findByVideoIdAndParentCommentIdIsNull(videoId, pageable);
+        if (scrollDirection.equals("up")) {
+            comments = commentRepository.findUpCommentByVideoIdAndId(videoId, idx);
+        } else if (scrollDirection.equals("down")) {
+            comments = commentRepository.findDownCommentByVideoIdAndId(videoId, idx);
+        }
 
         return CommentListResponse.builder()
-                .commentResponses(pages.map(p -> CommentResponse.builder()
-                        .content(p.getContent())
-                        .writerNickname(p.getUser().getNickname())
-                        .build()))
+                .commentResponses(comments.stream()
+                        .map(c -> CommentResponse.builder()
+                                .content(c.getContent())
+                                .writerNickname(c.getUser().getNickname())
+                                .build())
+                        .toList())
                 .build();
     }
 
-    public CommentListResponse getChildComments(Long videoId, Long parentCommentId, int page) {
+    public CommentListResponse getChildComments(Long videoId, Long parentCommentId, Long idx, String scrollDirection) {
 
         if (!videoRepository.existsById(videoId)) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO);
         }
 
-        // 댓글 검색
-        Pageable pageable = PageRequest.of(page, 10);
+        List<Comment> comments = new ArrayList<>();
 
-        Slice<Comment> pages = commentRepository.findCommentsByVideoIdAndParentCommentId(videoId, parentCommentId, pageable);
+        if (scrollDirection.equals("up")) {
+            comments = commentRepository.findUpCommentByVideoIdAndIdAndParentCommentId(parentCommentId, videoId, idx);
+        } else if (scrollDirection.equals("down")) {
+            comments = commentRepository.findDownCommentByVideoIdAndIdAndParentCommentId(parentCommentId, videoId, idx);
+        }
 
         return CommentListResponse.builder()
-                .commentResponses(pages.map(p -> CommentResponse.builder()
-                        .content(p.getContent())
-                        .writerNickname(p.getUser().getNickname())
-                        .build()))
+                .commentResponses(comments.stream()
+                        .map(c -> CommentResponse.builder()
+                                .content(c.getContent())
+                                .writerNickname(c.getUser().getNickname())
+                                .build())
+                        .toList())
                 .build();
     }
 

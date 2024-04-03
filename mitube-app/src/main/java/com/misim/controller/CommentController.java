@@ -21,20 +21,29 @@ public class CommentController {
     private final CommentService commentService;
 
 
+    // idx, sort, scroll direction
+    // 1th way - idx and scroll direction -> 'idx'
+    // 2th way - scroll direction ~ idx -> 'idx' : scroll down lowest idx or scroll up highest idx
+    // scroll down
+    // select * from comments where parentCommentId is null and videoId = 'videoId' and idx < 'idx' order by sort DESC limit 'pageSize';
+    // scroll up
+    // select * from comments where parentCommentId is null and videoId = 'videoId' and idx > 'idx' order by sort ACS limit 'pageSize';
+    // 1 / '2' 3 4 / '5' 6 7 / '8' 9 10
     @GetMapping("/{videoId}")
-    public CommonResponse<CommentListResponse> getParentComments(@PathVariable Long videoId, @RequestParam int page) {
+    public CommonResponse<CommentListResponse> getParentComments(@PathVariable Long videoId, @RequestParam Long idx, @RequestParam String scrollDirection) {
 
-        CommentListResponse comments = commentService.getParentComments(videoId, page);
+        CommentListResponse comments = commentService.getParentComments(videoId, idx, scrollDirection);
 
         return CommonResponse.<CommentListResponse>builder()
                 .body(comments)
                 .build();
     }
 
+    //
     @GetMapping("/{videoId}/{parentCommentId}")
-    public CommonResponse<CommentListResponse> getChildComments(@PathVariable Long videoId, @PathVariable Long parentCommentId, @RequestParam int page) {
+    public CommonResponse<CommentListResponse> getChildComments(@PathVariable Long videoId, @PathVariable Long parentCommentId, @RequestParam Long idx, @RequestParam String scrollDirection) {
 
-        CommentListResponse comments = commentService.getChildComments(videoId, parentCommentId, page);
+        CommentListResponse comments = commentService.getChildComments(videoId, parentCommentId, idx, scrollDirection);
 
         return CommonResponse.<CommentListResponse>builder()
                 .body(comments)

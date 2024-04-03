@@ -85,7 +85,7 @@ public class VideoController {
 
         StartWatchingVideoResponse response = videoService.startWatchingVideo(videoId, userId);
 
-        CommentListResponse commentListResponse = commentService.getParentComments(videoId, 0);
+        CommentListResponse commentListResponse = commentService.getParentComments(videoId, null, "down");
 
         response.setCommentListResponse(commentListResponse);
 
