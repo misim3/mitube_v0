@@ -30,6 +30,7 @@ public class CommentService {
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
 
+    // 스크롤 다운의 경우만 다음 페이지가 존재하는지 미리 확인
     public CommentListResponse getParentComments(Long videoId, Long idx, String scrollDirection) {
 
         if (!videoRepository.existsById(videoId)) {
@@ -44,7 +45,7 @@ public class CommentService {
             comments = commentRepository.findDownCommentByVideoIdAndId(videoId, idx);
         }
 
-        return CommentListResponse.builder()
+        CommentListResponse commentListResponse = CommentListResponse.builder()
                 .commentResponses(comments.stream()
                         .map(c -> CommentResponse.builder()
                                 .content(c.getContent())
@@ -52,6 +53,15 @@ public class CommentService {
                                 .build())
                         .toList())
                 .build();
+
+        if (comments.size() == 11) {
+            commentListResponse.setHasNext(true);
+            commentListResponse.setCommentResponses(commentListResponse.getCommentResponses().subList(0, 9));
+        } else {
+            commentListResponse.setHasNext(false);
+        }
+
+        return commentListResponse;
     }
 
     public CommentListResponse getChildComments(Long videoId, Long parentCommentId, Long idx, String scrollDirection) {
