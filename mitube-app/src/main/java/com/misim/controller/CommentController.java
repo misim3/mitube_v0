@@ -5,11 +5,16 @@ import com.misim.controller.model.Response.CommentListResponse;
 import com.misim.controller.model.Response.CommentResponse;
 import com.misim.controller.model.Response.CreateCommentResponse;
 import com.misim.exception.CommonResponse;
+import com.misim.exception.MitubeErrorCode;
+import com.misim.exception.MitubeException;
 import com.misim.service.CommentService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 @Tag(name = "댓글 API", description = "댓글 정보 관련 API")
@@ -20,6 +25,7 @@ public class CommentController {
 
     private final CommentService commentService;
 
+    private final List<String> scroll = Arrays.asList("up", "down");
 
     // idx, sort, scroll direction
     // 1th way - idx and scroll direction -> 'idx'
@@ -29,8 +35,11 @@ public class CommentController {
     // scroll up
     // select * from comments where parentCommentId is null and videoId = 'videoId' and idx > 'idx' order by sort ACS limit 'pageSize';
     // 1 / '2' 3 4 / '5' 6 7 / '8' 9 10
+    // commentService 메소드 호출 전, scrollDirection 데이터 검사
     @GetMapping("/{videoId}")
     public CommonResponse<CommentListResponse> getParentComments(@PathVariable Long videoId, @RequestParam Long idx, @RequestParam String scrollDirection) {
+
+        checkRequests(idx, scrollDirection);
 
         CommentListResponse comments = commentService.getParentComments(videoId, idx, scrollDirection);
 
@@ -39,9 +48,10 @@ public class CommentController {
                 .build();
     }
 
-    //
     @GetMapping("/{videoId}/{parentCommentId}")
     public CommonResponse<CommentListResponse> getChildComments(@PathVariable Long videoId, @PathVariable Long parentCommentId, @RequestParam Long idx, @RequestParam String scrollDirection) {
+
+        checkRequests(idx, scrollDirection);
 
         CommentListResponse comments = commentService.getChildComments(videoId, parentCommentId, idx, scrollDirection);
 
@@ -70,4 +80,14 @@ public class CommentController {
         commentService.deleteComments(commentId);
     }
 
+    private void checkRequests(Long idx, String scrollDirection) {
+
+        if (idx < 1) {
+            throw  new MitubeException(MitubeErrorCode.INVALID_COMMENT_INDEX);
+        }
+
+        if (scrollDirection.isBlank() || !scroll.contains(scrollDirection)) {
+            throw new MitubeException(MitubeErrorCode.INVALID_COMMENT_SCROLL_DIRECTION);
+        }
+    }
 }
