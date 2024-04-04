@@ -9,6 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Schema(name = "비밀번호 초기화 요청 DTO")
 public class ResetPasswordRequest extends VerificationDto {
 
     @Schema(name = "nickname", description = "닉네임", example = "hongkildong", requiredMode = Schema.RequiredMode.REQUIRED)

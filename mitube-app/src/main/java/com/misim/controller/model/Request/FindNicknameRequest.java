@@ -10,6 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Schema(name = "닉네임 찾기 요청 DTO")
 public class FindNicknameRequest implements Checker {
 
     @Schema(name = "token", description = "토큰", example = "AIHR==", requiredMode = Schema.RequiredMode.REQUIRED)

@@ -9,6 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Schema(name = "새로운 동영상 생성 요청 DTO")
 public class CreateVideoRequest implements Checker {
 
     @Schema(name = "title", description = "동영상 제목", example = "Hello world!", requiredMode = Schema.RequiredMode.REQUIRED)

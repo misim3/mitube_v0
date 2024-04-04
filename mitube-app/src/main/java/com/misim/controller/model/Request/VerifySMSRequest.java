@@ -10,6 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Schema(name = "SMS 본인 인증 검증 요청 DTO")
 public class VerifySMSRequest extends VerificationDto {
 
     @Schema(name = "phoneNumber", description = "전화번호", example = "01012345678", requiredMode = Schema.RequiredMode.REQUIRED)

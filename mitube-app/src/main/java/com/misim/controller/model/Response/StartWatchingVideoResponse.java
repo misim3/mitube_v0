@@ -6,7 +6,11 @@ import lombok.Data;
 
 @Data
 @Builder
+@Schema(name = "동영상 시청 시작 정보 응답 DTO")
 public class StartWatchingVideoResponse {
+
+    @Schema(name = "videoId", description = "동영상 식별 정보", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Long videoId;
 
     @Schema(name = "watchingTime", description = "동영상 시청 시각. 동영상 시청한 기록이 없다면, 0. 있다면, 시청 시각 반환", example = "1234", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long watchingTime;

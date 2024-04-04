@@ -11,7 +11,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@Schema(description = "유저 DTO")
+@Schema(description = "유저 등록 요청 DTO")
 public class SignUpUserRequest implements Checker {
 
     @Schema(name = "email", description = "User 이메일", example = "hongkildong@example.com", requiredMode = Schema.RequiredMode.REQUIRED)

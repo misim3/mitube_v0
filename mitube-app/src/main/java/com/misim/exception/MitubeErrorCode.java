@@ -59,6 +59,7 @@ public enum MitubeErrorCode implements ErrorCode{
     NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "댓글을 찾을 수 없습니다.", 10803),
     INVALID_COMMENT_INDEX(HttpStatus.BAD_REQUEST, "댓글 인덱스 형식에 맞지 않습니다.", 10804),
     INVALID_COMMENT_SCROLL_DIRECTION(HttpStatus.BAD_REQUEST, "댓글 스크롤 방향 형식에 맞지 않습니다.", 10805),
+    INVALID_COMMENT_ID(HttpStatus.BAD_REQUEST, "댓글 식별 정보 형식에 맞지 않습니다.", 10806),
 
     INVALID_SUBSCRIPTION_OWNER(HttpStatus.BAD_REQUEST, "채널 소유자 형식에 맞지 않습니다.", 10900),
     INVALID_SUBSCRIPTION_SUBSCRIBER(HttpStatus.BAD_REQUEST, "구독자 형식에 맞지 않습니다.", 10901),
