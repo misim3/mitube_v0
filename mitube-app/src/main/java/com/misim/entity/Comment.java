@@ -26,7 +26,11 @@ public class Comment extends BaseTimeEntity {
     private Long parentCommentId;
 
     @ManyToOne
+    @Setter
     private User user;
+
+    @Setter
+    private Boolean isActive;
 
     @Builder
     public Comment(String content, Video video, Long parentCommentId, User user) {
@@ -34,5 +38,6 @@ public class Comment extends BaseTimeEntity {
         this.video = video;
         this.parentCommentId = parentCommentId;
         this.user = user;
+        this.isActive = true;
     }
 }

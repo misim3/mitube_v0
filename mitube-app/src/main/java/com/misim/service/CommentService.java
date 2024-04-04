@@ -48,6 +48,7 @@ public class CommentService {
         CommentListResponse commentListResponse = CommentListResponse.builder()
                 .commentResponses(comments.stream()
                         .map(c -> CommentResponse.builder()
+                                .commentId(c.getId())
                                 .content(c.getContent())
                                 .writerNickname(c.getUser().getNickname())
                                 .build())
@@ -81,6 +82,7 @@ public class CommentService {
         return CommentListResponse.builder()
                 .commentResponses(comments.stream()
                         .map(c -> CommentResponse.builder()
+                                .commentId(c.getId())
                                 .content(c.getContent())
                                 .writerNickname(c.getUser().getNickname())
                                 .build())
@@ -135,13 +137,23 @@ public class CommentService {
 
         commentRepository.save(comment);
     }
-
+    
     public void deleteComments(Long commentId) {
 
         if (commentId == null || !commentRepository.existsById(commentId)) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_COMMENT);
         }
 
-        commentRepository.deleteById(commentId);
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_COMMENT));
+
+        comment.setContent("삭제된 댓글입니다.");
+        // 아래와 같은 코드가 가능한지 테스트가 필요하다.
+        // 만약 불가능하다면, 댓글 목록을 가져올 때, 댓글이 활성화 상태인지 확인해서 댓글 작성자의 닉네임을 가져와야 한다.
+        // 만약 가능하다면, 댓글이 활성화 상태인지 여부를 담는 isActive 필드는 필요하지 않다.
+        comment.setUser(null);
+        comment.setIsActive(false);
+
+        commentRepository.save(comment);
     }
 }
