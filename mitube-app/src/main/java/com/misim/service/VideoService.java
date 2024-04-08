@@ -1,6 +1,7 @@
 package com.misim.service;
 
 import com.misim.controller.model.Request.CreateVideoRequest;
+import com.misim.controller.model.Response.ReactionResponse;
 import com.misim.controller.model.Response.StartWatchingVideoResponse;
 import com.misim.controller.model.Response.VideoResponse;
 import com.misim.entity.*;
@@ -36,6 +37,7 @@ public class VideoService {
     private final WatchingInfoRepository watchingInfoRepository;
     private final SubscriptionRepository subscriptionRepository;
     private final ViewRepository viewRepository;
+    private final ReactionService reactionService;
 
     public String uploadVideos(MultipartFile file) {
 
@@ -136,22 +138,19 @@ public class VideoService {
         videoRepository.save(video);
         viewRepository.save(view, video.getViews());
 
+        WatchingInfo watchingInfo;
+
         if (watchingInfoRepository.existsByUserIdAndVideoId(userId, videoId)) {
 
-            WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId);
+            watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId);
 
             if (watchingInfo == null) {
                 throw new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO);
             }
 
-            return StartWatchingVideoResponse.builder()
-                    .watchingTime(watchingInfo.getWatchingTime())
-                    .views(video.getViews())
-                    .build();
-
         } else {
 
-            WatchingInfo watchingInfo = WatchingInfo.builder()
+            watchingInfo = WatchingInfo.builder()
                     .videoId(videoId)
                     .userId(userId)
                     .watchingTime(0L)
@@ -159,11 +158,16 @@ public class VideoService {
 
             watchingInfoRepository.save(watchingInfo);
 
-            return StartWatchingVideoResponse.builder()
-                    .watchingTime(watchingInfo.getWatchingTime())
-                    .views(video.getViews())
-                    .build();
         }
+
+        // 로그인 상태라면, 해당 유저가 해당 동영상에 대한 반응 정보를 불러온다.
+        ReactionResponse reactionResponse = reactionService.getReaction(userId, videoId);
+
+        return StartWatchingVideoResponse.builder()
+                .watchingTime(watchingInfo.getWatchingTime())
+                .views(video.getViews())
+                .reactionResponse(reactionResponse)
+                .build();
     }
 
     public void updateWatchingVideoInfo(Long videoId, Long userId, Long watchingTime) {
@@ -241,7 +245,7 @@ public class VideoService {
 
         List<Video> videos = subscriptions.stream()
                 .limit(10)
-                .map(s -> videoRepository.findTopByUserId(s.getOwnerId()))
+                .map(s -> videoRepository.findTopByUserId(s.getChannel().getOwner().getId()))
                 .toList();
 
         return VideoResponse.convertVideos(videos);
