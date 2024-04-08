@@ -30,13 +30,17 @@ public class User extends BaseTimeEntity{
 
     private boolean isEnabled;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "users", cascade = CascadeType.PERSIST)
     @Setter
     private List<TermAgreement> termAgreements = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST)
+    @OneToOne(mappedBy = "users", cascade = CascadeType.PERSIST)
     @Setter
     private VerificationToken verificationToken;
+
+    @OneToMany(mappedBy = "users")
+    @Setter
+    private List<Subscription> subscribingList = new ArrayList<>();
 
     @Builder
     public User(String email, String password, String nickname, String phoneNumber) {

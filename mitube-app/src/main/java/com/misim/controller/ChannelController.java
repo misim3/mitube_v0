@@ -35,7 +35,7 @@ public class ChannelController {
 
         request.check();
 
-        subscriptionService.subscribing(request.getOwnerId(), request.getSubscriberId());
+        subscriptionService.subscribing(request.getChannelId(), request.getSubscriberId());
     }
 
     @Operation(summary = "채널 구독 취소", description = "채널 구독을 취소합니다.")
@@ -49,6 +49,6 @@ public class ChannelController {
 
         request.check();
 
-        subscriptionService.unsubscribing(request.getOwnerId(), request.getSubscriberId());
+        subscriptionService.unsubscribing(request.getChannelId(), request.getSubscriberId());
     }
 }

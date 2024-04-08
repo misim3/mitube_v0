@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Table(name = "subscriptions")
@@ -15,13 +17,17 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    private Long ownerId;
+    @ManyToOne
+    @JoinColumn(name = "CHANNEL_ID")
+    private Channel channel;
 
-    private Long subscriberId;
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private User subscriber;
 
     @Builder
-    public Subscription(Long ownerId, Long subscriberId) {
-        this.ownerId = ownerId;
-        this.subscriberId = subscriberId;
+    public Subscription(Channel channel, User subscriber) {
+        this.channel = channel;
+        this.subscriber = subscriber;
     }
 }

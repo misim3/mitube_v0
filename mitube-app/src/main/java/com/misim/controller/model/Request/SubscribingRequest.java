@@ -11,8 +11,8 @@ import lombok.Data;
 @Schema(name = "구독 요청 DTO")
 public class SubscribingRequest implements Checker {
 
-    @Schema(name = "ownerId", description = "채널 소유주의 유저 식별 정보", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Long ownerId;
+    @Schema(name = "channelId", description = "채널 식별 정보", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Long channelId;
 
     @Schema(name = "subscriberId", description = "채널 구독자의 유저 식별 정보", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long subscriberId;
@@ -20,8 +20,8 @@ public class SubscribingRequest implements Checker {
     @Override
     public void check() {
 
-        if (ownerId == null) {
-            throw new MitubeException(MitubeErrorCode.INVALID_SUBSCRIPTION_OWNER);
+        if (channelId == null) {
+            throw new MitubeException(MitubeErrorCode.INVALID_SUBSCRIPTION_CHANNEL);
         }
 
         if (subscriberId == null) {

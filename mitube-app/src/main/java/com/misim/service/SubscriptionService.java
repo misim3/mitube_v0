@@ -1,11 +1,13 @@
 package com.misim.service;
 
+import com.misim.entity.Channel;
 import com.misim.entity.Subscription;
+import com.misim.entity.User;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
+import com.misim.repository.ChannelRepository;
 import com.misim.repository.SubscriptionRepository;
 import com.misim.repository.UserRepository;
-import com.misim.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,35 +17,34 @@ public class SubscriptionService {
 
     private final SubscriptionRepository subscriptionRepository;
     private final UserRepository userRepository;
+    private final ChannelRepository channelRepository;
 
-    public void subscribing(Long ownerId, Long subscriberId) {
+    public void subscribing(Long channelId, Long subscriberId) {
 
-        if (!userRepository.existsById(ownerId)) {
-            throw new MitubeException(MitubeErrorCode.NOT_FOUND_USER);
-        }
+        Channel channel = channelRepository.findById(channelId)
+                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_CHANNEL));
 
-        if (!userRepository.existsById(subscriberId)) {
-            throw new MitubeException(MitubeErrorCode.NOT_FOUND_USER);
-        }
+        User subscriber = userRepository.findById(subscriberId)
+                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_SUBSCRIBER));
 
         Subscription subscription = Subscription.builder()
-                .ownerId(ownerId)
-                .subscriberId(subscriberId)
+                .channel(channel)
+                .subscriber(subscriber)
                 .build();
 
         subscriptionRepository.save(subscription);
     }
 
-    public void unsubscribing(Long ownerId, Long subscriberId) {
+    public void unsubscribing(Long channelId, Long subscriberId) {
 
-        if (!userRepository.existsById(ownerId)) {
-            throw new MitubeException(MitubeErrorCode.NOT_FOUND_USER);
+        if (!channelRepository.existsById(channelId)) {
+            throw new MitubeException(MitubeErrorCode.NOT_FOUND_CHANNEL);
         }
 
         if (!userRepository.existsById(subscriberId)) {
-            throw new MitubeException(MitubeErrorCode.NOT_FOUND_USER);
+            throw new MitubeException(MitubeErrorCode.NOT_FOUND_SUBSCRIBER);
         }
 
-        subscriptionRepository.deleteByOwnerIdAndSubscriberId(ownerId, subscriberId);
+        subscriptionRepository.deleteByChannelIdAndSubscriberId(channelId, subscriberId);
     }
 }
