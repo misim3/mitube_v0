@@ -70,6 +70,7 @@ public enum MitubeErrorCode implements ErrorCode{
     INVALID_REACTION_TYPE(HttpStatus.BAD_REQUEST, "리액션 타입 형식에 맞지 않습니다.", 11001),
     INVALID_REACTION_VIDEO(HttpStatus.BAD_REQUEST, "리액션 동영상 형식에 맞지 않습니다.", 11002),
     INVALID_REACTION_USER(HttpStatus.BAD_REQUEST, "리액션 유저 형식에 맞지 않습니다.", 11003),
+    NOT_FOUND_REACTION(HttpStatus.BAD_REQUEST, "리액션을 찾을 수 없습니다.", 11004),
 
     UNKNOWN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 에러가 발생했습니다.", 99999),;
 

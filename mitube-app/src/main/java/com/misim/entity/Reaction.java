@@ -23,15 +23,19 @@ public class Reaction {
     @Setter
     private Boolean isActive;
 
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
-    private Long videoId;
+    @ManyToOne
+    @JoinColumn(name = "VIDEO_ID")
+    private Video video;
 
     @Builder
-    public Reaction(String type, Boolean isActive, Long userId, Long videoId) {
+    public Reaction(String type, Boolean isActive, User user, Video video) {
         this.type = type;
         this.isActive = isActive;
-        this.userId = userId;
-        this.videoId = videoId;
+        this.user = user;
+        this.video = video;
     }
 }
