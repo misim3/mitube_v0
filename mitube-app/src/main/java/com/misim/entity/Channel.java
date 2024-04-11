@@ -27,7 +27,7 @@ public class Channel extends BaseTimeEntity {
     private User owner;
 
     @Setter
-    @OneToMany
+    @OneToMany(mappedBy = "channel")
     private List<Subscription> subscriptionList = new ArrayList<>();
 
     public Channel(String title, String description, User owner) {
