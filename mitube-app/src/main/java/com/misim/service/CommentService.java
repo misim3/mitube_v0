@@ -45,6 +45,28 @@ public class CommentService {
             comments = commentRepository.findDownCommentByVideoIdAndId(videoId, idx);
         }
 
+        // commment.isActive == false인 경우, CommentResponse의 content = "삭제된 댓글입니다.", writerNickname = "익명"으로 설정.
+
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+        CommentResponse commentResponse;
+
+        for (Comment comment : comments) {
+            if (comment.getIsActive()) {
+                commentResponse = CommentResponse.builder()
+                        .commentId(comment.getId())
+                        .content(comment.getContent())
+                        .writerNickname(comment.getUser().getNickname())
+                        .build();
+            } else {
+                commentResponse = CommentResponse.builder()
+                        .commentId(comment.getId())
+                        .content("삭제된 댓글입니다.")
+                        .writerNickname("익명")
+                        .build();
+            }
+            commentResponseList.add(commentResponse);
+        }
+
         CommentListResponse commentListResponse = CommentListResponse.builder()
                 .commentResponses(comments.stream()
                         .map(c -> CommentResponse.builder()
@@ -77,6 +99,28 @@ public class CommentService {
             comments = commentRepository.findUpCommentByVideoIdAndIdAndParentCommentId(parentCommentId, videoId, idx);
         } else if (scrollDirection.equals("down")) {
             comments = commentRepository.findDownCommentByVideoIdAndIdAndParentCommentId(parentCommentId, videoId, idx);
+        }
+
+        // commment.isActive == false인 경우, CommentResponse의 content = "삭제된 댓글입니다.", writerNickname = "익명"으로 설정.
+
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+        CommentResponse commentResponse;
+
+        for (Comment comment : comments) {
+            if (comment.getIsActive()) {
+                commentResponse = CommentResponse.builder()
+                        .commentId(comment.getId())
+                        .content(comment.getContent())
+                        .writerNickname(comment.getUser().getNickname())
+                        .build();
+            } else {
+                commentResponse = CommentResponse.builder()
+                        .commentId(comment.getId())
+                        .content("삭제된 댓글입니다.")
+                        .writerNickname("익명")
+                        .build();
+            }
+            commentResponseList.add(commentResponse);
         }
 
         return CommentListResponse.builder()
@@ -147,11 +191,6 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_COMMENT));
 
-        comment.setContent("삭제된 댓글입니다.");
-        // 아래와 같은 코드가 가능한지 테스트가 필요하다.
-        // 만약 불가능하다면, 댓글 목록을 가져올 때, 댓글이 활성화 상태인지 확인해서 댓글 작성자의 닉네임을 가져와야 한다.
-        // 만약 가능하다면, 댓글이 활성화 상태인지 여부를 담는 isActive 필드는 필요하지 않다.
-        comment.setUser(null);
         comment.setIsActive(false);
 
         commentRepository.save(comment);
