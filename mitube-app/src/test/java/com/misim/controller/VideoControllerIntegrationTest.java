@@ -313,7 +313,7 @@ class VideoControllerIntegrationTest {
                 .param("userId", String.valueOf(userId))
                 .contentType(MediaType.APPLICATION_JSON));
 
-        System.out.println(watchingInfoRepository.count());
+        //System.out.println(watchingInfoRepository.count());
     }
 
     @Test
