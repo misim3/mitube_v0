@@ -22,12 +22,12 @@ public class Channel extends BaseTimeEntity {
 
     private String description;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     private User owner;
 
     @Setter
-    @OneToMany(mappedBy = "channel")
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private List<Subscription> subscriptionList = new ArrayList<>();
 
     public Channel(String title, String description, User owner) {

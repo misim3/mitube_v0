@@ -17,17 +17,17 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CHANNEL_ID")
     private Channel channel;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
-    private User subscriber;
+    private User user;
 
     @Builder
-    public Subscription(Channel channel, User subscriber) {
+    public Subscription(Channel channel, User user) {
         this.channel = channel;
-        this.subscriber = subscriber;
+        this.user = user;
     }
 }
