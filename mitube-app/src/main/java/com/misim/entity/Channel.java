@@ -26,10 +26,6 @@ public class Channel extends BaseTimeEntity {
     @JoinColumn(name = "USER_ID")
     private User owner;
 
-    @Setter
-    @OneToMany(mappedBy = "channel", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    private List<Subscription> subscriptionList = new ArrayList<>();
-
     public Channel(String title, String description, User owner) {
         this.title = title;
         this.description = description;

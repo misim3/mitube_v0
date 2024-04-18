@@ -34,13 +34,17 @@ public class User extends BaseTimeEntity{
     @Setter
     private List<TermAgreement> termAgreements = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @Setter
     private VerificationToken verificationToken;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "subscriber", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @Setter
     private List<Subscription> subscriptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @Setter
+    private List<Channel> channels = new ArrayList<>();
 
     @Builder
     public User(String email, String password, String nickname, String phoneNumber) {

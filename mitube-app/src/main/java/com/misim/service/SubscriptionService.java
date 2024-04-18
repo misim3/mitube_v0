@@ -29,7 +29,7 @@ public class SubscriptionService {
 
         Subscription subscription = Subscription.builder()
                 .channel(channel)
-                .user(subscriber)
+                .subscriber(subscriber)
                 .build();
 
         subscriptionRepository.save(subscription);
@@ -45,7 +45,7 @@ public class SubscriptionService {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_SUBSCRIBER);
         }
 
-        Subscription subscription = subscriptionRepository.findByChannelIdAndUserId(channelId, subscriberId)
+        Subscription subscription = subscriptionRepository.findByChannelIdAndSubscriberId(channelId, subscriberId)
                 .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_SUBSCRIPTION));
 
         subscriptionRepository.delete(subscription);
