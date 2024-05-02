@@ -6,7 +6,11 @@ import lombok.Data;
 
 @Data
 @Builder
+@Schema(name = "댓글 정보 응답 DTO")
 public class CommentResponse {
+
+    @Schema(name = "commentId", description = "댓글 식별 정보", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Long commentId;
 
     @Schema(name = "content", description = "댓글 내용", example = "재밌네요!", requiredMode = Schema.RequiredMode.REQUIRED)
     private String content;

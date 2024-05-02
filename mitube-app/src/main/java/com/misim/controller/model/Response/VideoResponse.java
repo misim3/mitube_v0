@@ -10,6 +10,7 @@ import java.util.List;
 
 @Data
 @Builder
+@Schema(name = "동영상 정보 응답 DTO")
 public class VideoResponse {
 
     @Schema(name = "videoId", description = "동영상 식별 정보", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)

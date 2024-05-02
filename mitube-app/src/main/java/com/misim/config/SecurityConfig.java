@@ -22,6 +22,7 @@ public class SecurityConfig {
                         "/terms/**",
                         "/videos/**",
                         "/comments/**",
+                        "/channels/**",
                         "/home"
                 );
     }

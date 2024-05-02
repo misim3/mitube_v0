@@ -13,11 +13,13 @@ import com.misim.repository.CommentRepository;
 import com.misim.repository.UserRepository;
 import com.misim.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -28,41 +30,107 @@ public class CommentService {
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
 
-    public CommentListResponse getParentComments(Long videoId, int page) {
+    // 스크롤 다운의 경우만 다음 페이지가 존재하는지 미리 확인
+    public CommentListResponse getParentComments(Long videoId, Long idx, String scrollDirection) {
 
         if (!videoRepository.existsById(videoId)) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO);
         }
 
-        // 댓글 검색
-        Pageable pageable = PageRequest.of(page, 10);
+        List<Comment> comments = new ArrayList<>();
 
-        Slice<Comment> pages = commentRepository.findByVideoIdAndParentCommentIdIsNull(videoId, pageable);
+        if (scrollDirection.equals("up")) {
+            comments = commentRepository.findUpCommentByVideoIdAndId(videoId, idx);
+        } else if (scrollDirection.equals("down")) {
+            comments = commentRepository.findDownCommentByVideoIdAndId(videoId, idx);
+        }
 
-        return CommentListResponse.builder()
-                .commentResponses(pages.map(p -> CommentResponse.builder()
-                        .content(p.getContent())
-                        .writerNickname(p.getUser().getNickname())
-                        .build()))
+        // commment.isActive == false인 경우, CommentResponse의 content = "삭제된 댓글입니다.", writerNickname = "익명"으로 설정.
+
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+        CommentResponse commentResponse;
+
+        for (Comment comment : comments) {
+            if (comment.getIsActive()) {
+                commentResponse = CommentResponse.builder()
+                        .commentId(comment.getId())
+                        .content(comment.getContent())
+                        .writerNickname(comment.getUser().getNickname())
+                        .build();
+            } else {
+                commentResponse = CommentResponse.builder()
+                        .commentId(comment.getId())
+                        .content("삭제된 댓글입니다.")
+                        .writerNickname("익명")
+                        .build();
+            }
+            commentResponseList.add(commentResponse);
+        }
+
+        CommentListResponse commentListResponse = CommentListResponse.builder()
+                .commentResponses(comments.stream()
+                        .map(c -> CommentResponse.builder()
+                                .commentId(c.getId())
+                                .content(c.getContent())
+                                .writerNickname(c.getUser().getNickname())
+                                .build())
+                        .toList())
                 .build();
+
+        if (comments.size() == 11) {
+            commentListResponse.setHasNext(true);
+            commentListResponse.setCommentResponses(commentListResponse.getCommentResponses().subList(0, 9));
+        } else {
+            commentListResponse.setHasNext(false);
+        }
+
+        return commentListResponse;
     }
 
-    public CommentListResponse getChildComments(Long videoId, Long parentCommentId, int page) {
+    public CommentListResponse getChildComments(Long videoId, Long parentCommentId, Long idx, String scrollDirection) {
 
         if (!videoRepository.existsById(videoId)) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO);
         }
 
-        // 댓글 검색
-        Pageable pageable = PageRequest.of(page, 10);
+        List<Comment> comments = new ArrayList<>();
 
-        Slice<Comment> pages = commentRepository.findCommentsByVideoIdAndParentCommentId(videoId, parentCommentId, pageable);
+        if (scrollDirection.equals("up")) {
+            comments = commentRepository.findUpCommentByVideoIdAndIdAndParentCommentId(parentCommentId, videoId, idx);
+        } else if (scrollDirection.equals("down")) {
+            comments = commentRepository.findDownCommentByVideoIdAndIdAndParentCommentId(parentCommentId, videoId, idx);
+        }
+
+        // commment.isActive == false인 경우, CommentResponse의 content = "삭제된 댓글입니다.", writerNickname = "익명"으로 설정.
+
+        List<CommentResponse> commentResponseList = new ArrayList<>();
+        CommentResponse commentResponse;
+
+        for (Comment comment : comments) {
+            if (comment.getIsActive()) {
+                commentResponse = CommentResponse.builder()
+                        .commentId(comment.getId())
+                        .content(comment.getContent())
+                        .writerNickname(comment.getUser().getNickname())
+                        .build();
+            } else {
+                commentResponse = CommentResponse.builder()
+                        .commentId(comment.getId())
+                        .content("삭제된 댓글입니다.")
+                        .writerNickname("익명")
+                        .build();
+            }
+            commentResponseList.add(commentResponse);
+        }
 
         return CommentListResponse.builder()
-                .commentResponses(pages.map(p -> CommentResponse.builder()
-                        .content(p.getContent())
-                        .writerNickname(p.getUser().getNickname())
-                        .build()))
+                .commentResponses(comments.stream()
+                        .map(c -> CommentResponse.builder()
+                                .commentId(c.getId())
+                                .content(c.getContent())
+                                .writerNickname(c.getUser().getNickname())
+                                .build())
+                        .toList())
                 .build();
     }
 
@@ -113,13 +181,18 @@ public class CommentService {
 
         commentRepository.save(comment);
     }
-
+    
     public void deleteComments(Long commentId) {
 
         if (commentId == null || !commentRepository.existsById(commentId)) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_COMMENT);
         }
 
-        commentRepository.deleteById(commentId);
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_COMMENT));
+
+        comment.setIsActive(false);
+
+        commentRepository.save(comment);
     }
 }

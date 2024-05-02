@@ -165,7 +165,7 @@ class UserControllerIntegrationTest {
         철수.setVerificationToken(인증토큰);
 
         userRepository.save(철수);
-        
+
         // mock 객체
         FindNicknameRequest mockRequest = new FindNicknameRequest();
         SmsVerification smsVerification = smsVerificationRepository.findSmsVerificationByPhoneNumber(본인인증.getPhoneNumber());

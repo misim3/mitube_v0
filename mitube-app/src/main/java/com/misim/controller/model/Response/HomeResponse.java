@@ -8,6 +8,7 @@ import java.util.List;
 
 @Data
 @Builder
+@Schema(name = "메인 페이지 정보 응답 DTO")
 public class HomeResponse {
 
     @Schema(name = "categoryList", description = "전체 동영상 카테고리 목록", example = "영화, 음악, ...", requiredMode = Schema.RequiredMode.REQUIRED)

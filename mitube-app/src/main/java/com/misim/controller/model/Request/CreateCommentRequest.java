@@ -1,12 +1,14 @@
 package com.misim.controller.model.Request;
 
 import com.misim.controller.model.Checker;
+import com.misim.controller.model.CommentDto;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
+@Schema(name = "댓글 생성 요청 DTO")
 public class CreateCommentRequest implements Checker {
 
     @Schema(name = "content", description = "댓글 내용", example = "프로그래밍 공부에 도움이 됩니다!", requiredMode = Schema.RequiredMode.REQUIRED)

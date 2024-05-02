@@ -57,6 +57,21 @@ public enum MitubeErrorCode implements ErrorCode{
     INVALID_COMMENT_VIDEO(HttpStatus.BAD_REQUEST, "댓글 비디오 형식에 맞지 않습니다.", 10801),
     INVALID_COMMENT_USER(HttpStatus.BAD_REQUEST, "댓글 유저 형식에 맞지 않습니다.", 10802),
     NOT_FOUND_COMMENT(HttpStatus.BAD_REQUEST, "댓글을 찾을 수 없습니다.", 10803),
+    INVALID_COMMENT_INDEX(HttpStatus.BAD_REQUEST, "댓글 인덱스 형식에 맞지 않습니다.", 10804),
+    INVALID_COMMENT_SCROLL_DIRECTION(HttpStatus.BAD_REQUEST, "댓글 스크롤 방향 형식에 맞지 않습니다.", 10805),
+    INVALID_COMMENT_ID(HttpStatus.BAD_REQUEST, "댓글 식별 정보 형식에 맞지 않습니다.", 10806),
+
+    INVALID_SUBSCRIPTION_CHANNEL(HttpStatus.BAD_REQUEST, "채널 형식에 맞지 않습니다.", 10900),
+    INVALID_SUBSCRIPTION_SUBSCRIBER(HttpStatus.BAD_REQUEST, "구독자 형식에 맞지 않습니다.", 10901),
+    NOT_FOUND_CHANNEL(HttpStatus.BAD_REQUEST, "채널을 찾을 수 없습니다.", 10902),
+    NOT_FOUND_SUBSCRIBER(HttpStatus.BAD_REQUEST, "채널 구독자를 찾을 수 없습니다.", 10903),
+    NOT_FOUND_SUBSCRIPTION(HttpStatus.BAD_REQUEST, "구독을 찾을 수 없습니다.", 10904),
+
+    INVALID_REACTION_UNCHECK(HttpStatus.BAD_REQUEST, "체크되지 않은 타입을 해제하려 합니다.", 11000),
+    INVALID_REACTION_TYPE(HttpStatus.BAD_REQUEST, "리액션 타입 형식에 맞지 않습니다.", 11001),
+    INVALID_REACTION_VIDEO(HttpStatus.BAD_REQUEST, "리액션 동영상 형식에 맞지 않습니다.", 11002),
+    INVALID_REACTION_USER(HttpStatus.BAD_REQUEST, "리액션 유저 형식에 맞지 않습니다.", 11003),
+    NOT_FOUND_REACTION(HttpStatus.BAD_REQUEST, "리액션을 찾을 수 없습니다.", 11004),
 
     UNKNOWN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 에러가 발생했습니다.", 99999),;
 
