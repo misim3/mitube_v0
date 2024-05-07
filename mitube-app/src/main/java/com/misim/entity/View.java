@@ -11,8 +11,11 @@ public class View implements Serializable {
 
     private Long videoId;
 
+    private Long views;
+
     @Builder
-    public View(Long videoId) {
+    public View(Long videoId, Long views) {
         this.videoId = videoId;
+        this.views = views;
     }
 }
