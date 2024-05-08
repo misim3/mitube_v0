@@ -32,4 +32,8 @@ public class ViewRepository {
     public void delete(String videoId) {
         hashOperations.delete(REDIS_KEY, videoId);
     }
+
+    public void incrementViewCount(String videoId) {
+        hashOperations.increment(REDIS_KEY, videoId, 1);
+    }
 }

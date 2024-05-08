@@ -127,7 +127,7 @@ public class VideoService {
 
     public StartWatchingVideoResponse startWatchingVideo (Long videoId, Long userId) {
 
-        View view = viewService.getView(videoId);
+        View view = viewService.getIncrementView(videoId);
 
         WatchingInfo watchingInfo;
 
