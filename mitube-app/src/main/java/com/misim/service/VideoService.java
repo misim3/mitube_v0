@@ -38,6 +38,7 @@ public class VideoService {
     private final SubscriptionRepository subscriptionRepository;
     private final ViewRepository viewRepository;
     private final ReactionService reactionService;
+    private final ViewService viewService;
 
     public String uploadVideos(MultipartFile file) {
 
@@ -126,17 +127,7 @@ public class VideoService {
 
     public StartWatchingVideoResponse startWatchingVideo (Long videoId, Long userId) {
 
-        Video video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
-
-        View view = View.builder()
-                .videoId(videoId)
-                .build();
-
-        video.setViews(video.getViews() + 1);
-
-        videoRepository.save(video);
-        viewRepository.save(view, video.getViews());
+        View view = viewService.getView(videoId);
 
         WatchingInfo watchingInfo;
 
@@ -165,7 +156,7 @@ public class VideoService {
 
         return StartWatchingVideoResponse.builder()
                 .watchingTime(watchingInfo.getWatchingTime())
-                .views(video.getViews())
+                .views(view.getViews())
                 .reactionResponse(reactionResponse)
                 .build();
     }
@@ -197,16 +188,16 @@ public class VideoService {
         return VideoResponse.convertVideos(videos);
     }
 
-    public List<VideoResponse> getHotVideos() {
-
-        Set<View> viewSet = viewRepository.findHotTen();
-
-        List<Long> videoIds = viewSet.stream().map(View::getVideoId).toList();
-
-        List<Video> videos = videoRepository.findAllById(videoIds);
-
-        return VideoResponse.convertVideos(videos);
-    }
+//    public List<VideoResponse> getHotVideos() {
+//
+//        Set<View> viewSet = viewRepository.findHotTen();
+//
+//        List<Long> videoIds = viewSet.stream().map(View::getVideoId).toList();
+//
+//        List<Video> videos = videoRepository.findAllById(videoIds);
+//
+//        return VideoResponse.convertVideos(videos);
+//    }
 
     public List<VideoResponse> getWatchingVideos(Long userId) {
 
