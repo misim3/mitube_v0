@@ -18,7 +18,7 @@ public class HomeService {
 
         return HomeResponse.builder()
                 .categoryList(VideoCategory.getCategoryList())
-                .hotVideoList(videoService.getHotVideos())
+                .hotVideoList(null)//videoService.getHotVideos())
                 .newVideoList(videoService.getNewVideos())
                 .watchingVideoList(videoService.getWatchingVideos(userId))
                 .subscribingChannelNewVideoList(videoService.getSubscribingChannelNewVideos(userId))
