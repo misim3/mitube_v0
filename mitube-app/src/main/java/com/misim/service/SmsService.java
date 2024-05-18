@@ -83,6 +83,7 @@ public class SmsService {
         smsVerification.setVerificationCode(code);
         smsVerification.setExpiryDate(LocalDateTime.now());
         smsVerification.setCurrentFailures(0);
+        smsVerification.setVerified(false);
 
         return smsVerification;
     }
@@ -118,7 +119,7 @@ public class SmsService {
             throw new MitubeException(MitubeErrorCode.EXPIRED_CODE);
         }
 
-        smsVerification.setCurrentFailures(smsVerification.getCurrentFailures());
+        smsVerification.addCurrentFailures();
 
         smsVerification.setVerified(true);
         smsVerificationRepository.save(smsVerification);

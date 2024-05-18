@@ -28,14 +28,14 @@ public class SmsVerification {
 
     private LocalDateTime expiryDate;
 
+    @Setter
     private Integer currentFailures;
 
     private Boolean isVerified;
 
     @Builder
-    public SmsVerification(String phoneNumber, String verificationCode) {
+    public SmsVerification(String phoneNumber) {
         this.phoneNumber = phoneNumber;
-        this.verificationCode = verificationCode;
         this.isVerified = false;
     }
 
@@ -47,7 +47,7 @@ public class SmsVerification {
         this.expiryDate = now.plusMinutes(EXPIRATION_MINUTES);
     }
 
-    public void setCurrentFailures(Integer currentFailures) {
+    public void addCurrentFailures() {
         if (currentFailures + 1 < NUMBER_OF_FAILURES) {
             this.currentFailures = currentFailures + 1;
         } else {
