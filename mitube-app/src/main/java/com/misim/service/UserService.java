@@ -68,7 +68,7 @@ public class UserService {
         user.setVerificationToken(verificationToken);
 
         // 유저 정보 저장
-        userRepository.save(user);
+//        userRepository.save(user);
     }
 
     // ******* 수정 필요 ********

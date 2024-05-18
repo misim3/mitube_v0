@@ -38,7 +38,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class))),
             @ApiResponse(responseCode = "409", description = "이미 가입된 유저입니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
-    @PostMapping("/signup")
+    @PostMapping("/signUp")
     public void signupUser(@RequestBody SignUpUserRequest signUpUserRequest) {
 
         // 유저 데이터 검사 - invalid인 경우 exception 발생

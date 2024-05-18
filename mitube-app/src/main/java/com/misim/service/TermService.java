@@ -51,9 +51,9 @@ public class TermService {
     public void checkTerms(List<String> checkedTermTitles) {
 
         List<Term> terms = termRepository.findTermGroupByTermGroupAndMaxVersion();
-        
+
         int cnt = 0;
-        
+
         // db에서 조회한 약관 중 필수 약관이 유저가 동의한 약관 제목에 존재하는지 확인
         // 한 번의 for 반복문에서 cnt도 처리하기 위해 포함관계를 확인한 후 필수 약관인지 확인한다.
         for (Term t : terms) {
