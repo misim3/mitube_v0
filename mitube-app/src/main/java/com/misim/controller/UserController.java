@@ -56,6 +56,7 @@ public class UserController {
     })
     @PostMapping("/sendVerificationBySMS")
     public void sendSMSVerificationCode(@RequestBody SendSMSRequest request) {
+
         Validator.validatePhoneNumber(request.getPhoneNumber());
 
         smsService.sendSMS(request.getPhoneNumber());
@@ -74,7 +75,7 @@ public class UserController {
 
         VerifySMSResponse response = smsService.matchSMS(request.getPhoneNumber(),
                 request.getCode(),
-                TimeUtil.parseStringToLocalDateTime(request.getRequestTime()));
+                TimeUtil.getNow());
 
         return CommonResponse
                 .<VerifySMSResponse>builder()

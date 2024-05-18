@@ -77,7 +77,7 @@ class UserControllerIntegrationTest {
         mockRequest.setConfirmPassword("Qwer1234%");
         mockRequest.setNickname("hongkildong");
         mockRequest.setPhoneNumber(phoneNumber);
-        SmsVerification smsVerification = smsVerificationRepository.findSmsVerificationByPhoneNumber(phoneNumber);
+        SmsVerification smsVerification = smsVerificationRepository.findTopByPhoneNumberOrderByExpiryDateDesc(phoneNumber);
         mockRequest.setToken(Base64Convertor.encode(smsVerification.getId()));
         mockRequest.setCheckedTermTitles(Arrays.asList("개인정보동의", "광고수신동의"));
 
@@ -109,10 +109,8 @@ class UserControllerIntegrationTest {
         mockRequest.setPhoneNumber("01012345671");
 
         // 수정 필요
-        SmsVerification smsVerification = smsVerificationRepository.findSmsVerificationByPhoneNumber("01012345671");
+        SmsVerification smsVerification = smsVerificationRepository.findTopByPhoneNumberOrderByExpiryDateDesc("01012345671");
         mockRequest.setCode(smsVerification.getVerificationCode());
-
-        mockRequest.setRequestTime(TimeUtil.formatLocalDateTimeNow());
 
         // 실행 결과 확인
         ResultActions actions = mockMvc.perform(post("/users/verifyAccountSMS")
@@ -168,7 +166,7 @@ class UserControllerIntegrationTest {
 
         // mock 객체
         FindNicknameRequest mockRequest = new FindNicknameRequest();
-        SmsVerification smsVerification = smsVerificationRepository.findSmsVerificationByPhoneNumber(본인인증.getPhoneNumber());
+        SmsVerification smsVerification = smsVerificationRepository.findTopByPhoneNumberOrderByExpiryDateDesc(본인인증.getPhoneNumber());
         mockRequest.setToken(Base64Convertor.encode(smsVerification.getId()));
 
         // 실행 결과 확인
@@ -205,7 +203,7 @@ class UserControllerIntegrationTest {
         // mock 객체
         ResetPasswordRequest mockRequest = new ResetPasswordRequest();
         mockRequest.setNickname(영희.getNickname());
-        SmsVerification smsVerification = smsVerificationRepository.findSmsVerificationByPhoneNumber(본인인증.getPhoneNumber());
+        SmsVerification smsVerification = smsVerificationRepository.findTopByPhoneNumberOrderByExpiryDateDesc(본인인증.getPhoneNumber());
         mockRequest.setCode(Base64Convertor.encode(smsVerification.getId()));
 
         // 실행 결과 확인

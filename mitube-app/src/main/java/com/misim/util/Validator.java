@@ -54,7 +54,7 @@ public class Validator {
     }
 
     public static void validateLocalDateTime(String requestTime) {
-        Matcher matcher = localDateTimePattern.matcher(requestTime);
+        Matcher matcher = localDateTimePattern.matcher(TimeUtil.parseStringToLocalDateTime(requestTime).toString());
 
         if (!matcher.matches()) {
             throw new MitubeException(MitubeErrorCode.INVALID_LOCAL_DATETIME);

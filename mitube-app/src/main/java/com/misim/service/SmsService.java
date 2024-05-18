@@ -7,6 +7,7 @@ import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import com.misim.repository.SmsVerificationRepository;
 import com.misim.util.Base64Convertor;
+import com.misim.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.model.Message;
@@ -37,14 +38,7 @@ public class SmsService {
 
     public void sendSMS(String phoneNumber) {
 
-        String code = makeCode();
-
-        SmsVerification smsVerification = SmsVerification.builder()
-                .phoneNumber(phoneNumber)
-                .verificationCode(code)
-                .build();
-
-        smsVerificationRepository.save(smsVerification);
+        smsVerificationRepository.save(makeSmsVerification(phoneNumber, makeCode()));
 
         /* 매 실행 혹은 테스트마다 sms api를 호출하는 것이 비 효율적이다.
          따라서 위 코드처럼 문자 전송이 완료되었다고 가정하자.
@@ -78,7 +72,7 @@ public class SmsService {
 
     private SmsVerification makeSmsVerification(String phoneNumber, String code) {
 
-        SmsVerification smsVerification = smsVerificationRepository.findSmsVerificationByPhoneNumber(phoneNumber);
+        SmsVerification smsVerification = smsVerificationRepository.findTopByPhoneNumberOrderByExpiryDateDesc(phoneNumber);
 
         if (smsVerification == null) {
             smsVerification = SmsVerification.builder()
@@ -104,15 +98,15 @@ public class SmsService {
         return sb.toString();
     }
 
-    public VerifySMSResponse matchSMS(String phoneNumber, String token, LocalDateTime current) {
+    public VerifySMSResponse matchSMS(String phoneNumber, String code, LocalDateTime current) {
 
-        SmsVerification smsVerification = smsVerificationRepository.findSmsVerificationByPhoneNumber(phoneNumber);
+        SmsVerification smsVerification = smsVerificationRepository.findTopByPhoneNumberOrderByExpiryDateDesc(phoneNumber);
 
         if (smsVerification == null) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_CODE);
         }
 
-        if (!smsVerification.getVerificationCode().equals(token)) {
+        if (!smsVerification.getVerificationCode().equals(code)) {
             throw new MitubeException(MitubeErrorCode.NOT_MATCH_CODE);
         }
 

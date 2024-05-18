@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SmsVerificationRepository extends JpaRepository<SmsVerification, Long> {
 
-    SmsVerification findSmsVerificationByPhoneNumber(String phoneNumber);
+    SmsVerification findTopByPhoneNumberOrderByExpiryDateDesc(String phoneNumber);
 }
