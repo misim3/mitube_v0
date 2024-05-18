@@ -44,10 +44,13 @@ class UserControllerIntegrationTest {
     private UserRepository userRepository;
 
     SmsVerification 본인인증(String s) {
-        return SmsVerification.builder()
+        SmsVerification smsVerification = SmsVerification.builder()
                 .phoneNumber("0101234567" + s)
-                .verificationCode("123456")
                 .build();
+
+        smsVerification.setVerificationCode("123456");
+
+        return smsVerification;
     }
 
     Term 개인정보동의() {

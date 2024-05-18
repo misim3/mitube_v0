@@ -48,7 +48,7 @@ public class SmsVerification {
     }
 
     public void addCurrentFailures() {
-        if (currentFailures + 1 < NUMBER_OF_FAILURES) {
+        if (this.currentFailures + 1 < NUMBER_OF_FAILURES) {
             this.currentFailures = currentFailures + 1;
         } else {
             throw new MitubeException(MitubeErrorCode.MAX_FAILURES);
