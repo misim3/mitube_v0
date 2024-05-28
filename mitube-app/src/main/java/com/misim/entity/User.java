@@ -34,7 +34,7 @@ public class User extends BaseTimeEntity{
     @Setter
     private List<TermAgreement> termAgreements = new ArrayList<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     @Setter
     private VerificationToken verificationToken;
 

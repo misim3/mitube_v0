@@ -13,6 +13,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JavaMailSender mailSender;
 
-
+    @Transactional
     public void registerUser(SignUpUserRequest signUpUserRequest) {
 
         // 약관 확인 - checkTerms 내부에서 예외 발생
@@ -68,7 +69,7 @@ public class UserService {
         user.setVerificationToken(verificationToken);
 
         // 유저 정보 저장
-//        userRepository.save(user);
+        userRepository.save(user);
     }
 
     // ******* 수정 필요 ********
