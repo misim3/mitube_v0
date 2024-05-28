@@ -7,6 +7,7 @@ import com.misim.entity.VerificationToken;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import com.misim.repository.SmsVerificationRepository;
+import com.misim.repository.UserRepository;
 import com.misim.repository.VerificationTokenRepository;
 import com.misim.util.Base64Convertor;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class VerificationTokenService {
 
     private final VerificationTokenRepository verificationTokenRepository;
     private final SmsVerificationRepository smsVerificationRepository;
+    private final UserRepository userRepository;
 
     public User findUserByToken(String token) {
 

@@ -19,7 +19,7 @@ public class FindNicknameRequest implements Checker {
     @Override
     public void check() {
 
-        if (this.token == null || token.isBlank()) {
+        if (this.token == null || this.token.isBlank()) {
             throw new MitubeException(MitubeErrorCode.INVALID_SMS_TOKEN);
         }
     }
