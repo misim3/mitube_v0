@@ -72,8 +72,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    // ******* 수정 필요 ********
-    // 1. mail 전송에서 오류가 발생한 경우에 대한 예외 처리 고민 필요
+    @Transactional
     public void resetUserPassword(String nickname, String token) {
 
         User user = verificationTokenService.findUserByToken(token);
@@ -82,9 +81,11 @@ public class UserService {
             String randomPassword = TemporaryPasswordGenerator.generateRandomPassword();
             user.setPassword(passwordEncoder.encode(randomPassword));
 
-            userRepository.save(user);
-
             sendTemporaryPasswordByEmail(user.getEmail(), user.getPassword());
+
+            userRepository.save(user);
+        } else {
+            throw new MitubeException(MitubeErrorCode.NOT_FOUND_USER);
         }
     }
 

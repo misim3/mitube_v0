@@ -117,7 +117,7 @@ public class UserController {
 
         request.check();
 
-        userService.resetUserPassword(request.getNickname(), request.getCode());
+        userService.resetUserPassword(request.getNickname(), request.getToken());
     }
     
     
