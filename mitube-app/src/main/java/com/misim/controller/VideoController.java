@@ -41,7 +41,7 @@ public class VideoController {
             @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @PostMapping("/upload")
-    public CommonResponse<UploadVideosResponse> uploadVideos(@RequestParam MultipartFile file) {
+    public CommonResponse<UploadVideosResponse> uploadVideos(@RequestPart MultipartFile file) {
 
         // 파일 검사
         checkFile(file);

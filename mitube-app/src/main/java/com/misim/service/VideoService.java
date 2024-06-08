@@ -64,13 +64,13 @@ public class VideoService {
 
     private String makeFolder() {
 
-        String folderStr = UPLOAD_PATH + File.separator + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
+        String folderStr = UPLOAD_PATH + File.separator + TimeUtil.getNow().format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
 
         Path folder = Paths.get(folderStr);
 
         if (!Files.exists(folder)) {
             try {
-                Files.createDirectory(folder);
+                Files.createDirectories(folder);
             } catch (IOException e) {
                 throw new MitubeException(MitubeErrorCode.NOT_CREATED_DIR);
             }
