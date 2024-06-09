@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -85,7 +84,7 @@ public class VideoService {
 
     public void createVideos(CreateVideoRequest createVideoRequest) {
 
-        Long videoFileId = Base64Convertor.decode(createVideoRequest.getToken());
+        Long videoFileId = Base64Convertor.decode(createVideoRequest.getVideo_token());
 
         // 비디오 파일 확인
         if (!videoFileRepository.existsById(videoFileId)) {

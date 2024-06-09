@@ -21,8 +21,8 @@ public class CreateVideoRequest implements Checker {
     @Schema(name = "nickname", description = "동영상 소유자 닉네임", example = "hongkildong", requiredMode = Schema.RequiredMode.REQUIRED)
     private String nickname;
 
-    @Schema(name = "token", description = "동영상 파일 토큰", example = "HAK+==", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String token;
+    @Schema(name = "video_token", description = "동영상 파일 토큰", example = "HAK+==", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String video_token;
 
     @Schema(name = "categoryId", description = "동영상 카테고리 식별 정보", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer categoryId;
@@ -43,7 +43,7 @@ public class CreateVideoRequest implements Checker {
             throw new MitubeException(MitubeErrorCode.INVALID_NICKNAME);
         }
 
-        if (token == null || token.isBlank()) {
+        if (video_token == null || video_token.isBlank()) {
             throw new MitubeException(MitubeErrorCode.INVALID_VIDEO_TOKEN);
         }
 
