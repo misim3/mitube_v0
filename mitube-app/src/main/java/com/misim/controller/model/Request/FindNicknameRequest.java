@@ -1,6 +1,5 @@
 package com.misim.controller.model.Request;
 
-
 import com.misim.controller.model.Checker;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;

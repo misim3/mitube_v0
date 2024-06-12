@@ -12,14 +12,10 @@ import com.misim.exception.MitubeException;
 import com.misim.repository.CommentRepository;
 import com.misim.repository.UserRepository;
 import com.misim.repository.VideoRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 
 @Service
@@ -45,36 +41,8 @@ public class CommentService {
             comments = commentRepository.findDownCommentByVideoIdAndId(videoId, idx);
         }
 
-        // commment.isActive == false인 경우, CommentResponse의 content = "삭제된 댓글입니다.", writerNickname = "익명"으로 설정.
-
-        List<CommentResponse> commentResponseList = new ArrayList<>();
-        CommentResponse commentResponse;
-
-        for (Comment comment : comments) {
-            if (comment.getIsActive()) {
-                commentResponse = CommentResponse.builder()
-                    .commentId(comment.getId())
-                    .content(comment.getContent())
-                    .writerNickname(comment.getUser().getNickname())
-                    .build();
-            } else {
-                commentResponse = CommentResponse.builder()
-                    .commentId(comment.getId())
-                    .content("삭제된 댓글입니다.")
-                    .writerNickname("익명")
-                    .build();
-            }
-            commentResponseList.add(commentResponse);
-        }
-
         CommentListResponse commentListResponse = CommentListResponse.builder()
-            .commentResponses(comments.stream()
-                .map(c -> CommentResponse.builder()
-                    .commentId(c.getId())
-                    .content(c.getContent())
-                    .writerNickname(c.getUser().getNickname())
-                    .build())
-                .toList())
+            .commentResponses(convertCommentResponseList(comments))
             .build();
 
         if (comments.size() == 11) {
@@ -105,8 +73,12 @@ public class CommentService {
                 parentCommentId, videoId, idx);
         }
 
-        // commment.isActive == false인 경우, CommentResponse의 content = "삭제된 댓글입니다.", writerNickname = "익명"으로 설정.
+        return CommentListResponse.builder()
+            .commentResponses(convertCommentResponseList(comments))
+            .build();
+    }
 
+    private List<CommentResponse> convertCommentResponseList(List<Comment> comments) {
         List<CommentResponse> commentResponseList = new ArrayList<>();
         CommentResponse commentResponse;
 
@@ -127,15 +99,7 @@ public class CommentService {
             commentResponseList.add(commentResponse);
         }
 
-        return CommentListResponse.builder()
-            .commentResponses(comments.stream()
-                .map(c -> CommentResponse.builder()
-                    .commentId(c.getId())
-                    .content(c.getContent())
-                    .writerNickname(c.getUser().getNickname())
-                    .build())
-                .toList())
-            .build();
+        return commentResponseList;
     }
 
     public CreateCommentResponse createComments(CreateCommentRequest request) {

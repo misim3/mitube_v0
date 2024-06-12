@@ -1,9 +1,9 @@
 package com.misim.entity;
 
+import java.io.Serializable;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.io.Serializable;
 import lombok.Setter;
 
 @Getter

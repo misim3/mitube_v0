@@ -2,7 +2,6 @@ package com.misim.util;
 
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
-
 import java.util.Base64;
 
 public class Base64Convertor {

@@ -1,7 +1,6 @@
 package com.misim.controller.model.Request;
 
 import com.misim.controller.model.Checker;
-import com.misim.controller.model.VerificationDto;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import io.swagger.v3.oas.annotations.media.Schema;

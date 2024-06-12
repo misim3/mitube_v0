@@ -4,18 +4,17 @@ import com.misim.controller.model.Request.SignUpUserRequest;
 import com.misim.entity.TermAgreement;
 import com.misim.entity.User;
 import com.misim.entity.VerificationToken;
-import com.misim.exception.MitubeException;
 import com.misim.exception.MitubeErrorCode;
+import com.misim.exception.MitubeException;
 import com.misim.repository.UserRepository;
 import com.misim.util.TemporaryPasswordGenerator;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

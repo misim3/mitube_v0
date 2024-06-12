@@ -5,9 +5,8 @@ import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import com.misim.util.Validator;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-
 import java.util.List;
+import lombok.Data;
 
 @Data
 @Schema(description = "유저 등록 요청 DTO")

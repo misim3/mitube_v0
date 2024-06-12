@@ -4,7 +4,6 @@ import com.misim.controller.model.CommentDto;
 import com.misim.controller.model.Request.CreateCommentRequest;
 import com.misim.controller.model.Request.UpdateCommentRequest;
 import com.misim.controller.model.Response.CommentListResponse;
-import com.misim.controller.model.Response.CommentResponse;
 import com.misim.controller.model.Response.CreateCommentResponse;
 import com.misim.exception.CommonResponse;
 import com.misim.exception.MitubeErrorCode;
@@ -18,9 +17,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.Update;
-import org.springframework.data.domain.Slice;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;

@@ -1,25 +1,16 @@
 package com.misim.service;
 
 import com.misim.controller.model.Response.VerifySMSResponse;
-import com.misim.controller.model.VerificationDto;
 import com.misim.entity.SmsVerification;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import com.misim.repository.SmsVerificationRepository;
 import com.misim.util.Base64Convertor;
-import com.misim.util.TimeUtil;
+import java.time.LocalDateTime;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
-import net.nurigo.sdk.NurigoApp;
-import net.nurigo.sdk.message.model.Message;
-import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
-import net.nurigo.sdk.message.response.SingleMessageSentResponse;
-import net.nurigo.sdk.message.service.DefaultMessageService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor

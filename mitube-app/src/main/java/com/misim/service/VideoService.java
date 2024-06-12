@@ -4,24 +4,34 @@ import com.misim.controller.model.Request.CreateVideoRequest;
 import com.misim.controller.model.Response.ReactionResponse;
 import com.misim.controller.model.Response.StartWatchingVideoResponse;
 import com.misim.controller.model.Response.VideoResponse;
-import com.misim.entity.*;
+import com.misim.entity.Subscription;
+import com.misim.entity.User;
+import com.misim.entity.Video;
+import com.misim.entity.VideoCategory;
+import com.misim.entity.VideoFile;
+import com.misim.entity.View;
+import com.misim.entity.WatchingInfo;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
-import com.misim.repository.*;
+import com.misim.repository.SubscriptionRepository;
+import com.misim.repository.UserRepository;
+import com.misim.repository.VideoFileRepository;
+import com.misim.repository.VideoRepository;
+import com.misim.repository.WatchingInfoRepository;
 import com.misim.util.Base64Convertor;
 import com.misim.util.TimeUtil;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -35,7 +45,6 @@ public class VideoService {
     private final UserRepository userRepository;
     private final WatchingInfoRepository watchingInfoRepository;
     private final SubscriptionRepository subscriptionRepository;
-    private final ViewRepository viewRepository;
     private final ReactionService reactionService;
     private final ViewService viewService;
 

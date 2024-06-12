@@ -1,13 +1,12 @@
 package com.misim.entity;
 
 import com.misim.util.TimeUtil;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor

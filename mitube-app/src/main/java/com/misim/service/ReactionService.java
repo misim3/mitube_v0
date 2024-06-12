@@ -7,11 +7,9 @@ import com.misim.exception.MitubeException;
 import com.misim.repository.ReactionRepository;
 import com.misim.repository.UserRepository;
 import com.misim.repository.VideoRepository;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.swing.text.html.Option;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
