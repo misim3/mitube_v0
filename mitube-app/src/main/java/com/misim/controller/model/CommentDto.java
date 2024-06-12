@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class CommentDto implements Checker{
+public class CommentDto implements Checker {
 
     @Schema(name = "commentId", description = "댓글 식별 정보", example = "1", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long commentId;

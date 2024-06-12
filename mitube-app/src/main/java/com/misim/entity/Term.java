@@ -26,7 +26,8 @@ public class Term {
     private Integer termGroup;
 
     @Builder
-    public Term(String title, String content, Boolean isRequired, Integer version, Integer termGroup) {
+    public Term(String title, String content, Boolean isRequired, Integer version,
+        Integer termGroup) {
         this.title = title;
         this.content = content;
         this.isRequired = isRequired;

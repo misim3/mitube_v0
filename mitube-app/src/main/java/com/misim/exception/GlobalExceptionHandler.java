@@ -14,7 +14,8 @@ public class GlobalExceptionHandler {
 
         e.fillInStackTrace();
 
-        CommonResponse<?> commonResponse = new CommonResponse<>(e.getErrorCode().getCode(), e.getErrorCode().getMessage(), null);
+        CommonResponse<?> commonResponse = new CommonResponse<>(e.getErrorCode().getCode(),
+            e.getErrorCode().getMessage(), null);
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(commonResponse);
     }
 
@@ -24,7 +25,10 @@ public class GlobalExceptionHandler {
 
         e.fillInStackTrace();
 
-        CommonResponse<?> commonResponse = new CommonResponse<>(MitubeErrorCode.UNKNOWN_EXCEPTION.getCode(), MitubeErrorCode.UNKNOWN_EXCEPTION.getMessage(), null);
-        return ResponseEntity.status(MitubeErrorCode.UNKNOWN_EXCEPTION.getHttpStatus()).body(commonResponse);
+        CommonResponse<?> commonResponse = new CommonResponse<>(
+            MitubeErrorCode.UNKNOWN_EXCEPTION.getCode(),
+            MitubeErrorCode.UNKNOWN_EXCEPTION.getMessage(), null);
+        return ResponseEntity.status(MitubeErrorCode.UNKNOWN_EXCEPTION.getHttpStatus())
+            .body(commonResponse);
     }
 }

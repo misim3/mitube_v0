@@ -33,14 +33,14 @@ public class RedisConfig {
         redisTemplate.setValueSerializer(new StringRedisSerializer());
         return redisTemplate;
     }
-
-    @Bean
-    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
-
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(listenerAdapter, new PatternTopic("keyspace"));
-
-        return container;
-    }
+//
+//    @Bean
+//    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+//
+//        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+//        container.setConnectionFactory(connectionFactory);
+//        container.addMessageListener(listenerAdapter, new PatternTopic("keyspace"));
+//
+//        return container;
+//    }
 }

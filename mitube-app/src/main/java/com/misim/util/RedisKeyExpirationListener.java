@@ -9,6 +9,7 @@ public class RedisKeyExpirationListener implements MessageListener {
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
-        System.out.println("######## onMessage pattern: " + new String(pattern) + '|' + message.toString());
+        System.out.println(
+            "######## onMessage pattern: " + new String(pattern) + '|' + message.toString());
     }
 }

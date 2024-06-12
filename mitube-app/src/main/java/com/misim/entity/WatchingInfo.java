@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
-public class WatchingInfo implements Serializable{
+public class WatchingInfo implements Serializable {
 
     private Long userId;
 

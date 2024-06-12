@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "term_agreements")
 @NoArgsConstructor
-public class TermAgreement extends BaseTimeEntity{
+public class TermAgreement extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

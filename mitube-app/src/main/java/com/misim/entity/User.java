@@ -8,9 +8,10 @@ import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "users", indexes = {@Index(name = "idx_email", columnList = "email", unique = true), @Index(name = "idx_nickname", columnList = "nickname", unique = true)})
+@Table(name = "users", indexes = {@Index(name = "idx_email", columnList = "email", unique = true),
+    @Index(name = "idx_nickname", columnList = "nickname", unique = true)})
 @NoArgsConstructor
-public class User extends BaseTimeEntity{
+public class User extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

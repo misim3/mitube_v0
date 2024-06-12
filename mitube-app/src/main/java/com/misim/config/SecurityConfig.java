@@ -17,14 +17,14 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
-                .requestMatchers(
-                        "/users/**",
-                        "/terms/**",
-                        "/videos/**",
-                        "/comments/**",
-                        "/channels/**",
-                        "/home"
-                );
+            .requestMatchers(
+                "/users/**",
+                "/terms/**",
+                "/videos/**",
+                "/comments/**",
+                "/channels/**",
+                "/home"
+            );
     }
 
     @Bean

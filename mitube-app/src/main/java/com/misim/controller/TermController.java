@@ -28,35 +28,36 @@ public class TermController {
     // 모든 약관 타이틀 제시
     @Operation(summary = "전체 약관 전송", description = "전체 약관 정보 가져오기")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "전체 약관 정보 전달 성공.")})
+        @ApiResponse(responseCode = "200", description = "전체 약관 정보 전달 성공.")})
     @GetMapping("/agree")
     public CommonResponse<TermListResponse> getTerms() {
 
         TermListResponse terms = termService.getAllTerms();
 
         return CommonResponse
-                .<TermListResponse>builder()
-                .body(terms)
-                .build();
+            .<TermListResponse>builder()
+            .body(terms)
+            .build();
     }
-    
+
     // 자세히 버튼 클릭 시 해당 약관에 대한 자세한 내용 제시
     @Operation(summary = "약관 상세 정보 전송", description = "해당 약관 정책 정보 가져오기")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "제목으로 약관 조회 성공."),
-            @ApiResponse(responseCode = "400", description = "제목 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "제목으로 약관 조회 성공."),
+        @ApiResponse(responseCode = "400", description = "제목 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @GetMapping("/policy")
-    public CommonResponse<TermDetailResponse> getTermPolicy(@RequestParam @Parameter(description = "약관 제목", in = ParameterIn.QUERY, example = "개인 정보 보호") String title) {
+    public CommonResponse<TermDetailResponse> getTermPolicy(
+        @RequestParam @Parameter(description = "약관 제목", in = ParameterIn.QUERY, example = "개인 정보 보호") String title) {
 
         checkTitle(title);
 
         TermDetailResponse response = termService.getTermByTitle(title);
 
         return CommonResponse
-                .<TermDetailResponse>builder()
-                .body(response)
-                .build();
+            .<TermDetailResponse>builder()
+            .body(response)
+            .build();
     }
 
     private void checkTitle(String title) {

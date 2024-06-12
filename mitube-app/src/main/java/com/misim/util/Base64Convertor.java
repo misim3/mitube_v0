@@ -6,6 +6,7 @@ import com.misim.exception.MitubeException;
 import java.util.Base64;
 
 public class Base64Convertor {
+
     public static String encode(Long key) {
 
         byte[] originalBytes = key.toString().getBytes();

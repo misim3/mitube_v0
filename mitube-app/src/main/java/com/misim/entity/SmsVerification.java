@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 public class SmsVerification {
+
     private static final long EXPIRATION_MINUTES = 3;
     private static final long NUMBER_OF_FAILURES = 3;
 

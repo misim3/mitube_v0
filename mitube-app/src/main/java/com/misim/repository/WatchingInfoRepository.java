@@ -35,10 +35,10 @@ public class WatchingInfoRepository {
     public List<WatchingInfo> findLastTopTenByUserId(Long userId) {
         Map<String, WatchingInfo> watchingInfoMap = hashOperations.entries(REDIS_KEY);
         return watchingInfoMap.values().stream()
-                .filter(info -> info.getUserId().equals(userId))
-                .sorted(Comparator.comparing(WatchingInfo::getModifiedDate).reversed())
-                .limit(10)
-                .toList();
+            .filter(info -> info.getUserId().equals(userId))
+            .sorted(Comparator.comparing(WatchingInfo::getModifiedDate).reversed())
+            .limit(10)
+            .toList();
     }
 
     private String generateHashKey(WatchingInfo watchingInfo) {

@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum MitubeErrorCode implements ErrorCode{
+public enum MitubeErrorCode implements ErrorCode {
 
     NOT_MATCH_PASSWORDS(HttpStatus.BAD_REQUEST, "비밀번호와 확인 비밀번호가 일치하지 않습니다.", 10000),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호 형식에 맞지 않습니다.", 10001),
@@ -73,7 +73,8 @@ public enum MitubeErrorCode implements ErrorCode{
     INVALID_REACTION_USER(HttpStatus.BAD_REQUEST, "리액션 유저 형식에 맞지 않습니다.", 11003),
     NOT_FOUND_REACTION(HttpStatus.BAD_REQUEST, "리액션을 찾을 수 없습니다.", 11004),
 
-    UNKNOWN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 에러가 발생했습니다.", 99999),;
+    UNKNOWN_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "알 수 없는 에러가 발생했습니다.", 99999),
+    ;
 
     private final HttpStatus httpStatus;
     private final String message;

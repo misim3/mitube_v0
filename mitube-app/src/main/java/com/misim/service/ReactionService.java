@@ -34,9 +34,9 @@ public class ReactionService {
         Optional<Reaction> reaction = reactionRepository.findById(userId);
 
         return reaction.map(r -> ReactionResponse.builder()
-                        .type(r.getType())
-                        .build())
-                .orElse(null);
+                .type(r.getType())
+                .build())
+            .orElse(null);
     }
 
     public void checking(String type, Long userId, Long videoId) {
@@ -50,7 +50,7 @@ public class ReactionService {
         }
 
         Reaction reaction = reactionRepository.findByUserIdAndVideoId(userId, videoId)
-                .orElse(null);
+            .orElse(null);
 
         if (reaction != null) {
 
@@ -60,13 +60,13 @@ public class ReactionService {
         } else {
 
             reaction = Reaction.builder()
-                    .type(type)
-                    .isActive(true)
-                    .user(userRepository.findById(userId)
-                            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_USER)))
-                    .video(videoRepository.findById(videoId)
-                            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO)))
-                    .build();
+                .type(type)
+                .isActive(true)
+                .user(userRepository.findById(userId)
+                    .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_USER)))
+                .video(videoRepository.findById(videoId)
+                    .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO)))
+                .build();
         }
 
         reactionRepository.save(reaction);
@@ -87,7 +87,7 @@ public class ReactionService {
         }
 
         Reaction reaction = reactionRepository.findByUserIdAndVideoId(userId, videoId)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_REACTION));
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_REACTION));
 
         reaction.setType(type);
         reaction.setIsActive(false);

@@ -63,7 +63,8 @@ public class VideoService {
 
     private String makeFolder() {
 
-        String folderStr = UPLOAD_PATH + File.separator + TimeUtil.getNow().format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
+        String folderStr = UPLOAD_PATH + File.separator + TimeUtil.getNow()
+            .format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
 
         Path folder = Paths.get(folderStr);
 
@@ -102,16 +103,16 @@ public class VideoService {
         }
 
         Video video = Video.builder()
-                .title(createVideoRequest.getTitle())
-                .description(createVideoRequest.getDescription())
-                .categoryId(createVideoRequest.getCategoryId())
-                .views(0L)
-                .thumbnailUrl("")
-                .build();
+            .title(createVideoRequest.getTitle())
+            .description(createVideoRequest.getDescription())
+            .categoryId(createVideoRequest.getCategoryId())
+            .views(0L)
+            .thumbnailUrl("")
+            .build();
 
         // 비디오 파일 연결
-        VideoFile videoFile =  videoFileRepository.findById(videoFileId)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO_FILE));
+        VideoFile videoFile = videoFileRepository.findById(videoFileId)
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO_FILE));
 
         video.setVideoFile(videoFile);
 
@@ -124,7 +125,7 @@ public class VideoService {
         videoRepository.save(video);
     }
 
-    public StartWatchingVideoResponse startWatchingVideo (Long videoId, Long userId) {
+    public StartWatchingVideoResponse startWatchingVideo(Long videoId, Long userId) {
 
         View view = viewService.getIncrementView(videoId);
 
@@ -141,10 +142,10 @@ public class VideoService {
         } else {
 
             watchingInfo = WatchingInfo.builder()
-                    .videoId(videoId)
-                    .userId(userId)
-                    .watchingTime(0L)
-                    .build();
+                .videoId(videoId)
+                .userId(userId)
+                .watchingTime(0L)
+                .build();
 
             watchingInfoRepository.save(watchingInfo);
 
@@ -154,10 +155,10 @@ public class VideoService {
         ReactionResponse reactionResponse = reactionService.getReaction(userId, videoId);
 
         return StartWatchingVideoResponse.builder()
-                .watchingTime(watchingInfo.getWatchingTime())
-                .views(view.getViews())
-                .reactionResponse(reactionResponse)
-                .build();
+            .watchingTime(watchingInfo.getWatchingTime())
+            .views(view.getViews())
+            .reactionResponse(reactionResponse)
+            .build();
     }
 
     public void updateWatchingVideoInfo(Long videoId, Long userId, Long watchingTime) {
@@ -183,7 +184,7 @@ public class VideoService {
         List<Video> videos = videoRepository.findTopTen();
 
         // 유료 회원 여부 판단해서 광고
-        
+
         return VideoResponse.convertVideos(videos);
     }
 
@@ -212,7 +213,7 @@ public class VideoService {
         List<WatchingInfo> watchingInfos = watchingInfoRepository.findLastTopTenByUserId(userId);
 
         List<Video> videos = videoRepository.findAllById(
-                watchingInfos.stream()
+            watchingInfos.stream()
                 .map(WatchingInfo::getVideoId)
                 .toList()
         );
@@ -231,12 +232,13 @@ public class VideoService {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_USER);
         }
 
-        List<Subscription> subscriptions = subscriptionRepository.findSubscriptionsBySubscriberId(userId);
+        List<Subscription> subscriptions = subscriptionRepository.findSubscriptionsBySubscriberId(
+            userId);
 
         List<Video> videos = subscriptions.stream()
-                .limit(10)
-                .map(s -> videoRepository.findTopByUserId(s.getChannel().getOwner().getId()))
-                .toList();
+            .limit(10)
+            .map(s -> videoRepository.findTopByUserId(s.getChannel().getOwner().getId()))
+            .toList();
 
         return VideoResponse.convertVideos(videos);
     }

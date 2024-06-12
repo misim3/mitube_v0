@@ -22,15 +22,15 @@ public class SubscriptionService {
     public void subscribing(Long channelId, Long subscriberId) {
 
         Channel channel = channelRepository.findById(channelId)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_CHANNEL));
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_CHANNEL));
 
         User subscriber = userRepository.findById(subscriberId)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_SUBSCRIBER));
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_SUBSCRIBER));
 
         Subscription subscription = Subscription.builder()
-                .channel(channel)
-                .subscriber(subscriber)
-                .build();
+            .channel(channel)
+            .subscriber(subscriber)
+            .build();
 
         subscriptionRepository.save(subscription);
     }
@@ -45,8 +45,9 @@ public class SubscriptionService {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_SUBSCRIBER);
         }
 
-        Subscription subscription = subscriptionRepository.findByChannelIdAndSubscriberId(channelId, subscriberId)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_SUBSCRIPTION));
+        Subscription subscription = subscriptionRepository.findByChannelIdAndSubscriberId(channelId,
+                subscriberId)
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_SUBSCRIPTION));
 
         subscriptionRepository.delete(subscription);
     }

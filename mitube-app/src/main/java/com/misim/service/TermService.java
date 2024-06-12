@@ -23,29 +23,29 @@ public class TermService {
 
         List<Term> terms = termRepository.findTermGroupByTermGroupAndMaxVersion();
 
-        List <TermResponse> termResponses = terms.stream()
-                .map(term -> TermResponse.builder()
-                        .title(term.getTitle())
-                        .isRequired(term.getIsRequired())
-                        .build())
-                .toList();
+        List<TermResponse> termResponses = terms.stream()
+            .map(term -> TermResponse.builder()
+                .title(term.getTitle())
+                .isRequired(term.getIsRequired())
+                .build())
+            .toList();
 
         return TermListResponse
-                .builder()
-                .termResponseList(termResponses)
-                .build();
+            .builder()
+            .termResponseList(termResponses)
+            .build();
     }
 
     public TermDetailResponse getTermByTitle(String title) {
 
         Term term = termRepository.findTermByTitleAndMaxVersion(title)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_TERM));
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_TERM));
 
         return TermDetailResponse.detailBuidler()
-                .title(term.getTitle())
-                .content(term.getContent())
-                .isRequired(term.getIsRequired())
-                .build();
+            .title(term.getTitle())
+            .content(term.getContent())
+            .isRequired(term.getIsRequired())
+            .build();
     }
 
     public void checkTerms(List<String> checkedTermTitles) {

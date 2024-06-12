@@ -13,7 +13,7 @@ public class CommonResponse<T> {
 
     @Schema(description = "응답 코드")
     private int code;
-    
+
     @Schema(description = "응답 메시지")
     private String message;
 

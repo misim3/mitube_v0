@@ -17,11 +17,11 @@ public class HomeService {
     public HomeResponse getHome(Long userId) {
 
         return HomeResponse.builder()
-                .categoryList(VideoCategory.getCategoryList())
-                .hotVideoList(null)//videoService.getHotVideos())
-                .newVideoList(videoService.getNewVideos())
-                .watchingVideoList(videoService.getWatchingVideos(userId))
-                .subscribingChannelNewVideoList(videoService.getSubscribingChannelNewVideos(userId))
-                .build();
+            .categoryList(VideoCategory.getCategoryList())
+            .hotVideoList(null)//videoService.getHotVideos())
+            .newVideoList(videoService.getNewVideos())
+            .watchingVideoList(videoService.getWatchingVideos(userId))
+            .subscribingChannelNewVideoList(videoService.getSubscribingChannelNewVideos(userId))
+            .build();
     }
 }

@@ -72,12 +72,13 @@ public class SmsService {
 
     private SmsVerification makeSmsVerification(String phoneNumber, String code) {
 
-        SmsVerification smsVerification = smsVerificationRepository.findTopByPhoneNumberOrderByExpiryDateDesc(phoneNumber);
+        SmsVerification smsVerification = smsVerificationRepository.findTopByPhoneNumberOrderByExpiryDateDesc(
+            phoneNumber);
 
         if (smsVerification == null) {
             smsVerification = SmsVerification.builder()
-                    .phoneNumber(phoneNumber)
-                    .build();
+                .phoneNumber(phoneNumber)
+                .build();
         }
 
         smsVerification.setVerificationCode(code);
@@ -101,7 +102,8 @@ public class SmsService {
 
     public VerifySMSResponse matchSMS(String phoneNumber, String code, LocalDateTime current) {
 
-        SmsVerification smsVerification = smsVerificationRepository.findTopByPhoneNumberOrderByExpiryDateDesc(phoneNumber);
+        SmsVerification smsVerification = smsVerificationRepository.findTopByPhoneNumberOrderByExpiryDateDesc(
+            phoneNumber);
 
         if (smsVerification == null) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_CODE);
@@ -133,8 +135,8 @@ public class SmsService {
     public boolean checkVerification(String token) {
 
         SmsVerification smsVerification = smsVerificationRepository
-                .findById(Base64Convertor.decode(token))
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_SMS_TOKEN));
+            .findById(Base64Convertor.decode(token))
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_SMS_TOKEN));
 
         return smsVerification.getIsVerified();
     }

@@ -52,19 +52,21 @@ public class UserService {
 
         // userDto -> user로 변환 (비밀번호 암호화)
         User user = User.builder()
-                .nickname(signUpUserRequest.getNickname())
-                .password(passwordEncoder.encode(signUpUserRequest.getPassword()))
-                .email(signUpUserRequest.getEmail())
-                .phoneNumber(signUpUserRequest.getPhoneNumber())
-                .build();
+            .nickname(signUpUserRequest.getNickname())
+            .password(passwordEncoder.encode(signUpUserRequest.getPassword()))
+            .email(signUpUserRequest.getEmail())
+            .phoneNumber(signUpUserRequest.getPhoneNumber())
+            .build();
 
         // 유저 정보와 약관 동의 정보 연결
-        List<TermAgreement> termAgreements = termAgreementService.getTermAgreements(user, signUpUserRequest.getCheckedTermTitles());
+        List<TermAgreement> termAgreements = termAgreementService.getTermAgreements(user,
+            signUpUserRequest.getCheckedTermTitles());
 
         user.setTermAgreements(termAgreements);
 
         // 유저 정보와 본인 인증 정보 연결
-        VerificationToken verificationToken = verificationTokenService.getVerificationToken(user, signUpUserRequest.getToken());
+        VerificationToken verificationToken = verificationTokenService.getVerificationToken(user,
+            signUpUserRequest.getToken());
 
         user.setVerificationToken(verificationToken);
 
@@ -93,8 +95,9 @@ public class UserService {
 
         String fromAddress = "hongkildong990@gmail.com";
         String subject = "Temporary Password Notification";
-        String content = "Hello,\n\nWe are sending you a temporary password.\n\nTemporary Password: " + password + "\n\nPlease be sure to change your password after logging in.\n\nThank you.";
-
+        String content =
+            "Hello,\n\nWe are sending you a temporary password.\n\nTemporary Password: " + password
+                + "\n\nPlease be sure to change your password after logging in.\n\nThank you.";
 
         SimpleMailMessage mail = new SimpleMailMessage();
         mail.setTo(toAddress);

@@ -48,46 +48,56 @@ public class CommentController {
     // commentService 메소드 호출 전, scrollDirection 데이터 검사
     @Operation(summary = "댓글 목록 요청", description = "동영상의 댓글 목록 10개 전달")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "댓글 목록 요청 성공"),
-            @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "댓글 목록 요청 성공"),
+        @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @GetMapping("/{videoId}")
-    public CommonResponse<CommentListResponse> getParentComments(@PathVariable @Parameter(name = "videoId", description = "시청할 동영상 식별 정보", required = true) Long videoId, @RequestParam @Parameter(name = "idx", description = "댓글의 인덱스 정보") Long idx, @RequestParam @Parameter(name = "scrollDirection", description = "댓글 목록 스크롤 방향으로 up, down만 가능하다.") String scrollDirection) {
+    public CommonResponse<CommentListResponse> getParentComments(
+        @PathVariable @Parameter(name = "videoId", description = "시청할 동영상 식별 정보", required = true) Long videoId,
+        @RequestParam @Parameter(name = "idx", description = "댓글의 인덱스 정보") Long idx,
+        @RequestParam @Parameter(name = "scrollDirection", description = "댓글 목록 스크롤 방향으로 up, down만 가능하다.") String scrollDirection) {
 
         checkRequests(idx, scrollDirection);
 
-        CommentListResponse comments = commentService.getParentComments(videoId, idx, scrollDirection);
+        CommentListResponse comments = commentService.getParentComments(videoId, idx,
+            scrollDirection);
 
         return CommonResponse.<CommentListResponse>builder()
-                .body(comments)
-                .build();
+            .body(comments)
+            .build();
     }
 
     @Operation(summary = "대댓글 목록 요청", description = "동영상 댓글의 대댓글 목록 10개 전달")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "대댓글 목록 요청 성공"),
-            @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "대댓글 목록 요청 성공"),
+        @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @GetMapping("/{videoId}/{parentCommentId}")
-    public CommonResponse<CommentListResponse> getChildComments(@PathVariable @Parameter(name = "videoId", description = "시청할 동영상 식별 정보", required = true) Long videoId, @PathVariable @Parameter(name = "parentCommentId", description = "대댓글이 달린 댓글의 식별 정보") Long parentCommentId, @RequestParam @Parameter(name = "idx", description = "댓글의 인덱스 정보") Long idx, @RequestParam @Parameter(name = "scrollDirection", description = "댓글 목록 스크롤 방향으로 up, down만 가능하다.") String scrollDirection) {
+    public CommonResponse<CommentListResponse> getChildComments(
+        @PathVariable @Parameter(name = "videoId", description = "시청할 동영상 식별 정보", required = true) Long videoId,
+        @PathVariable @Parameter(name = "parentCommentId", description = "대댓글이 달린 댓글의 식별 정보") Long parentCommentId,
+        @RequestParam @Parameter(name = "idx", description = "댓글의 인덱스 정보") Long idx,
+        @RequestParam @Parameter(name = "scrollDirection", description = "댓글 목록 스크롤 방향으로 up, down만 가능하다.") String scrollDirection) {
 
         checkRequests(idx, scrollDirection);
 
-        CommentListResponse comments = commentService.getChildComments(videoId, parentCommentId, idx, scrollDirection);
+        CommentListResponse comments = commentService.getChildComments(videoId, parentCommentId,
+            idx, scrollDirection);
 
         return CommonResponse.<CommentListResponse>builder()
-                .body(comments)
-                .build();
+            .body(comments)
+            .build();
     }
 
     @Operation(summary = "댓글 생성", description = "동영상 댓글을 생성합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "댓글 생성 성공"),
-            @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "댓글 생성 성공"),
+        @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @PostMapping("/create")
-    public CommonResponse<CreateCommentResponse> createComments(@RequestBody CreateCommentRequest request) {
-        
+    public CommonResponse<CreateCommentResponse> createComments(
+        @RequestBody CreateCommentRequest request) {
+
         request.check();
 
         CreateCommentResponse response = commentService.createComments(request);
@@ -97,8 +107,8 @@ public class CommentController {
 
     @Operation(summary = "댓글 수정", description = "동영상 댓글을 수정합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "댓글 수정 성공"),
-            @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "댓글 수정 성공"),
+        @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @PostMapping("/update")
     public void updateComments(@RequestBody UpdateCommentRequest request) {
@@ -110,8 +120,8 @@ public class CommentController {
 
     @Operation(summary = "댓글 삭제", description = "동영상 댓글을 삭제합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "댓글 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "댓글 삭제 성공"),
+        @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @PostMapping("/delete")
     public void deleteComments(@RequestBody CommentDto request) {
@@ -124,7 +134,7 @@ public class CommentController {
     private void checkRequests(Long idx, String scrollDirection) {
 
         if (idx < 1) {
-            throw  new MitubeException(MitubeErrorCode.INVALID_COMMENT_INDEX);
+            throw new MitubeException(MitubeErrorCode.INVALID_COMMENT_INDEX);
         }
 
         if (scrollDirection.isBlank() || !scroll.contains(scrollDirection)) {

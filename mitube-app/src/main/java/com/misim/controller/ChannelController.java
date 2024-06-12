@@ -27,8 +27,8 @@ public class ChannelController {
     @Operation(summary = "채널 구독", description = "채널을 구독합니다.")
     @Parameter(name = "SubscribingRequest", description = "채널 구독 요청을 위한 정보", required = true)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "채널 구독 성공"),
-            @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "채널 구독 성공"),
+        @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @PostMapping("/subscribe")
     public void subscribing(@RequestBody SubscribingRequest request) {
@@ -41,8 +41,8 @@ public class ChannelController {
     @Operation(summary = "채널 구독 취소", description = "채널 구독을 취소합니다.")
     @Parameter(name = "SubscribingRequest", description = "채널 구독 취소 요청을 위한 정보", required = true)
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "채널 구독 취소 성공"),
-            @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "채널 구독 취소 성공"),
+        @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @PostMapping("/unsubscribe")
     public void unsubscribing(@RequestBody SubscribingRequest request) {

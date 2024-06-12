@@ -18,17 +18,15 @@ public class ViewService {
     public View getIncrementView(Long videoId) {
 
         if (viewRepository.exists(videoId.toString())) {
-            // 캐시 힛
             viewRepository.incrementViewCount(videoId.toString());
             return viewRepository.findViewByVideoId(videoId.toString());
 
         } else {
-            // 캐시 미스
             View view = View.builder()
-                    .videoId(videoId)
-                    .views(videoRepository.findViewsByVideoId(videoId)
-                            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO)) + 1)
-                    .build();
+                .videoId(videoId)
+                .views(videoRepository.findViewsByVideoId(videoId)
+                    .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO)) + 1)
+                .build();
 
             viewRepository.save(view);
 
