@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Schema(description = "인증 관련 DTO")
-public class VerificationDto implements Checker{
+public class VerificationDto implements Checker {
 
     @Schema(name = "code", description = "코드", example = "123456", requiredMode = Schema.RequiredMode.REQUIRED)
     private String code;

@@ -4,25 +4,34 @@ import com.misim.controller.model.Request.CreateVideoRequest;
 import com.misim.controller.model.Response.ReactionResponse;
 import com.misim.controller.model.Response.StartWatchingVideoResponse;
 import com.misim.controller.model.Response.VideoResponse;
-import com.misim.entity.*;
+import com.misim.entity.Subscription;
+import com.misim.entity.User;
+import com.misim.entity.Video;
+import com.misim.entity.VideoCategory;
+import com.misim.entity.VideoFile;
+import com.misim.entity.View;
+import com.misim.entity.WatchingInfo;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
-import com.misim.repository.*;
+import com.misim.repository.SubscriptionRepository;
+import com.misim.repository.UserRepository;
+import com.misim.repository.VideoFileRepository;
+import com.misim.repository.VideoRepository;
+import com.misim.repository.WatchingInfoRepository;
 import com.misim.util.Base64Convertor;
 import com.misim.util.TimeUtil;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -36,8 +45,8 @@ public class VideoService {
     private final UserRepository userRepository;
     private final WatchingInfoRepository watchingInfoRepository;
     private final SubscriptionRepository subscriptionRepository;
-    private final ViewRepository viewRepository;
     private final ReactionService reactionService;
+    private final ViewService viewService;
 
     public String uploadVideos(MultipartFile file) {
 
@@ -63,13 +72,14 @@ public class VideoService {
 
     private String makeFolder() {
 
-        String folderStr = UPLOAD_PATH + File.separator + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
+        String folderStr = UPLOAD_PATH + File.separator + TimeUtil.getNow()
+            .format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
 
         Path folder = Paths.get(folderStr);
 
         if (!Files.exists(folder)) {
             try {
-                Files.createDirectory(folder);
+                Files.createDirectories(folder);
             } catch (IOException e) {
                 throw new MitubeException(MitubeErrorCode.NOT_CREATED_DIR);
             }
@@ -84,7 +94,7 @@ public class VideoService {
 
     public void createVideos(CreateVideoRequest createVideoRequest) {
 
-        Long videoFileId = Base64Convertor.decode(createVideoRequest.getToken());
+        Long videoFileId = Base64Convertor.decode(createVideoRequest.getVideo_token());
 
         // 비디오 파일 확인
         if (!videoFileRepository.existsById(videoFileId)) {
@@ -102,16 +112,16 @@ public class VideoService {
         }
 
         Video video = Video.builder()
-                .title(createVideoRequest.getTitle())
-                .description(createVideoRequest.getDescription())
-                .categoryId(createVideoRequest.getCategoryId())
-                .views(0L)
-                .thumbnailUrl("")
-                .build();
+            .title(createVideoRequest.getTitle())
+            .description(createVideoRequest.getDescription())
+            .categoryId(createVideoRequest.getCategoryId())
+            .views(0L)
+            .thumbnailUrl("")
+            .build();
 
         // 비디오 파일 연결
-        VideoFile videoFile =  videoFileRepository.findById(videoFileId)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO_FILE));
+        VideoFile videoFile = videoFileRepository.findById(videoFileId)
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO_FILE));
 
         video.setVideoFile(videoFile);
 
@@ -124,19 +134,9 @@ public class VideoService {
         videoRepository.save(video);
     }
 
-    public StartWatchingVideoResponse startWatchingVideo (Long videoId, Long userId) {
+    public StartWatchingVideoResponse startWatchingVideo(Long videoId, Long userId) {
 
-        Video video = videoRepository.findById(videoId)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
-
-        View view = View.builder()
-                .videoId(videoId)
-                .build();
-
-        video.setViews(video.getViews() + 1);
-
-        videoRepository.save(video);
-        viewRepository.save(view, video.getViews());
+        View view = viewService.getIncrementView(videoId);
 
         WatchingInfo watchingInfo;
 
@@ -151,10 +151,10 @@ public class VideoService {
         } else {
 
             watchingInfo = WatchingInfo.builder()
-                    .videoId(videoId)
-                    .userId(userId)
-                    .watchingTime(0L)
-                    .build();
+                .videoId(videoId)
+                .userId(userId)
+                .watchingTime(0L)
+                .build();
 
             watchingInfoRepository.save(watchingInfo);
 
@@ -164,10 +164,10 @@ public class VideoService {
         ReactionResponse reactionResponse = reactionService.getReaction(userId, videoId);
 
         return StartWatchingVideoResponse.builder()
-                .watchingTime(watchingInfo.getWatchingTime())
-                .views(video.getViews())
-                .reactionResponse(reactionResponse)
-                .build();
+            .watchingTime(watchingInfo.getWatchingTime())
+            .views(view.getCount())
+            .reactionResponse(reactionResponse)
+            .build();
     }
 
     public void updateWatchingVideoInfo(Long videoId, Long userId, Long watchingTime) {
@@ -193,20 +193,20 @@ public class VideoService {
         List<Video> videos = videoRepository.findTopTen();
 
         // 유료 회원 여부 판단해서 광고
-        
-        return VideoResponse.convertVideos(videos);
-    }
-
-    public List<VideoResponse> getHotVideos() {
-
-        Set<View> viewSet = viewRepository.findHotTen();
-
-        List<Long> videoIds = viewSet.stream().map(View::getVideoId).toList();
-
-        List<Video> videos = videoRepository.findAllById(videoIds);
 
         return VideoResponse.convertVideos(videos);
     }
+
+//    public List<VideoResponse> getHotVideos() {
+//
+//        Set<View> viewSet = viewRepository.findHotTen();
+//
+//        List<Long> videoIds = viewSet.stream().map(View::getVideoId).toList();
+//
+//        List<Video> videos = videoRepository.findAllById(videoIds);
+//
+//        return VideoResponse.convertVideos(videos);
+//    }
 
     public List<VideoResponse> getWatchingVideos(Long userId) {
 
@@ -222,7 +222,7 @@ public class VideoService {
         List<WatchingInfo> watchingInfos = watchingInfoRepository.findLastTopTenByUserId(userId);
 
         List<Video> videos = videoRepository.findAllById(
-                watchingInfos.stream()
+            watchingInfos.stream()
                 .map(WatchingInfo::getVideoId)
                 .toList()
         );
@@ -241,12 +241,13 @@ public class VideoService {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_USER);
         }
 
-        List<Subscription> subscriptions = subscriptionRepository.findSubscriptionsBySubscriberId(userId);
+        List<Subscription> subscriptions = subscriptionRepository.findSubscriptionsBySubscriberId(
+            userId);
 
         List<Video> videos = subscriptions.stream()
-                .limit(10)
-                .map(s -> videoRepository.findTopByUserId(s.getChannel().getOwner().getId()))
-                .toList();
+            .limit(10)
+            .map(s -> videoRepository.findTopByUserId(s.getChannel().getOwner().getId()))
+            .toList();
 
         return VideoResponse.convertVideos(videos);
     }

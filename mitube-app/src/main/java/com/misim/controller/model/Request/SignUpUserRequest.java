@@ -5,12 +5,10 @@ import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import com.misim.util.Validator;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-
 import java.util.List;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 @Schema(description = "유저 등록 요청 DTO")
 public class SignUpUserRequest implements Checker {
 
@@ -29,11 +27,11 @@ public class SignUpUserRequest implements Checker {
     @Schema(name = "phoneNumber", description = "User 전화번호", example = "01012345678", requiredMode = Schema.RequiredMode.REQUIRED)
     private String phoneNumber;
 
-    @Schema(name = "code", description = "User 토큰", example = "AIHR==", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(name = "token", description = "SMS 인증 토큰", example = "AIHR==", requiredMode = Schema.RequiredMode.REQUIRED)
     private String token;
 
     // 리스트
-    @Schema(name = "checkedTerms", description = "체크된 약관 제목", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(name = "checkedTermTitles", description = "체크된 약관 제목", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<String> checkedTermTitles;
 
     @Override
@@ -54,6 +52,10 @@ public class SignUpUserRequest implements Checker {
 
         if (nickname == null || nickname.isBlank()) {
             throw new MitubeException(MitubeErrorCode.INVALID_NICKNAME);
+        }
+
+        if (checkedTermTitles.isEmpty()) {
+            throw new MitubeException(MitubeErrorCode.NOT_AGREE_REQUIRED_TERM);
         }
 
         if (token == null || token.isBlank()) {

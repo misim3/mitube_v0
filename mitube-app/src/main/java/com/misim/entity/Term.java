@@ -1,6 +1,10 @@
 package com.misim.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +30,8 @@ public class Term {
     private Integer termGroup;
 
     @Builder
-    public Term(String title, String content, Boolean isRequired, Integer version, Integer termGroup) {
+    public Term(String title, String content, Boolean isRequired, Integer version,
+        Integer termGroup) {
         this.title = title;
         this.content = content;
         this.isRequired = isRequired;

@@ -6,7 +6,6 @@ import com.misim.controller.model.Request.CreateVideoRequest;
 import com.misim.entity.User;
 import com.misim.entity.Video;
 import com.misim.entity.VideoFile;
-import com.misim.entity.WatchingInfo;
 import com.misim.repository.UserRepository;
 import com.misim.repository.VideoFileRepository;
 import com.misim.repository.VideoRepository;
@@ -22,7 +21,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -108,7 +106,7 @@ class VideoControllerIntegrationTest {
         request.setDescription("test video");
         request.setNickname("hongkildong");
         VideoFile videoFile = videoFileRepository.findByPath("test path");
-        request.setToken(Base64Convertor.encode(videoFile.getId()));
+        request.setVideo_token(Base64Convertor.encode(videoFile.getId()));
         request.setCategoryId(1);
 
         // 실행 결과 확인
@@ -127,7 +125,7 @@ class VideoControllerIntegrationTest {
         request.setTitle(null);
         request.setDescription("test video");
         request.setNickname("hongkildong");
-        request.setToken("token");
+        request.setVideo_token("video_token");
         request.setCategoryId(1);
 
         // 실행 결과 확인
@@ -146,7 +144,7 @@ class VideoControllerIntegrationTest {
         request.setTitle("test");
         request.setDescription(null);
         request.setNickname("hongkildong");
-        request.setToken("token");
+        request.setVideo_token("video_token");
         request.setCategoryId(1);
 
         // 실행 결과 확인
@@ -165,7 +163,7 @@ class VideoControllerIntegrationTest {
         request.setTitle("test");
         request.setDescription("test video");
         request.setNickname(null);
-        request.setToken("token");
+        request.setVideo_token("video_token");
         request.setCategoryId(1);
 
         // 실행 결과 확인
@@ -184,7 +182,7 @@ class VideoControllerIntegrationTest {
         request.setTitle("test");
         request.setDescription("test video");
         request.setNickname("hongkildong");
-        request.setToken(null);
+        request.setVideo_token(null);
         request.setCategoryId(1);
 
         // 실행 결과 확인
@@ -203,7 +201,7 @@ class VideoControllerIntegrationTest {
         request.setTitle("test");
         request.setDescription("test video");
         request.setNickname("hongkildong");
-        request.setToken("token");
+        request.setVideo_token("video_token");
         request.setCategoryId(null);
 
         // 실행 결과 확인
@@ -222,7 +220,7 @@ class VideoControllerIntegrationTest {
         request.setTitle("test");
         request.setDescription("test video");
         request.setNickname("hongkildong");
-        request.setToken("MQ==");
+        request.setVideo_token("MQ==");
         request.setCategoryId(1);
 
         // 실행 결과 확인
@@ -248,7 +246,7 @@ class VideoControllerIntegrationTest {
         request.setDescription("test video");
         request.setNickname("no nickname");
         VideoFile videoFile = videoFileRepository.findByPath("test path");
-        request.setToken(Base64Convertor.encode(videoFile.getId()));
+        request.setVideo_token(Base64Convertor.encode(videoFile.getId()));
         request.setCategoryId(1);
 
         // 실행 결과 확인
@@ -280,7 +278,7 @@ class VideoControllerIntegrationTest {
         request.setDescription("test video");
         request.setNickname("hongkildong");
         VideoFile videoFile = videoFileRepository.findByPath("test path");
-        request.setToken(Base64Convertor.encode(videoFile.getId()));
+        request.setVideo_token(Base64Convertor.encode(videoFile.getId()));
         request.setCategoryId(100);
 
         // 실행 결과 확인

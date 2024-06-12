@@ -1,10 +1,9 @@
 package com.misim.entity;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Arrays;
 import java.util.List;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
@@ -23,25 +22,27 @@ public enum VideoCategory {
     MOVIE("영화", 11),
     BLOG("블로그", 12),
     CAR("자동차", 13),
-    COMEDY("코미디", 14),;
+    COMEDY("코미디", 14),
+    ;
 
     private final String name;
     private final int code;
 
     @Getter
-    private static final List<String> categoryList = Arrays.stream(VideoCategory.values()).map(VideoCategory::getName).toList();
+    private static final List<String> categoryList = Arrays.stream(VideoCategory.values())
+        .map(VideoCategory::getName).toList();
 
     public static Boolean existByCode(int code) {
         return Arrays.stream(VideoCategory.values())
-                .anyMatch(c -> c.getCode() == code);
+            .anyMatch(c -> c.getCode() == code);
     }
 
     public static String getNameByCode(int code) {
         return Arrays.stream(VideoCategory.values())
-                .filter(c -> c.getCode() == code)
-                .findFirst()
-                .map(VideoCategory::getName)
-                .orElse(null);
+            .filter(c -> c.getCode() == code)
+            .findFirst()
+            .map(VideoCategory::getName)
+            .orElse(null);
     }
 
 }

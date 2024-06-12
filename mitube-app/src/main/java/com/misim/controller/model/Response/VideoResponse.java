@@ -3,10 +3,9 @@ package com.misim.controller.model.Response;
 import com.misim.entity.Video;
 import com.misim.entity.VideoCategory;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -40,15 +39,15 @@ public class VideoResponse {
     public static List<VideoResponse> convertVideos(List<Video> videos) {
         return videos.stream()
             .map(video -> VideoResponse.builder()
-                    .videoId(video.getId())
-                    .title(video.getTitle())
-                    .description(video.getDescription())
-                    .userId(video.getUser().getId())
-                    .category(VideoCategory.getNameByCode(video.getCategoryId()))
-                    .videoUrl(video.getVideoFile().getPath())
-                    .views(video.getViews())
-                    .thumbnailUrl(video.getThumbnailUrl())
-                    .build())
+                .videoId(video.getId())
+                .title(video.getTitle())
+                .description(video.getDescription())
+                .userId(video.getUser().getId())
+                .category(VideoCategory.getNameByCode(video.getCategoryId()))
+                .videoUrl(video.getVideoFile().getPath())
+                .views(video.getViews())
+                .thumbnailUrl(video.getThumbnailUrl())
+                .build())
             .toList();
     }
 }

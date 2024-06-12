@@ -23,7 +23,7 @@ public class StartWatchingVideoResponse {
 
     // 비디오 전용 스토리지
     private String videoLink;
-    
+
     @Schema(name = "reactionResponse", description = "유저의 동영상에 대한 반응으로 로그인 상태가 아닐 시 null 값을 가진다.", example = "null", requiredMode = Schema.RequiredMode.REQUIRED)
     private ReactionResponse reactionResponse;
 }

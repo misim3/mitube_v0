@@ -1,13 +1,12 @@
 package com.misim.repository;
 
 import com.misim.entity.WatchingInfo;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Repository;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Repository;
 
 @Repository
 public class WatchingInfoRepository {
@@ -35,10 +34,10 @@ public class WatchingInfoRepository {
     public List<WatchingInfo> findLastTopTenByUserId(Long userId) {
         Map<String, WatchingInfo> watchingInfoMap = hashOperations.entries(REDIS_KEY);
         return watchingInfoMap.values().stream()
-                .filter(info -> info.getUserId().equals(userId))
-                .sorted(Comparator.comparing(WatchingInfo::getModifiedDate).reversed())
-                .limit(10)
-                .toList();
+            .filter(info -> info.getUserId().equals(userId))
+            .sorted(Comparator.comparing(WatchingInfo::getModifiedDate).reversed())
+            .limit(10)
+            .toList();
     }
 
     private String generateHashKey(WatchingInfo watchingInfo) {

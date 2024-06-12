@@ -30,15 +30,15 @@ public class UserController {
     private final SmsService smsService;
     private final VerificationTokenService verificationTokenService;
 
-    // 약관 동의 -> 본인 인증 -> 유저 정보 기입 후 등록 버튼 클릭
+    // 약관 동의 -> 회원 정보 기입 -> 본인 인증
     @Operation(summary = "회원 가입", description = "새로운 회원을 등록합니다.")
     @Parameter(name = "UserDto", description = "User 회원 가입을 위한 데이터.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원 가입 성공."),
-            @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class))),
-            @ApiResponse(responseCode = "409", description = "이미 가입된 유저입니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "회원 가입 성공."),
+        @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class))),
+        @ApiResponse(responseCode = "409", description = "이미 가입된 유저입니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
-    @PostMapping("/signup")
+    @PostMapping("/signUp")
     public void signupUser(@RequestBody SignUpUserRequest signUpUserRequest) {
 
         // 유저 데이터 검사 - invalid인 경우 exception 발생
@@ -51,11 +51,12 @@ public class UserController {
     // 본인 인증
     @Operation(summary = "SMS 인증 코드 발송", description = "SMS를 통해 인증 코드를 발송합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SMS 인증 코드 발송 성공."),
-            @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "SMS 인증 코드 발송 성공."),
+        @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @PostMapping("/sendVerificationBySMS")
     public void sendSMSVerificationCode(@RequestBody SendSMSRequest request) {
+
         Validator.validatePhoneNumber(request.getPhoneNumber());
 
         smsService.sendSMS(request.getPhoneNumber());
@@ -64,22 +65,23 @@ public class UserController {
     @Operation(summary = "SMS 인증 코드 확인", description = "전달받은 인증 코드를 확인합니다..")
     @Parameter(name = "VerificationDto", description = "인증과 연관된 데이터.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "SMS 인증 코드 확인 성공."),
-            @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "SMS 인증 코드 확인 성공."),
+        @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @PostMapping("/verifyAccountSMS")
-    public CommonResponse<VerifySMSResponse> checkSMSVerificationCode(@RequestBody VerifySMSRequest request) {
+    public CommonResponse<VerifySMSResponse> checkSMSVerificationCode(
+        @RequestBody VerifySMSRequest request) {
 
         request.check();
 
         VerifySMSResponse response = smsService.matchSMS(request.getPhoneNumber(),
-                request.getCode(),
-                TimeUtil.parseStringToLocalDateTime(request.getRequestTime()));
+            request.getCode(),
+            TimeUtil.getNow());
 
         return CommonResponse
-                .<VerifySMSResponse>builder()
-                .body(response)
-                .build();
+            .<VerifySMSResponse>builder()
+            .body(response)
+            .build();
     }
 
 
@@ -87,20 +89,22 @@ public class UserController {
     @Operation(summary = "아이디 찾기", description = "본인 인증 후 인증 토큰을 이용하여 아이디 찾기")
     @Parameter(name = "VerificationDto", description = "인증과 연관된 데이터.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "아이디 찾기 성공."),
-            @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "아이디 찾기 성공."),
+        @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @PostMapping("/nickname/find")
-    public CommonResponse<FindNicknameResponse> findNickname(@RequestBody FindNicknameRequest request) {
+    public CommonResponse<FindNicknameResponse> findNickname(
+        @RequestBody FindNicknameRequest request) {
 
         request.check();
 
-        FindNicknameResponse response = verificationTokenService.findUserNicknameByToken(request.getToken());
+        FindNicknameResponse response = verificationTokenService.findUserNicknameByToken(
+            request.getToken());
 
         return CommonResponse
-                .<FindNicknameResponse>builder()
-                .body(response)
-                .build();
+            .<FindNicknameResponse>builder()
+            .body(response)
+            .build();
     }
 
 
@@ -108,18 +112,18 @@ public class UserController {
     @Operation(summary = "비밀번호 초기화", description = "본인 인증 후 인증 토큰을 이용하여 비밀번호 초기화")
     @Parameter(name = "VerificationDto", description = "인증과 연관된 데이터.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "비밀번호 초기화 성공."),
-            @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
+        @ApiResponse(responseCode = "200", description = "비밀번호 초기화 성공."),
+        @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @PostMapping("/help/resetPassword")
     public void resetPassword(@RequestBody ResetPasswordRequest request) {
 
         request.check();
 
-        userService.resetUserPassword(request.getNickname(), request.getCode());
+        userService.resetUserPassword(request.getNickname(), request.getToken());
     }
-    
-    
+
+
     // 비밀번호 변경 - 로그인 -> 비밀번호 변경
     @GetMapping("/help/changePassword")
     public void changePassword() {

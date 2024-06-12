@@ -63,7 +63,7 @@ class VideoControllerTest {
         mockCreateVideoRequest.setTitle("test");
         mockCreateVideoRequest.setDescription("test video");
         mockCreateVideoRequest.setNickname("hongkildong");
-        mockCreateVideoRequest.setToken("MQ==");
+        mockCreateVideoRequest.setVideo_token("MQ==");
         mockCreateVideoRequest.setCategoryId(1);
 
         doNothing().when(videoService).createVideos(mockCreateVideoRequest);

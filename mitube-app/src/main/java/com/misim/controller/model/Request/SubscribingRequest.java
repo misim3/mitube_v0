@@ -3,7 +3,6 @@ package com.misim.controller.model.Request;
 import com.misim.controller.model.Checker;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
-import io.netty.channel.ChannelHandler;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

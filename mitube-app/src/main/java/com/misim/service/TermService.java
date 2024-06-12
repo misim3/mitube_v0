@@ -7,10 +7,9 @@ import com.misim.entity.Term;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import com.misim.repository.TermRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -23,37 +22,37 @@ public class TermService {
 
         List<Term> terms = termRepository.findTermGroupByTermGroupAndMaxVersion();
 
-        List <TermResponse> termResponses = terms.stream()
-                .map(term -> TermResponse.builder()
-                        .title(term.getTitle())
-                        .isRequired(term.getIsRequired())
-                        .build())
-                .toList();
+        List<TermResponse> termResponses = terms.stream()
+            .map(term -> TermResponse.builder()
+                .title(term.getTitle())
+                .isRequired(term.getIsRequired())
+                .build())
+            .toList();
 
         return TermListResponse
-                .builder()
-                .termResponseList(termResponses)
-                .build();
+            .builder()
+            .termResponseList(termResponses)
+            .build();
     }
 
     public TermDetailResponse getTermByTitle(String title) {
 
         Term term = termRepository.findTermByTitleAndMaxVersion(title)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_TERM));
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_TERM));
 
         return TermDetailResponse.detailBuidler()
-                .title(term.getTitle())
-                .content(term.getContent())
-                .isRequired(term.getIsRequired())
-                .build();
+            .title(term.getTitle())
+            .content(term.getContent())
+            .isRequired(term.getIsRequired())
+            .build();
     }
 
     public void checkTerms(List<String> checkedTermTitles) {
 
         List<Term> terms = termRepository.findTermGroupByTermGroupAndMaxVersion();
-        
+
         int cnt = 0;
-        
+
         // db에서 조회한 약관 중 필수 약관이 유저가 동의한 약관 제목에 존재하는지 확인
         // 한 번의 for 반복문에서 cnt도 처리하기 위해 포함관계를 확인한 후 필수 약관인지 확인한다.
         for (Term t : terms) {

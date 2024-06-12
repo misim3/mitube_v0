@@ -1,6 +1,11 @@
 package com.misim.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +15,7 @@ import lombok.Setter;
 @Getter
 @Table(name = "videos")
 @NoArgsConstructor
-public class Video extends BaseTimeEntity{
+public class Video extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,7 +42,8 @@ public class Video extends BaseTimeEntity{
     private String thumbnailUrl;
 
     @Builder
-    public Video(String title, String description, Integer categoryId, Long views, String thumbnailUrl, User user) {
+    public Video(String title, String description, Integer categoryId, Long views,
+        String thumbnailUrl, User user) {
         this.title = title;
         this.description = description;
         this.categoryId = categoryId;
