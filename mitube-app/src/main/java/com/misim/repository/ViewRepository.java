@@ -21,19 +21,24 @@ public class ViewRepository {
         hashOperations.put(REDIS_KEY, view.getVideoId().toString(), view);
     }
 
-    public Boolean exists(String videoId) {
-        return hashOperations.hasKey(REDIS_KEY, videoId);
+    public Boolean exists(Long videoId) {
+        return hashOperations.hasKey(REDIS_KEY, videoId.toString());
     }
 
-    public View findViewByVideoId(String videoId) {
-        return hashOperations.get(REDIS_KEY, videoId);
+    public View findViewByVideoId(Long videoId) {
+        return hashOperations.get(REDIS_KEY, videoId.toString());
     }
 
-    public void delete(String videoId) {
-        hashOperations.delete(REDIS_KEY, videoId);
+    public void delete(Long videoId) {
+        hashOperations.delete(REDIS_KEY, videoId.toString());
     }
 
-    public void incrementViewCount(String videoId) {
-        hashOperations.increment(REDIS_KEY, videoId, 1);
+    public View incrementViewCount(Long videoId) {
+        View view = hashOperations.get(REDIS_KEY, videoId.toString());
+        if (view != null) {
+            view.setCount(view.getCount() + 1);
+            hashOperations.put(REDIS_KEY, videoId.toString(), view);
+        }
+        return view;
     }
 }

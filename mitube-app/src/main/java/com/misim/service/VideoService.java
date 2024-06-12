@@ -156,7 +156,7 @@ public class VideoService {
 
         return StartWatchingVideoResponse.builder()
             .watchingTime(watchingInfo.getWatchingTime())
-            .views(view.getViews())
+            .views(view.getCount())
             .reactionResponse(reactionResponse)
             .build();
     }

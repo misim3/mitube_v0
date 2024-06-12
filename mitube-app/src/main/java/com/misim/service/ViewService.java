@@ -17,20 +17,21 @@ public class ViewService {
 
     public View getIncrementView(Long videoId) {
 
-        if (viewRepository.exists(videoId.toString())) {
-            viewRepository.incrementViewCount(videoId.toString());
-            return viewRepository.findViewByVideoId(videoId.toString());
+        View view;
+
+        if (viewRepository.exists(videoId)) {
+            view = viewRepository.incrementViewCount(videoId);
 
         } else {
-            View view = View.builder()
+            view = View.builder()
                 .videoId(videoId)
-                .views(videoRepository.findViewsByVideoId(videoId)
+                .count(videoRepository.findViewsByVideoId(videoId)
                     .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO)) + 1)
                 .build();
 
             viewRepository.save(view);
-
-            return view;
         }
+
+        return view;
     }
 }
