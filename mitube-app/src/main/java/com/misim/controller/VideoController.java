@@ -2,7 +2,6 @@ package com.misim.controller;
 
 import com.misim.controller.model.Request.ReactionRequest;
 import com.misim.controller.model.Response.CommentListResponse;
-import com.misim.controller.model.Response.CommentResponse;
 import com.misim.controller.model.Response.StartWatchingVideoResponse;
 import com.misim.controller.model.Response.UploadVideosResponse;
 import com.misim.controller.model.Request.CreateVideoRequest;
@@ -20,7 +19,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -109,7 +107,7 @@ public class VideoController {
         @ApiResponse(responseCode = "200", description = "동영상 시청 정보 업데이트 성공"),
         @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
-    @PostMapping("/watch/{videoId}")
+    @PostMapping("/watch/{videoId}/update")
     public void watchingVideo(
         @PathVariable @Parameter(name = "videoId", description = "시청할 동영상 식별 정보", required = true) Long videoId,
         @RequestParam @Parameter(name = "userId", description = "동영상을 시청할 유저의 식별 정보") Long userId,
@@ -118,7 +116,6 @@ public class VideoController {
         videoService.updateWatchingVideoInfo(videoId, userId, watchingTime);
     }
 
-    // 99999 에러 발생
     @Operation(summary = "동영상 시청 완료", description = "동영상 시청 완료로 시청 정보를 업데이트합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "동영상 시청 정보 업데이트 성공"),
