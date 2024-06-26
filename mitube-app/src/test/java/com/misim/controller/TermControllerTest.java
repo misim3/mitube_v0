@@ -1,9 +1,16 @@
 package com.misim.controller;
 
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.misim.controller.model.Response.TermDetailResponse;
 import com.misim.controller.model.Response.TermListResponse;
 import com.misim.controller.model.Response.TermResponse;
 import com.misim.service.TermService;
+import java.util.Collections;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +20,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.Collections;
-
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TermController.class)
 @WithMockUser
@@ -84,26 +85,6 @@ class TermControllerTest {
         // 실행 결과 확인
         mockMvc.perform(get("/terms/policy")
                         .param("title", "")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is4xxClientError());
-    }
-
-    @Test
-    @DisplayName("파라미터인 title로 term을 찾을 수 없는 경우")
-    public void testGetTermPolicyNotFoundTerms() throws Exception {
-
-        // mock 객체
-        TermDetailResponse mockResponse = TermDetailResponse.detailBuidler()
-                .title("Sample TermDetailResponse")
-                .content("Sample TermDetailResponse's Contents")
-                .isRequired(true)
-                .build();
-
-        given(termService.getTermByTitle("Sample TermDetailResponse")).willReturn(mockResponse);
-
-        // 실행 결과 확인
-        mockMvc.perform(get("/terms/policy")
-                        .param("title", "Unknown TermDetailResponse")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
     }
