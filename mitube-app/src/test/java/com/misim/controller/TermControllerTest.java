@@ -32,7 +32,7 @@ class TermControllerTest {
     private TermService termService;
 
     @Test
-    public void testGetTermsByMocking() throws Exception {
+    public void getTerms_correctly_byMocking() throws Exception {
 
         // mock 객체
         TermListResponse mockResponse = TermListResponse.builder()
@@ -55,7 +55,7 @@ class TermControllerTest {
     }
 
     @Test
-    public void testGetTermPolicyByMocking() throws Exception {
+    public void getTermPolicy_correctly_byMocking() throws Exception {
 
         // mock 객체
         TermDetailResponse mockResponse = TermDetailResponse.detailBuidler()
@@ -80,7 +80,7 @@ class TermControllerTest {
 
     @Test
     @DisplayName("파라미터인 title의 값이 없는 경우")
-    public void testGetTermPolicyNotFoundTermsByNoTitle() throws Exception {
+    public void getTermPolicy_notFoundTerms_NoTitle() throws Exception {
 
         // 실행 결과 확인
         mockMvc.perform(get("/terms/policy")
