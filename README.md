@@ -8,6 +8,7 @@ Java 17, Spring Boot, Spring Data JPA, MySQL, Redis, NCP Server, Junit5, Mockito
 <br/>
 
 ## 서버 구성도
+![아키텍처2 drawio](https://github.com/user-attachments/assets/608d6302-02a1-4992-b5e7-14dc421d4486)
 <br/>
 
 ## 주요 기능
