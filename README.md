@@ -27,4 +27,4 @@ Java 17, Spring Boot, Spring Data JPA, MySQL, Redis, NCP Server, Junit5, Mockito
 - **채널 구독**
 <br/>
 
-## [비즈니스 로직]()
+## [비즈니스 로직](https://github.com/f-lab-edu/mitube/wiki/%EB%B9%84%EC%A6%88%EB%8B%88%EC%8A%A4-%EB%A1%9C%EC%A7%81)
