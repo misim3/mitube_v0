@@ -1,4 +1,4 @@
-package com.misim.controller;
+package com.misim.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;

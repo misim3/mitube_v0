@@ -1,7 +1,17 @@
-package com.misim.controller;
+package com.misim.integration;
+
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.misim.controller.model.Request.*;
+import com.misim.controller.model.Request.FindNicknameRequest;
+import com.misim.controller.model.Request.ResetPasswordRequest;
+import com.misim.controller.model.Request.SendSMSRequest;
+import com.misim.controller.model.Request.SignUpUserRequest;
+import com.misim.controller.model.Request.VerifySMSRequest;
 import com.misim.entity.SmsVerification;
 import com.misim.entity.Term;
 import com.misim.entity.User;
@@ -10,7 +20,7 @@ import com.misim.repository.SmsVerificationRepository;
 import com.misim.repository.TermRepository;
 import com.misim.repository.UserRepository;
 import com.misim.util.Base64Convertor;
-import com.misim.util.TimeUtil;
+import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,11 +28,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.Arrays;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -207,7 +212,7 @@ class UserControllerIntegrationTest {
         ResetPasswordRequest mockRequest = new ResetPasswordRequest();
         mockRequest.setNickname(영희.getNickname());
         SmsVerification smsVerification = smsVerificationRepository.findTopByPhoneNumberOrderByExpiryDateDesc(본인인증.getPhoneNumber());
-        mockRequest.setCode(Base64Convertor.encode(smsVerification.getId()));
+        //mockRequest.setCode(Base64Convertor.encode(smsVerification.getId()));
 
         // 실행 결과 확인
         mockMvc.perform(post("/users/help/resetPassword")

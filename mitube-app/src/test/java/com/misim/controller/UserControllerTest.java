@@ -1,13 +1,26 @@
 package com.misim.controller;
 
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.misim.controller.model.Request.*;
+import com.misim.controller.model.Request.FindNicknameRequest;
+import com.misim.controller.model.Request.ResetPasswordRequest;
+import com.misim.controller.model.Request.SendSMSRequest;
+import com.misim.controller.model.Request.SignUpUserRequest;
+import com.misim.controller.model.Request.VerifySMSRequest;
 import com.misim.controller.model.Response.FindNicknameResponse;
 import com.misim.controller.model.Response.VerifySMSResponse;
 import com.misim.service.SmsService;
 import com.misim.service.UserService;
 import com.misim.service.VerificationTokenService;
 import com.misim.util.TimeUtil;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,15 +29,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.time.LocalDateTime;
-
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(UserController.class)
 @WithMockUser
@@ -93,7 +97,7 @@ class UserControllerTest {
         mockRequest.setPhoneNumber("01012345678");
         mockRequest.setCode("123456");
         LocalDateTime mockCurrent = TimeUtil.getNow();
-        mockRequest.setRequestTime(TimeUtil.formatLocalDateTime(mockCurrent));
+        //mockRequest.setRequestTime(TimeUtil.formatLocalDateTime(mockCurrent));
 
         VerifySMSResponse mockResponse = new VerifySMSResponse();
         mockResponse.setToken("MQ==");
@@ -140,9 +144,9 @@ class UserControllerTest {
         // mock 객체
         ResetPasswordRequest mockRequest = new ResetPasswordRequest();
         mockRequest.setNickname("hongkildong");
-        mockRequest.setCode("MQ==");
+        //mockRequest.setCode("MQ==");
 
-        doNothing().when(userService).resetUserPassword(mockRequest.getNickname(), mockRequest.getCode());
+        //doNothing().when(userService).resetUserPassword(mockRequest.getNickname(), mockRequest.getCode());
 
         // 실행 결과 확인
         mockMvc.perform(post("/users/help/resetPassword")
