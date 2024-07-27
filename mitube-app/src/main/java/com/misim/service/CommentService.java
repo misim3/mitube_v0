@@ -56,22 +56,14 @@ public class CommentService {
         return commentListResponse;
     }
 
-    public CommentListResponse getChildComments(Long videoId, Long parentCommentId, Long idx,
-        String scrollDirection) {
+    public CommentListResponse getChildComments(Long videoId, Long parentCommentId, Long idx) {
 
         if (!videoRepository.existsById(videoId)) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO);
         }
 
-        List<Comment> comments = new ArrayList<>();
-
-        if (scrollDirection.equals("up")) {
-            comments = commentRepository.findUpCommentByVideoIdAndIdAndParentCommentId(
+        List<Comment> comments = commentRepository.findDownCommentByVideoIdAndIdAndParentCommentId(
                 parentCommentId, videoId, idx);
-        } else if (scrollDirection.equals("down")) {
-            comments = commentRepository.findDownCommentByVideoIdAndIdAndParentCommentId(
-                parentCommentId, videoId, idx);
-        }
 
         return CommentListResponse.builder()
             .commentResponses(convertCommentResponseList(comments))

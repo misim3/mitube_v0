@@ -145,4 +145,22 @@ class VideoControllerTest {
             .param("watchingTime", watchingTime.toString()))
             .andExpect(status().isOk());
     }
+
+    @Test
+    void completeWatcingVideo_correctly_byMocking() throws Exception {
+
+        Long videoId = 1L;
+        Long userId = 1L;
+        Long watchingTime = 1234L;
+
+        mockMvc.perform(post("/videos/watch/{videoId}/update", 1L)
+                .param("userId", userId.toString())
+                .param("watchingTime", watchingTime.toString()))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void checkVideo_correctly_byMocking() throws Exception {
+        
+    }
 }

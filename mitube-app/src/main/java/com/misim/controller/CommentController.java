@@ -72,13 +72,10 @@ public class CommentController {
     public CommonResponse<CommentListResponse> getChildComments(
         @PathVariable @Parameter(name = "videoId", description = "시청할 동영상 식별 정보", required = true) Long videoId,
         @PathVariable @Parameter(name = "parentCommentId", description = "대댓글이 달린 댓글의 식별 정보") Long parentCommentId,
-        @RequestParam @Parameter(name = "idx", description = "댓글의 인덱스 정보") Long idx,
-        @RequestParam @Parameter(name = "scrollDirection", description = "댓글 목록 스크롤 방향으로 up, down만 가능하다.") String scrollDirection) {
-
-        checkRequests(idx, scrollDirection);
+        @RequestParam @Parameter(name = "idx", description = "대댓글의 인덱스 정보") Long idx) {
 
         CommentListResponse comments = commentService.getChildComments(videoId, parentCommentId,
-            idx, scrollDirection);
+            idx);
 
         return CommonResponse.<CommentListResponse>builder()
             .body(comments)

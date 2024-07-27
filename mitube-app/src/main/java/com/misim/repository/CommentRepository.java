@@ -28,9 +28,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findDownCommentByVideoIdAndIdAndParentCommentId(
         @Param("parentCommentId") Long parentCommentId, @Param("videoId") Long videoId,
         @Param("id") Long id);
-
-    @Query("SELECT c1 from Comment c1 WHERE c1.parentCommentId = :parentCommentId AND c1.video.id = :videoId AND c1.id > :id ORDER BY c1.createdDate ASC LIMIT 10")
-    List<Comment> findUpCommentByVideoIdAndIdAndParentCommentId(
-        @Param("parentCommentId") Long parentCommentId, @Param("videoId") Long videoId,
-        @Param("id") Long id);
 }
