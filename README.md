@@ -11,7 +11,7 @@ Java 17, Spring Boot, Spring Data JPA, MySQL, Redis, NCP Server, Junit5, Mockito
 ![아키텍처2 drawio](https://github.com/user-attachments/assets/608d6302-02a1-4992-b5e7-14dc421d4486)
 <br/>
 
-## ERD
+## [ERD](https://github.com/f-lab-edu/mitube/wiki/ERD)
 
 ## 주요 기능
 
@@ -27,4 +27,4 @@ Java 17, Spring Boot, Spring Data JPA, MySQL, Redis, NCP Server, Junit5, Mockito
 - **채널 구독**
 <br/>
 
-## 비즈니스 로직
+## [비즈니스 로직]()
