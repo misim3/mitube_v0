@@ -16,7 +16,7 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
 
     Video findTopByUserId(Long userId);
 
-    @Query("SELECT v FROM Video v ORDER BY v.createdDate LIMIT 10")
+    @Query("SELECT v FROM Video v ORDER BY v.createdDate DESC LIMIT 10")
     List<Video> findTopTen();
 
     Video findByTitle(String title);

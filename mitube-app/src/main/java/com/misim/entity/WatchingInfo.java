@@ -1,32 +1,45 @@
 package com.misim.entity;
 
-import com.misim.util.TimeUtil;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
+@Entity
 @Getter
+@Table(name = "watching_infos")
 @NoArgsConstructor
-public class WatchingInfo implements Serializable {
+public class WatchingInfo extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private Long userId;
 
     private Long videoId;
 
-    @Setter
     private Long watchingTime;
 
-    @Setter
-    private LocalDateTime modifiedDate;
+    private Boolean isWatchedToEnd;
 
     @Builder
     public WatchingInfo(Long userId, Long videoId, Long watchingTime) {
         this.userId = userId;
         this.videoId = videoId;
         this.watchingTime = watchingTime;
-        this.modifiedDate = TimeUtil.getNow();
+        this.isWatchedToEnd = false;
+    }
+
+    public void addWatchingTime(Long watchingTime) {
+        this.watchingTime += watchingTime;
+    }
+
+    public void completeWatchingVideo() {
+        this.isWatchedToEnd = true;
     }
 }

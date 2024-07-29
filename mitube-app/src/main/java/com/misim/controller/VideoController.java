@@ -113,7 +113,7 @@ public class VideoController {
         @RequestParam @Parameter(name = "userId", description = "동영상을 시청할 유저의 식별 정보") Long userId,
         @RequestParam Long watchingTime) {
 
-        videoService.updateWatchingVideoInfo(videoId, userId, watchingTime);
+        videoService.updateWatchingVideo(videoId, userId, watchingTime);
     }
 
     @Operation(summary = "동영상 시청 완료", description = "동영상 시청 완료로 시청 정보를 업데이트합니다.")
@@ -127,7 +127,7 @@ public class VideoController {
         @RequestParam @Parameter(name = "userId", description = "동영상을 시청할 유저의 식별 정보") Long userId,
         @RequestParam Long watchingTime) {
 
-        videoService.updateWatchingVideoInfo(videoId, userId, watchingTime);
+        videoService.completeWatchingVideo(videoId, userId, watchingTime);
     }
 
     @Operation(summary = "동영상에 대한 유저의 반응 선택", description = "동영상에 대한 유저의 반응. 좋아요, 싫어요 선택 정보를 저장합니다.")
