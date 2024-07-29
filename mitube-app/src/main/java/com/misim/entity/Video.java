@@ -9,7 +9,6 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
@@ -26,29 +25,31 @@ public class Video extends BaseTimeEntity {
     private String description;
 
     @ManyToOne
-    @Setter
     private User user;
 
     @ManyToOne
-    @Setter
     private VideoFile videoFile;
 
-    private Integer categoryId;
+    private Long viewCount;
 
-    @Setter
-    private Long views;
+    private Integer categoryId;
 
     // 연관관계 설정 가능
     private String thumbnailUrl;
 
     @Builder
-    public Video(String title, String description, Integer categoryId, Long views,
-        String thumbnailUrl, User user) {
+    public Video(String title, String description, User user, VideoFile videoFile, Long viewCount,
+        Integer categoryId, String thumbnailUrl) {
         this.title = title;
         this.description = description;
-        this.categoryId = categoryId;
-        this.views = views;
         this.user = user;
+        this.videoFile = videoFile;
+        this.viewCount = viewCount;
+        this.categoryId = categoryId;
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    public void incrementViewCount() {
+        this.viewCount++;
     }
 }
