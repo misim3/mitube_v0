@@ -1,50 +1,20 @@
 package com.misim.repository;
 
 import com.misim.entity.WatchingInfo;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WatchingInfoRepository {
+public interface WatchingInfoRepository extends JpaRepository<WatchingInfo, Long> {
 
-    private static final String REDIS_KEY = "watchingInfos";
+    Boolean existsByUserIdAndVideoId(Long userId, Long videoId);
 
-    private final HashOperations<String, String, WatchingInfo> hashOperations;
+    Optional<WatchingInfo> findByUserIdAndVideoId(Long userId, Long videoId);
 
-    public WatchingInfoRepository(RedisTemplate<String, WatchingInfo> redisTemplate) {
-        this.hashOperations = redisTemplate.opsForHash();
-    }
-
-    public void save(WatchingInfo watchingInfo) {
-        hashOperations.put(REDIS_KEY, generateHashKey(watchingInfo), watchingInfo);
-    }
-
-    public Boolean existsByUserIdAndVideoId(Long userId, Long videoId) {
-        return hashOperations.hasKey(REDIS_KEY, generateHashKey(userId, videoId));
-    }
-
-    public WatchingInfo findByUserIdAndVideoId(Long userId, Long videoId) {
-        return hashOperations.get(REDIS_KEY, generateHashKey(userId, videoId));
-    }
-
-    public List<WatchingInfo> findLastTopTenByUserId(Long userId) {
-        Map<String, WatchingInfo> watchingInfoMap = hashOperations.entries(REDIS_KEY);
-        return watchingInfoMap.values().stream()
-            .filter(info -> info.getUserId().equals(userId))
-            .sorted(Comparator.comparing(WatchingInfo::getModifiedDate).reversed())
-            .limit(10)
-            .toList();
-    }
-
-    private String generateHashKey(WatchingInfo watchingInfo) {
-        return generateHashKey(watchingInfo.getUserId(), watchingInfo.getVideoId());
-    }
-
-    private String generateHashKey(Long userId, Long videoId) {
-        return userId + ":" + videoId;
-    }
+    @Query("SELECT w FROM WatchingInfo w WHERE w.userId = :userId And w.isWatchedToEnd = FALSE ORDER BY w.modifiedDate DESC LIMIT 10")
+    List<WatchingInfo> findLastTopTenByUserId(@Param("userId") Long userId);
 }

@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -142,17 +143,14 @@ public class VideoService {
 
         if (watchingInfoRepository.existsByUserIdAndVideoId(userId, videoId)) {
 
-            watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId);
-
-            if (watchingInfo == null) {
-                throw new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO);
-            }
+            watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
+                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO));
 
         } else {
 
             watchingInfo = WatchingInfo.builder()
-                .videoId(videoId)
                 .userId(userId)
+                .videoId(videoId)
                 .watchingTime(0L)
                 .build();
 
@@ -170,20 +168,33 @@ public class VideoService {
             .build();
     }
 
-    public void updateWatchingVideoInfo(Long videoId, Long userId, Long watchingTime) {
+    @Async
+    public void updateWatchingVideo(Long videoId, Long userId, Long watchingTime) {
 
-        if (!watchingInfoRepository.existsByUserIdAndVideoId(userId, videoId)) {
-            throw new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO);
-        }
-
-        WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId);
+        WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO));
 
         if (watchingInfo == null) {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO);
         }
 
-        watchingInfo.setWatchingTime(watchingTime);
-        watchingInfo.setModifiedDate(TimeUtil.getNow());
+        watchingInfo.addWatchingTime(watchingTime);
+
+        watchingInfoRepository.save(watchingInfo);
+    }
+
+    @Async
+    public void completeWatchingVideo(Long videoId, Long userId, Long watchingTime) {
+
+        WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO));
+
+        if (watchingInfo == null) {
+            throw new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO);
+        }
+
+        watchingInfo.addWatchingTime(watchingTime);
+        watchingInfo.completeWatchingVideo();
 
         watchingInfoRepository.save(watchingInfo);
     }
