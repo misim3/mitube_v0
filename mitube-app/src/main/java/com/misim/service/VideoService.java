@@ -47,6 +47,7 @@ public class VideoService {
     private final SubscriptionRepository subscriptionRepository;
     private final AsyncService asyncService;
     private final ReactionService reactionService;
+    private final ViewIncreaseRequestService viewIncreaseRequestService;
 
     public String uploadVideos(MultipartFile file) {
 
@@ -189,16 +190,14 @@ public class VideoService {
         return VideoResponse.convertVideos(videos);
     }
 
-//    public List<VideoResponse> getHotVideos() {
-//
-//        Set<View> viewSet = viewRepository.findHotTen();
-//
-//        List<Long> videoIds = viewSet.stream().map(View::getVideoId).toList();
-//
-//        List<Video> videos = videoRepository.findAllById(videoIds);
-//
-//        return VideoResponse.convertVideos(videos);
-//    }
+    public List<VideoResponse> getHotVideos() {
+
+        List<Long> videoIds = viewIncreaseRequestService.getTopIncreasesForLastWeek();
+
+        List<Video> videos = videoRepository.findAllById(videoIds);
+
+        return VideoResponse.convertVideos(videos);
+    }
 
     public List<VideoResponse> getWatchingVideos(Long userId) {
 
