@@ -25,11 +25,7 @@ public class ReactionService {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_USER);
         }
 
-        if (!videoRepository.existsById(videoId)) {
-            throw new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO);
-        }
-
-        Optional<Reaction> reaction = reactionRepository.findById(userId);
+        Optional<Reaction> reaction = reactionRepository.findByUserIdAndVideoId(userId, videoId);
 
         return reaction.map(r -> ReactionResponse.builder()
                 .type(r.getType())

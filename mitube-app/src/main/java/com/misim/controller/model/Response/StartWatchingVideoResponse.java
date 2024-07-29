@@ -15,6 +15,9 @@ public class StartWatchingVideoResponse {
     @Schema(name = "watchingTime", description = "동영상 시청 시각. 동영상 시청한 기록이 없다면, 0. 있다면, 시청 시각 반환", example = "1234", requiredMode = Schema.RequiredMode.REQUIRED)
     private Long watchingTime;
 
+    @Schema(name = "isWatchedToEnd", description = "동영상 시청 완료 여부", example = "true or false", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Boolean isWatchedToEnd;
+
     @Schema(name = "commentListResponse", description = "댓글 목록", example = "...", requiredMode = Schema.RequiredMode.REQUIRED)
     private CommentListResponse commentListResponse;
 

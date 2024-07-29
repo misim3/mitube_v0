@@ -9,7 +9,6 @@ import com.misim.entity.User;
 import com.misim.entity.Video;
 import com.misim.entity.VideoCategory;
 import com.misim.entity.VideoFile;
-import com.misim.entity.View;
 import com.misim.entity.WatchingInfo;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
@@ -46,8 +45,8 @@ public class VideoService {
     private final UserRepository userRepository;
     private final WatchingInfoRepository watchingInfoRepository;
     private final SubscriptionRepository subscriptionRepository;
+    private final AsyncService asyncService;
     private final ReactionService reactionService;
-    private final ViewService viewService;
 
     public String uploadVideos(MultipartFile file) {
 
@@ -112,24 +111,19 @@ public class VideoService {
             throw new MitubeException(MitubeErrorCode.INVALID_CATEGORY);
         }
 
-        Video video = Video.builder()
-            .title(createVideoRequest.getTitle())
-            .description(createVideoRequest.getDescription())
-            .categoryId(createVideoRequest.getCategoryId())
-            .views(0L)
-            .thumbnailUrl("")
-            .build();
-
-        // 비디오 파일 연결
         VideoFile videoFile = videoFileRepository.findById(videoFileId)
             .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO_FILE));
 
-        video.setVideoFile(videoFile);
-
-        // 유저 연결
         User user = userRepository.findByNickname(createVideoRequest.getNickname());
 
-        video.setUser(user);
+        Video video = Video.builder()
+            .title(createVideoRequest.getTitle())
+            .description(createVideoRequest.getDescription())
+            .user(user)
+            .videoFile(videoFile)
+            .categoryId(createVideoRequest.getCategoryId())
+            .thumbnailUrl("")
+            .build();
 
         // 비디오 저장
         videoRepository.save(video);
@@ -137,33 +131,28 @@ public class VideoService {
 
     public StartWatchingVideoResponse startWatchingVideo(Long videoId, Long userId) {
 
-        View view = viewService.getIncrementView(videoId);
-
-        WatchingInfo watchingInfo;
-
-        if (watchingInfoRepository.existsByUserIdAndVideoId(userId, videoId)) {
-
-            watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO));
-
-        } else {
-
-            watchingInfo = WatchingInfo.builder()
-                .userId(userId)
-                .videoId(videoId)
-                .watchingTime(0L)
-                .build();
-
-            watchingInfoRepository.save(watchingInfo);
-
-        }
+        Video video = videoRepository.findById(videoId)
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
 
         // 로그인 상태라면, 해당 유저가 해당 동영상에 대한 반응 정보를 불러온다.
         ReactionResponse reactionResponse = reactionService.getReaction(userId, videoId);
 
+        WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
+            .orElse(WatchingInfo.builder()
+                .userId(userId)
+                .videoId(videoId)
+                .watchingTime(0L)
+                .build()
+            );
+
+        video.incrementViewCount();
+
+        asyncService.startWatchingVideo(video, watchingInfo);
+
         return StartWatchingVideoResponse.builder()
             .watchingTime(watchingInfo.getWatchingTime())
-            .views(view.getCount())
+            .isWatchedToEnd(watchingInfo.getIsWatchedToEnd())
+            .views(video.getViewCount())
             .reactionResponse(reactionResponse)
             .build();
     }
@@ -173,10 +162,6 @@ public class VideoService {
 
         WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
             .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO));
-
-        if (watchingInfo == null) {
-            throw new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO);
-        }
 
         watchingInfo.addWatchingTime(watchingTime);
 
@@ -188,10 +173,6 @@ public class VideoService {
 
         WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
             .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO));
-
-        if (watchingInfo == null) {
-            throw new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO);
-        }
 
         watchingInfo.addWatchingTime(watchingTime);
         watchingInfo.completeWatchingVideo();

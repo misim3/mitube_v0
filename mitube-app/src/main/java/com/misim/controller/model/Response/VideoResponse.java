@@ -45,7 +45,7 @@ public class VideoResponse {
                 .userId(video.getUser().getId())
                 .category(VideoCategory.getNameByCode(video.getCategoryId()))
                 .videoUrl(video.getVideoFile().getPath())
-                .views(video.getViews())
+                .views(video.getViewCount())
                 .thumbnailUrl(video.getThumbnailUrl())
                 .build())
             .toList();
