@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "watching_infos")
+@Table(name = "temp_watching_infos")
 @NoArgsConstructor
-public class WatchingInfo extends BaseTimeEntity {
+public class TempWatchingInfo extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class WatchingInfo extends BaseTimeEntity {
     private Boolean isWatchedToEnd;
 
     @Builder
-    public WatchingInfo(Long userId, Long videoId, Long watchingTime) {
+    public TempWatchingInfo(Long userId, Long videoId, Long watchingTime) {
         this.userId = userId;
         this.videoId = videoId;
         this.watchingTime = watchingTime;
@@ -41,14 +41,5 @@ public class WatchingInfo extends BaseTimeEntity {
 
     public void completeWatchingVideo() {
         this.isWatchedToEnd = true;
-    }
-
-    public TempWatchingInfo convertToTempWatchingInfo() {
-        TempWatchingInfo tempWatchingInfo = new TempWatchingInfo(this.userId, this.videoId, this.watchingTime);
-
-        if (this.isWatchedToEnd) {
-            tempWatchingInfo.completeWatchingVideo();
-        }
-        return tempWatchingInfo;
     }
 }
