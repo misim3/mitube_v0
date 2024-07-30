@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,6 +46,7 @@ public class VideoService {
     private final SubscriptionRepository subscriptionRepository;
     private final AsyncService asyncService;
     private final ReactionService reactionService;
+    private final WatchingInfoService watchingInfoService;
     private final ViewIncreaseRequestService viewIncreaseRequestService;
 
     public String uploadVideos(MultipartFile file) {
@@ -158,27 +158,14 @@ public class VideoService {
             .build();
     }
 
-    @Async
     public void updateWatchingVideo(Long videoId, Long userId, Long watchingTime) {
 
-        WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
-            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO));
-
-        watchingInfo.addWatchingTime(watchingTime);
-
-        watchingInfoRepository.save(watchingInfo);
+        watchingInfoService.updateWatchingInfo(videoId, userId, watchingTime);
     }
 
-    @Async
     public void completeWatchingVideo(Long videoId, Long userId, Long watchingTime) {
 
-        WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
-            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO));
-
-        watchingInfo.addWatchingTime(watchingTime);
-        watchingInfo.completeWatchingVideo();
-
-        watchingInfoRepository.save(watchingInfo);
+        watchingInfoService.completeWatchingInfo(videoId, userId, watchingTime);
     }
 
     public List<VideoResponse> getNewVideos() {
