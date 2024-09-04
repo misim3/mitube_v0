@@ -1,9 +1,8 @@
 package com.misim.service;
 
 import com.misim.controller.model.Request.CreateVideoRequest;
-import com.misim.controller.model.Response.ReactionResponse;
-import com.misim.controller.model.Response.StartWatchingVideoResponse;
 import com.misim.controller.model.Response.VideoResponse;
+import com.misim.controller.model.Response.WatchingVideoResponse;
 import com.misim.entity.Subscription;
 import com.misim.entity.User;
 import com.misim.entity.Video;
@@ -130,32 +129,30 @@ public class VideoService {
         videoRepository.save(video);
     }
 
-    public StartWatchingVideoResponse startWatchingVideo(Long videoId, Long userId) {
+    public WatchingVideoResponse startWatchingVideo(Long videoId) {
 
         Video video = videoRepository.findById(videoId)
             .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
 
-        // 로그인 상태라면, 해당 유저가 해당 동영상에 대한 반응 정보를 불러온다.
-        ReactionResponse reactionResponse = reactionService.getReaction(userId, videoId);
+        video.incrementViewCount();
 
-        WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
-            .orElse(WatchingInfo.builder()
-                .userId(userId)
-                .videoId(videoId)
-                .watchingTime(0L)
-                .build()
-            );
+        return WatchingVideoResponse.builder()
+            .title(video.getTitle())
+            .description(video.getDescription())
+            .views(video.getViewCount())
+            .createdDate(video.getCreatedDate())
+            .videoLink(null)
+            .build();
+    }
+
+    public void incrementView(Long videoId) {
+
+        Video video = videoRepository.findById(videoId)
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
 
         video.incrementViewCount();
 
-        asyncService.startWatchingVideo(video, watchingInfo);
-
-        return StartWatchingVideoResponse.builder()
-            .watchingTime(watchingInfo.getWatchingTime())
-            .isWatchedToEnd(watchingInfo.getIsWatchedToEnd())
-            .views(video.getViewCount())
-            .reactionResponse(reactionResponse)
-            .build();
+        videoRepository.save(video);
     }
 
     public void updateWatchingVideo(Long videoId, Long userId, Long watchingTime) {
