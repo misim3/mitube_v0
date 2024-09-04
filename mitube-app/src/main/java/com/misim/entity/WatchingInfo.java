@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -23,20 +24,18 @@ public class WatchingInfo extends BaseTimeEntity {
 
     private Long videoId;
 
+    @Setter
     private Long watchingTime;
 
     private Boolean isWatchedToEnd;
 
     @Builder
-    public WatchingInfo(Long userId, Long videoId, Long watchingTime) {
+    public WatchingInfo(Long id, Long userId, Long videoId, Long watchingTime) {
+        this.id = id;
         this.userId = userId;
         this.videoId = videoId;
         this.watchingTime = watchingTime;
         this.isWatchedToEnd = false;
-    }
-
-    public void addWatchingTime(Long watchingTime) {
-        this.watchingTime += watchingTime;
     }
 
     public void completeWatchingVideo() {
@@ -44,7 +43,12 @@ public class WatchingInfo extends BaseTimeEntity {
     }
 
     public TempWatchingInfo convertToTempWatchingInfo() {
-        TempWatchingInfo tempWatchingInfo = new TempWatchingInfo(this.userId, this.videoId, this.watchingTime);
+        TempWatchingInfo tempWatchingInfo = TempWatchingInfo.builder()
+            .id(this.id)
+            .userId(this.userId)
+            .videoId(this.videoId)
+            .watchingTime(this.watchingTime)
+            .build();
 
         if (this.isWatchedToEnd) {
             tempWatchingInfo.completeWatchingVideo();

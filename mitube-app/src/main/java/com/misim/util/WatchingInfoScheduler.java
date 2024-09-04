@@ -11,7 +11,7 @@ public class WatchingInfoScheduler {
 
     private final WatchingInfoService watchingInfoService;
 
-    @Scheduled(fixedRate = 300000)  // 5분 간격
+    @Scheduled(fixedRate = 60000)  // 5분 간격
     public void scheduledUpdateWatchingInfo() {
         watchingInfoService.scheduleUpdate();
     }

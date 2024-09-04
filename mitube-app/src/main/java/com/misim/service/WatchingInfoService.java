@@ -2,8 +2,6 @@ package com.misim.service;
 
 import com.misim.entity.TempWatchingInfo;
 import com.misim.entity.WatchingInfo;
-import com.misim.exception.MitubeErrorCode;
-import com.misim.exception.MitubeException;
 import com.misim.repository.TempWatchingInfoRepository;
 import com.misim.repository.WatchingInfoRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +24,23 @@ public class WatchingInfoService {
 
             temp = tempWatchingInfoRepository.findByUserIdAndVideoId(userId, videoId);
 
-        } else {
+        } else if (watchingInfoRepository.existsByUserIdAndVideoId(userId, videoId)) {
 
-            WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
-                .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO));
+            WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId);
 
             temp = watchingInfo.convertToTempWatchingInfo();
+        } else {
+
+            WatchingInfo watchingInfo = WatchingInfo.builder()
+                .userId(userId)
+                .videoId(videoId)
+                .watchingTime(watchingTime)
+                .build();
+
+            temp = watchingInfoRepository.save(watchingInfo).convertToTempWatchingInfo();
         }
 
-        temp.addWatchingTime(watchingTime);
+        temp.setWatchingTime(watchingTime);
 
         tempWatchingInfoRepository.save(temp);
     }
@@ -42,10 +48,9 @@ public class WatchingInfoService {
     @Async
     public void completeWatchingInfo(Long videoId, Long userId, Long watchingTime) {
 
-        WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId)
-            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_WATCHING_INFO));
+        WatchingInfo watchingInfo = watchingInfoRepository.findByUserIdAndVideoId(userId, videoId);
 
-        watchingInfo.addWatchingTime(watchingTime);
+        watchingInfo.setWatchingTime(watchingTime);
         watchingInfo.completeWatchingVideo();
 
         watchingInfoRepository.save(watchingInfo);
@@ -54,7 +59,10 @@ public class WatchingInfoService {
     @Transactional
     public void scheduleUpdate() {
 
-        watchingInfoRepository.updateWatchingTime();
+        watchingInfoRepository.saveAll(tempWatchingInfoRepository.findAll()
+            .stream()
+            .map(TempWatchingInfo::convertToWatchingInfo).toList()
+        );
 
         tempWatchingInfoRepository.deleteAll();
     }
