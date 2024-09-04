@@ -13,6 +13,7 @@ import com.misim.repository.CommentRepository;
 import com.misim.repository.UserRepository;
 import com.misim.repository.VideoRepository;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class CommentService {
 
         if (scrollDirection.equals("up")) {
             comments = commentRepository.findUpCommentByVideoIdAndId(videoId, idx);
+            comments = comments.stream().sorted(Comparator.comparingLong(Comment::getId)).toList();
         } else if (scrollDirection.equals("down")) {
             comments = commentRepository.findDownCommentByVideoIdAndId(videoId, idx);
         }
@@ -48,7 +50,7 @@ public class CommentService {
         if (comments.size() == 11) {
             commentListResponse.setHasNext(true);
             commentListResponse.setCommentResponses(
-                commentListResponse.getCommentResponses().subList(0, 9));
+                commentListResponse.getCommentResponses().subList(0, 10));
         } else {
             commentListResponse.setHasNext(false);
         }
