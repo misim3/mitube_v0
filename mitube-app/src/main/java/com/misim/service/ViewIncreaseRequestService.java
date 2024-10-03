@@ -26,7 +26,7 @@ public class ViewIncreaseRequestService {
     @Scheduled(fixedRate = 3600000) // 1시간 간격으로 실행
     @Transactional
     public void cleanOldRecords() {
-        LocalDateTime oneWeekAgo = TimeUtil.getNow().minusDays(7).plusMinutes(1);
+        LocalDateTime oneWeekAgo = TimeUtil.getNow().minusDays(7).minusMinutes(1);
         viewIncreaseRequestRepository.deleteByRequestDateTimeBefore(oneWeekAgo);
     }
 }

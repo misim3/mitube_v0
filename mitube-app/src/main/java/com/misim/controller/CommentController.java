@@ -126,7 +126,7 @@ public class CommentController {
 
     private void checkRequests(Long idx, String scrollDirection) {
 
-        if (idx < 1) {
+        if (idx < 0) {
             throw new MitubeException(MitubeErrorCode.INVALID_COMMENT_INDEX);
         }
 
