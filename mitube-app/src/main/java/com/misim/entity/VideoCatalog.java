@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "videos")
 @NoArgsConstructor
-public class Video extends BaseTimeEntity {
+public class VideoCatalog extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,27 +25,15 @@ public class Video extends BaseTimeEntity {
     private String description;
 
     @ManyToOne
-    private User user;
-
-    @ManyToOne
     private VideoFile videoFile;
-
-    private Long viewCount;
 
     private Integer categoryId;
 
     @Builder
-    public Video(String title, String description, User user, VideoFile videoFile, Long viewCount,
-        Integer categoryId) {
+    public VideoCatalog(String title, String description, VideoFile videoFile, Integer categoryId) {
         this.title = title;
         this.description = description;
-        this.user = user;
         this.videoFile = videoFile;
-        this.viewCount = viewCount;
         this.categoryId = categoryId;
-    }
-
-    public void incrementViewCount() {
-        this.viewCount++;
     }
 }

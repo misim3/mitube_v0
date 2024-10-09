@@ -5,7 +5,7 @@ import com.misim.controller.model.Response.VideoResponse;
 import com.misim.controller.model.Response.WatchingVideoResponse;
 import com.misim.entity.Subscription;
 import com.misim.entity.User;
-import com.misim.entity.Video;
+import com.misim.entity.VideoCatalog;
 import com.misim.entity.VideoCategory;
 import com.misim.entity.VideoFile;
 import com.misim.entity.WatchingInfo;
@@ -117,30 +117,26 @@ public class VideoService {
 
         User user = userRepository.findByNickname(createVideoRequest.getNickname());
 
-        Video video = Video.builder()
+        VideoCatalog videoCatalog = VideoCatalog.builder()
             .title(createVideoRequest.getTitle())
             .description(createVideoRequest.getDescription())
-            .user(user)
             .videoFile(videoFile)
             .categoryId(createVideoRequest.getCategoryId())
             .build();
 
         // 비디오 저장
-        videoRepository.save(video);
+        videoRepository.save(videoCatalog);
     }
 
     public WatchingVideoResponse startWatchingVideo(Long videoId) {
 
-        Video video = videoRepository.findById(videoId)
+        VideoCatalog videoCatalog = videoRepository.findById(videoId)
             .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
 
-        video.incrementViewCount();
-
         return WatchingVideoResponse.builder()
-            .title(video.getTitle())
-            .description(video.getDescription())
-            .views(video.getViewCount())
-            .createdDate(video.getCreatedDate())
+            .title(videoCatalog.getTitle())
+            .description(videoCatalog.getDescription())
+            .createdDate(videoCatalog.getCreatedDate())
             .videoLink(null)
             .build();
     }
@@ -148,12 +144,12 @@ public class VideoService {
     @Async
     public void incrementView(Long videoId) {
 
-        Video video = videoRepository.findById(videoId)
-            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
-
-        video.incrementViewCount();
-
-        videoRepository.save(video);
+//        VideoCatalog videoCatalog = videoRepository.findById(videoId)
+//            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
+//
+//        videoCatalog.incrementViewCount();
+//
+//        videoRepository.save(videoCatalog);
     }
 
     public void updateWatchingVideo(Long videoId, Long userId, Long watchingTime) {
@@ -168,20 +164,20 @@ public class VideoService {
 
     public List<VideoResponse> getNewVideos() {
 
-        List<Video> videos = videoRepository.findTopTen();
+        List<VideoCatalog> videoCatalogs = videoRepository.findTopTen();
 
         // 유료 회원 여부 판단해서 광고
 
-        return VideoResponse.convertVideos(videos);
+        return VideoResponse.convertVideos(videoCatalogs);
     }
 
     public List<VideoResponse> getHotVideos() {
 
         List<Long> videoIds = viewIncreaseRequestService.getTopIncreasesForLastWeek();
 
-        List<Video> videos = videoRepository.findAllById(videoIds);
+        List<VideoCatalog> videoCatalogs = videoRepository.findAllById(videoIds);
 
-        return VideoResponse.convertVideos(videos);
+        return VideoResponse.convertVideos(videoCatalogs);
     }
 
     public List<VideoResponse> getWatchingVideos(Long userId) {
@@ -197,13 +193,13 @@ public class VideoService {
 
         List<WatchingInfo> watchingInfos = watchingInfoRepository.findLastTopTenByUserId(userId);
 
-        List<Video> videos = videoRepository.findAllById(
+        List<VideoCatalog> videoCatalogs = videoRepository.findAllById(
             watchingInfos.stream()
                 .map(WatchingInfo::getVideoId)
                 .toList()
         );
 
-        return VideoResponse.convertVideos(videos);
+        return VideoResponse.convertVideos(videoCatalogs);
     }
 
     public List<VideoResponse> getSubscribingChannelNewVideos(Long userId) {
@@ -220,11 +216,11 @@ public class VideoService {
         List<Subscription> subscriptions = subscriptionRepository.findSubscriptionsBySubscriberId(
             userId);
 
-        List<Video> videos = subscriptions.stream()
+        List<VideoCatalog> videoCatalogs = subscriptions.stream()
             .limit(10)
             .map(s -> videoRepository.findTopByUserId(s.getChannel().getOwner().getId()))
             .toList();
 
-        return VideoResponse.convertVideos(videos);
+        return VideoResponse.convertVideos(videoCatalogs);
     }
 }

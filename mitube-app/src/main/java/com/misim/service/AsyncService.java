@@ -1,6 +1,6 @@
 package com.misim.service;
 
-import com.misim.entity.Video;
+import com.misim.entity.VideoCatalog;
 import com.misim.entity.ViewIncreaseRequest;
 import com.misim.entity.WatchingInfo;
 import com.misim.repository.VideoRepository;
@@ -19,13 +19,13 @@ public class AsyncService {
     private final ViewIncreaseRequestRepository viewIncreaseRequestRepository;
 
     @Async
-    public void startWatchingVideo(Video video, WatchingInfo watchingInfo) {
-        videoRepository.save(video);
+    public void startWatchingVideo(VideoCatalog videoCatalog, WatchingInfo watchingInfo) {
+        videoRepository.save(videoCatalog);
         if (watchingInfo.getId() == null) {
             watchingInfoRepository.save(watchingInfo);
         }
         viewIncreaseRequestRepository.save(ViewIncreaseRequest.builder()
-            .videoId(video.getId())
+            .videoId(videoCatalog.getId())
             .build()
         );
     }
