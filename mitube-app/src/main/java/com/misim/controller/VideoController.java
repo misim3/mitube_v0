@@ -49,7 +49,7 @@ public class VideoController {
         @ApiResponse(responseCode = "200", description = "동영상 시청 요청 성공"),
         @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
-    @GetMapping("/watch/{videoId}")
+    @GetMapping("/{videoId}")
     public CommonResponse<WatchingVideoResponse> startWatchingVideo(
         @PathVariable @Parameter(name = "videoId", description = "시청할 동영상 식별 정보", required = true) Long videoId) {
 
@@ -66,7 +66,7 @@ public class VideoController {
         @ApiResponse(responseCode = "200", description = "동영상 시청 정보 업데이트 성공"),
         @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
-    @PostMapping("/watch/{videoId}/update")
+    @PostMapping("/{videoId}/update")
     public void watchingVideo(
         @PathVariable @Parameter(name = "videoId", description = "시청할 동영상 식별 정보", required = true) Long videoId,
         @RequestParam @Parameter(name = "userId", description = "동영상을 시청할 유저의 식별 정보") Long userId,
@@ -80,7 +80,7 @@ public class VideoController {
         @ApiResponse(responseCode = "200", description = "동영상 시청 정보 업데이트 성공"),
         @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
-    @PostMapping("/watch/{videoId}/complete")
+    @PostMapping("/{videoId}/complete")
     public void completeWatchingVideo(
         @PathVariable @Parameter(name = "videoId", description = "시청할 동영상 식별 정보", required = true) Long videoId,
         @RequestParam @Parameter(name = "userId", description = "동영상을 시청할 유저의 식별 정보") Long userId,
