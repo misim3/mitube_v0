@@ -141,6 +141,7 @@ public class VideoService {
             .build();
     }
 
+    //추후 수정
     @Async
     public void incrementView(Long videoId) {
 
@@ -202,6 +203,7 @@ public class VideoService {
         return VideoResponse.convertVideos(videoCatalogs);
     }
 
+    // 추후 수정
     public List<VideoResponse> getSubscribingChannelNewVideos(Long userId) {
 
         // 로그인하지 않은 사용자가 요청한 경우, 빈 리스트 반환
@@ -216,11 +218,12 @@ public class VideoService {
         List<Subscription> subscriptions = subscriptionRepository.findSubscriptionsBySubscriberId(
             userId);
 
-        List<VideoCatalog> videoCatalogs = subscriptions.stream()
-            .limit(10)
-            .map(s -> videoRepository.findTopByUserId(s.getChannel().getOwner().getId()))
-            .toList();
-
-        return VideoResponse.convertVideos(videoCatalogs);
+//        List<VideoCatalog> videoCatalogs = subscriptions.stream()
+//            .limit(10)
+//            .map(s -> videoRepository.findTopByUserId(s.getChannel().getOwner().getId()))
+//            .toList();
+//
+//        return VideoResponse.convertVideos(videoCatalogs);
+        return null;
     }
 }

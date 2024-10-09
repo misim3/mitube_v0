@@ -9,10 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VideoRepository extends JpaRepository<VideoCatalog, Long> {
 
-    VideoCatalog findTopByUserId(Long userId);
-
     @Query("SELECT v FROM VideoCatalog v ORDER BY v.createdDate DESC LIMIT 10")
     List<VideoCatalog> findTopTen();
-
-    VideoCatalog findByTitle(String title);
 }
