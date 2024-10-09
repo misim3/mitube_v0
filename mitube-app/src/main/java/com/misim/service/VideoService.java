@@ -123,7 +123,6 @@ public class VideoService {
             .user(user)
             .videoFile(videoFile)
             .categoryId(createVideoRequest.getCategoryId())
-            .thumbnailUrl("")
             .build();
 
         // 비디오 저장
