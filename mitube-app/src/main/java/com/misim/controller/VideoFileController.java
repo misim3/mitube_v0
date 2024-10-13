@@ -4,14 +4,16 @@ import com.misim.controller.model.Response.UploadVideosResponse;
 import com.misim.exception.CommonResponse;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
+import com.misim.service.VideoFileService;
 import com.misim.service.VideoService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -19,18 +21,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/videofiles")
 public class VideoFileController {
 
     private final VideoService videoService;
+    private final VideoFileService videoFileService;
 
-    @Operation(summary = "동영상 업로드", description = "새로운 동영상을 업로드합니다.")
-    @Parameter(name = "MultipartFile", description = "MultipartFile 형식의 동영상 데이터")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "동영상 업로드 성공"),
-        @ApiResponse(responseCode = "400", description = "요청 형식이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
-    })
+    public VideoFileController(VideoService videoService, VideoFileService videoFileService) {
+        this.videoService = videoService;
+        this.videoFileService = videoFileService;
+    }
+
     @PostMapping("/upload")
     public CommonResponse<UploadVideosResponse> uploadVideos(@RequestPart MultipartFile file) {
 
@@ -54,5 +55,18 @@ public class VideoFileController {
         if (file == null || file.isEmpty()) {
             throw new MitubeException(MitubeErrorCode.EMPTY_FILE);
         }
+    }
+
+    @GetMapping("/{videoId}")
+    public ResponseEntity<Resource> stream(@PathVariable Long videoId) {
+
+//        VideoCatalog videoCatalog = videoService.getVideo(videoId);
+//
+//        Resource resource = new FileSystemResource(videoCatalog.getVideoFile().getPath());
+        Path path = Paths.get("C:/Users/sim00/mitube/mitube-app/upload.path/2024_07_29/video.mp4");
+
+        Resource resource = new FileSystemResource(path);
+
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType("video/mp4")).body(resource);
     }
 }

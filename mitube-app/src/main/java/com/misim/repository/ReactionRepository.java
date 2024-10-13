@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReactionRepository extends JpaRepository<Reaction, Long> {
 
-    Boolean existsReactionByUserIdAndVideoId(Long userId, Long videoId);
+    Boolean existsReactionByUserIdAndVideoCatalogId(Long userId, Long videoCatalogId);
 
-    Optional<Reaction> findByUserIdAndVideoId(Long userId, Long videoId);
+    Optional<Reaction> findByUserIdAndVideoCatalogId(Long userId, Long videoCatalogId);
 }

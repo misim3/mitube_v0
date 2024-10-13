@@ -128,6 +128,11 @@ public class VideoService {
         videoRepository.save(videoCatalog);
     }
 
+    public VideoCatalog getVideo(Long videoId) {
+        return videoRepository.findById(videoId)
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
+    }
+
     public WatchingVideoResponse startWatchingVideo(Long videoId) {
 
         VideoCatalog videoCatalog = videoRepository.findById(videoId)

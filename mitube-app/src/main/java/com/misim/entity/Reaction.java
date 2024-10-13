@@ -33,15 +33,13 @@ public class Reaction {
     @JoinColumn(name = "USER_ID")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "VIDEO_ID")
-    private VideoCatalog videoCatalog;
+    private Long videoCatalogId;
 
     @Builder
-    public Reaction(String type, Boolean isActive, User user, VideoCatalog videoCatalog) {
+    public Reaction(String type, Boolean isActive, User user, Long videoCatalogId) {
         this.type = type;
         this.isActive = isActive;
         this.user = user;
-        this.videoCatalog = videoCatalog;
+        this.videoCatalogId = videoCatalogId;
     }
 }

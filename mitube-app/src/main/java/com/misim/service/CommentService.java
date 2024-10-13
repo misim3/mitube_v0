@@ -119,7 +119,7 @@ public class CommentService {
 
         Comment comment = Comment.builder()
             .content(request.getContent())
-            .videoCatalog(videoCatalog)
+            .videoCatalogId(videoCatalog.getId())
             .user(user)
             .parentCommentId(request.getParentCommentId())
             .build();
