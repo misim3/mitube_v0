@@ -17,27 +17,14 @@ import com.misim.repository.VideoFileRepository;
 import com.misim.repository.VideoRepository;
 import com.misim.repository.WatchingInfoRepository;
 import com.misim.util.Base64Convertor;
-import com.misim.util.TimeUtil;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class VideoService {
-
-    @Value("upload.path")
-    private String UPLOAD_PATH;
 
     private final VideoRepository videoRepository;
     private final VideoFileRepository videoFileRepository;
@@ -48,50 +35,6 @@ public class VideoService {
     private final ReactionService reactionService;
     private final WatchingInfoService watchingInfoService;
     private final ViewIncreaseRequestService viewIncreaseRequestService;
-
-    public String uploadVideos(MultipartFile file) {
-
-        String uploadDir = makeFolder();
-
-        String saveFileName = createFileName(file.getOriginalFilename());
-
-        String saveFile = uploadDir + File.separator + saveFileName;
-
-        Path saveFilePath = Paths.get(saveFile);
-
-        try {
-            file.transferTo(saveFilePath);
-        } catch (IOException e) {
-            e.fillInStackTrace();
-            throw new MitubeException(MitubeErrorCode.NOT_CREATED_FILE);
-        }
-
-        VideoFile videoFile = videoFileRepository.save(VideoFile.builder().path(saveFile).build());
-
-        return Base64Convertor.encode(videoFile.getId());
-    }
-
-    private String makeFolder() {
-
-        String folderStr = UPLOAD_PATH + File.separator + TimeUtil.getNow()
-            .format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
-
-        Path folder = Paths.get(folderStr);
-
-        if (!Files.exists(folder)) {
-            try {
-                Files.createDirectories(folder);
-            } catch (IOException e) {
-                throw new MitubeException(MitubeErrorCode.NOT_CREATED_DIR);
-            }
-        }
-
-        return folderStr;
-    }
-
-    private String createFileName(String originalFilename) {
-        return UUID.randomUUID() + "_" + originalFilename;
-    }
 
     public void createVideos(CreateVideoRequest createVideoRequest) {
 

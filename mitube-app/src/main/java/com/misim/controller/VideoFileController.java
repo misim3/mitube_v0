@@ -38,7 +38,7 @@ public class VideoFileController {
         checkFile(file);
 
         // 비디오 업로드
-        String id = videoService.uploadVideos(file);
+        String id = videoFileService.uploadVideos(file);
 
         UploadVideosResponse uploadVideosResponse = new UploadVideosResponse();
         uploadVideosResponse.setId(id);
