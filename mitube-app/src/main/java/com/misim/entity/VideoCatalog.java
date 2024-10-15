@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "videos")
+@Table(name = "video_catalog")
 @NoArgsConstructor
 public class VideoCatalog extends BaseTimeEntity {
 
