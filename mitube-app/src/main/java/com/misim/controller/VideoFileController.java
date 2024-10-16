@@ -31,6 +31,7 @@ public class VideoFileController {
         this.videoFileService = videoFileService;
     }
 
+    // videofiles/upload -> videos/create -> videofils/{videoId} 전체 과정 테스트 통과
     @PostMapping("/upload")
     public CommonResponse<UploadVideosResponse> uploadVideos(@RequestPart MultipartFile file) {
 
