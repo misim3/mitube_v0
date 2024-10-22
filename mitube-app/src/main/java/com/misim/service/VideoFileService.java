@@ -14,6 +14,8 @@ import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,9 +31,8 @@ public class VideoFileService {
         this.videoFileRepository = videoFileRepository;
     }
 
-    public VideoFile getVideoFile(Long videoFileId) {
-        return videoFileRepository.findById(videoFileId)
-            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO_FILE));
+    public Resource getFileResource(String path) {
+        return new FileSystemResource(path);
     }
 
 

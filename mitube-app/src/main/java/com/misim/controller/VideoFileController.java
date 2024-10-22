@@ -7,7 +7,6 @@ import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import com.misim.service.VideoFileService;
 import com.misim.service.VideoService;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -62,7 +61,7 @@ public class VideoFileController {
 
         VideoCatalog videoCatalog = videoService.getVideo(videoId);
 
-        Resource resource = new FileSystemResource(videoCatalog.getVideoFile().getPath());
+        Resource resource = videoFileService.getFileResource(videoCatalog.getVideoFile().getPath());
 
         return ResponseEntity.ok().contentType(MediaType.parseMediaType("video/mp4")).body(resource);
     }

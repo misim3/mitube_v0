@@ -1,8 +1,8 @@
 package com.misim.controller;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -71,17 +72,24 @@ class VideoFileControllerTest {
     @Test
     void testStreamVideo_Success() throws Exception {
         // given
+        Long videoId = 1L;
         VideoFile videoFile = new VideoFile("path/to/video.mp4");
         VideoCatalog videoCatalog = new VideoCatalog("title", "description", videoFile, 0);
-        when(videoService.getVideo(eq(1L))).thenReturn(videoCatalog);
+        when(videoService.getVideo(videoId)).thenReturn(videoCatalog);
+
+        byte[] videoContent = "test video content".getBytes();
+        ByteArrayResource resource = new ByteArrayResource(videoContent);
+        when(videoFileService.getFileResource("path/to/video.mp4")).thenReturn(resource);
 
         // when & then
-        mockMvc.perform(get("/videofiles/1"))
+        mockMvc.perform(get("/videofiles/{videoId}", videoId))
             .andExpect(status().isOk())
-            .andExpect(content().contentType("video/mp4"));
+            .andExpect(content().contentType(MediaType.parseMediaType("video/mp4")))
+            .andExpect(content().bytes(videoContent));
 
         // verify
-        verify(videoService).getVideo(1L);
+        verify(videoService, times(1)).getVideo(videoId);
+        verify(videoFileService, times(1)).getFileResource("path/to/video.mp4");
     }
 
     @Test
