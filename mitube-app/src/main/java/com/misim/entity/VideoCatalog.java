@@ -4,7 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,16 +24,20 @@ public class VideoCatalog extends BaseTimeEntity {
 
     private String description;
 
-    @ManyToOne
-    private VideoFile videoFile;
-
     private Integer categoryId;
 
+    @OneToOne
+    private VideoFile videoFile;
+
+    @OneToOne
+    private VideoMetadata videoMetadata;
+
     @Builder
-    public VideoCatalog(String title, String description, VideoFile videoFile, Integer categoryId) {
+    public VideoCatalog(String title, String description, Integer categoryId, VideoFile videoFile, VideoMetadata videoMetadata) {
         this.title = title;
         this.description = description;
-        this.videoFile = videoFile;
         this.categoryId = categoryId;
+        this.videoFile = videoFile;
+        this.videoMetadata = videoMetadata;
     }
 }
