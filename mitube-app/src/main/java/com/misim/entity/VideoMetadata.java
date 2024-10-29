@@ -29,4 +29,24 @@ public class VideoMetadata extends BaseTimeEntity{
         this.likeCount = likeCount;
         this.dislikeCount = dislikeCount;
     }
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
+
+    public void incrementLikeCount() {
+        this.likeCount++;
+    }
+
+    public void incrementDislikeCount() {
+        this.dislikeCount++;
+    }
+
+    public void decrementLikeCount() {
+        this.likeCount--;
+    }
+
+    public void decrementDislikeCount() {
+        this.dislikeCount--;
+    }
 }
