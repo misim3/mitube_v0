@@ -1,10 +1,12 @@
 package com.misim.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -12,7 +14,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MitubeException.class)
     public ResponseEntity<CommonResponse<?>> handleMitubeException(MitubeException e) {
 
-        e.fillInStackTrace();
+        log.error("Handler MitubeException: {}", e.getMessage(), e);
 
         CommonResponse<?> commonResponse = new CommonResponse<>(e.getErrorCode().getCode(),
             e.getErrorCode().getMessage(), null);
@@ -23,7 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CommonResponse<?>> handleUnknownException(Exception e) {
 
-        e.fillInStackTrace();
+        log.error("Handler UnknownException: {}", e.getMessage(), e);
 
         CommonResponse<?> commonResponse = new CommonResponse<>(
             MitubeErrorCode.UNKNOWN_EXCEPTION.getCode(),
