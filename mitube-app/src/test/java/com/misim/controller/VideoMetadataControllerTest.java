@@ -9,7 +9,6 @@ import com.misim.exception.CommonResponse;
 import com.misim.service.VideoMetadataService;
 import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
-import io.restassured.http.ContentType;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import java.util.NoSuchElementException;
@@ -34,7 +33,6 @@ class VideoMetadataControllerTest {
             .given()
                 .log()
                 .all()
-                .contentType(ContentType.JSON)
                 .pathParam("videoMetadataId", metadata.getId())
             .when()
                 .get("/videoMetadata/{videoMetadataId}")
@@ -62,7 +60,6 @@ class VideoMetadataControllerTest {
             .given()
                 .log()
                 .all()
-                .contentType(ContentType.JSON)
                 .pathParam("videoMetadataId", metadata1.getId())
             .when()
                 .post("/videoMetadata/{videoMetadataId}/view")
@@ -89,9 +86,8 @@ class VideoMetadataControllerTest {
             .given()
                 .log()
                 .all()
-                .contentType(ContentType.JSON)
                 .pathParam("videoMetadataId", metadata1.getId())
-                .param("isChecked", true)
+                .queryParam("isChecked", true)
             .when()
                 .post("/videoMetadata/{videoMetadataId}/like")
             .then()
@@ -116,9 +112,8 @@ class VideoMetadataControllerTest {
             .given()
                 .log()
                 .all()
-                .contentType(ContentType.JSON)
                 .pathParam("videoMetadataId", metadata1.getId())
-                .param("isChecked", true)
+                .queryParam("isChecked", true)
             .when()
                 .post("/videoMetadata/{videoMetadataId}/dislike")
             .then()
@@ -144,7 +139,6 @@ class VideoMetadataControllerTest {
             .given()
                 .log()
                 .all()
-                .contentType(ContentType.JSON)
                 .pathParam("videoMetadataId", metadata1.getId())
             .when()
                 .delete("/videoMetadata/{videoMetadataId}")
