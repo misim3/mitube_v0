@@ -24,9 +24,9 @@ public class MainController {
 
     private final VideoService videoService;
 
-    @Operation(summary = "메인 화면 데이터 전송", description = "메인 화면에 필요한 데이터 전송")
+    @Operation(summary = "카테고리 목록 전송", description = "메인 화면에 필요한 카테고리 목록 전송")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "메인 화면 데이터 전송 성공"),
+        @ApiResponse(responseCode = "200", description = "카테고리 목록 전송 성공"),
         @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @GetMapping("/category")
@@ -40,9 +40,9 @@ public class MainController {
             .build();
     }
 
-    @Operation(summary = "메인 화면 데이터 전송", description = "메인 화면에 필요한 데이터 전송")
+    @Operation(summary = "인기 영상 목록 전송", description = "메인 화면에 필요한 인기 영상 목록 전송")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "메인 화면 데이터 전송 성공"),
+        @ApiResponse(responseCode = "200", description = "인기 영상 목록 전송 성공"),
         @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @GetMapping("/hot")
@@ -56,9 +56,9 @@ public class MainController {
             .build();
     }
 
-    @Operation(summary = "메인 화면 데이터 전송", description = "메인 화면에 필요한 데이터 전송")
+    @Operation(summary = "새 영상 목록 전송", description = "메인 화면에 필요한 새 영상 목록 전송")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "메인 화면 데이터 전송 성공"),
+        @ApiResponse(responseCode = "200", description = "새 영상 목록 전송 성공"),
         @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @GetMapping("/new")
@@ -72,9 +72,9 @@ public class MainController {
             .build();
     }
 
-    @Operation(summary = "메인 화면 데이터 전송", description = "메인 화면에 필요한 데이터 전송")
+    @Operation(summary = "시청 중인 영상 목록 전송", description = "메인 화면에 필요한 시청 중인 영상 목록 전송")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "메인 화면 데이터 전송 성공"),
+        @ApiResponse(responseCode = "200", description = "시청 중인 영상 목록 전송 성공"),
         @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @GetMapping("/watching")
@@ -89,9 +89,9 @@ public class MainController {
             .build();
     }
 
-    @Operation(summary = "메인 화면 데이터 전송", description = "메인 화면에 필요한 데이터 전송")
+    @Operation(summary = "구독 채널의 신규 영상 목록 전송", description = "메인 화면에 필요한 구독 채널의 신규 영상 목록 전송")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "메인 화면 데이터 전송 성공"),
+        @ApiResponse(responseCode = "200", description = "구독 채널의 신규 영상 목록 전송 성공"),
         @ApiResponse(responseCode = "400", description = "요청이 올바르지 않습니다.", content = @Content(schema = @Schema(implementation = CommonResponse.class)))
     })
     @GetMapping("/subscribing")

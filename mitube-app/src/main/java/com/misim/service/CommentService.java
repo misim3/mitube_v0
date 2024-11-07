@@ -6,7 +6,7 @@ import com.misim.controller.model.Response.CommentResponse;
 import com.misim.controller.model.Response.CreateCommentResponse;
 import com.misim.entity.Comment;
 import com.misim.entity.User;
-import com.misim.entity.Video;
+import com.misim.entity.VideoCatalog;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import com.misim.repository.CommentRepository;
@@ -111,7 +111,7 @@ public class CommentService {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_COMMENT);
         }
 
-        Video video = videoRepository.findById(request.getVideoId())
+        VideoCatalog videoCatalog = videoRepository.findById(request.getVideoId())
             .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
 
         User user = userRepository.findById(request.getUserId())
@@ -119,7 +119,7 @@ public class CommentService {
 
         Comment comment = Comment.builder()
             .content(request.getContent())
-            .video(video)
+            .videoCatalogId(videoCatalog.getId())
             .user(user)
             .parentCommentId(request.getParentCommentId())
             .build();

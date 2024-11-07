@@ -25,7 +25,7 @@ public class ReactionService {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_USER);
         }
 
-        Optional<Reaction> reaction = reactionRepository.findByUserIdAndVideoId(userId, videoId);
+        Optional<Reaction> reaction = reactionRepository.findByUserIdAndVideoCatalogId(userId, videoId);
 
         return reaction.map(r -> ReactionResponse.builder()
                 .type(r.getType())
@@ -43,7 +43,7 @@ public class ReactionService {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO);
         }
 
-        Reaction reaction = reactionRepository.findByUserIdAndVideoId(userId, videoId)
+        Reaction reaction = reactionRepository.findByUserIdAndVideoCatalogId(userId, videoId)
             .orElse(null);
 
         if (reaction != null) {
@@ -58,8 +58,7 @@ public class ReactionService {
                 .isActive(true)
                 .user(userRepository.findById(userId)
                     .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_USER)))
-                .video(videoRepository.findById(videoId)
-                    .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO)))
+                .videoCatalogId(videoId)
                 .build();
         }
 
@@ -76,11 +75,11 @@ public class ReactionService {
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO);
         }
 
-        if (!reactionRepository.existsReactionByUserIdAndVideoId(userId, videoId)) {
+        if (!reactionRepository.existsReactionByUserIdAndVideoCatalogId(userId, videoId)) {
             throw new MitubeException(MitubeErrorCode.INVALID_REACTION_UNCHECK);
         }
 
-        Reaction reaction = reactionRepository.findByUserIdAndVideoId(userId, videoId)
+        Reaction reaction = reactionRepository.findByUserIdAndVideoCatalogId(userId, videoId)
             .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_REACTION));
 
         reaction.setType(type);

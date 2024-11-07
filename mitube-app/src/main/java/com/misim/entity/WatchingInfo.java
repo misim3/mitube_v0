@@ -41,18 +41,4 @@ public class WatchingInfo extends BaseTimeEntity {
     public void completeWatchingVideo() {
         this.isWatchedToEnd = true;
     }
-
-    public TempWatchingInfo convertToTempWatchingInfo() {
-        TempWatchingInfo tempWatchingInfo = TempWatchingInfo.builder()
-            .id(this.id)
-            .userId(this.userId)
-            .videoId(this.videoId)
-            .watchingTime(this.watchingTime)
-            .build();
-
-        if (this.isWatchedToEnd) {
-            tempWatchingInfo.completeWatchingVideo();
-        }
-        return tempWatchingInfo;
-    }
 }

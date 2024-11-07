@@ -5,7 +5,7 @@ import com.misim.controller.model.Response.VideoResponse;
 import com.misim.controller.model.Response.WatchingVideoResponse;
 import com.misim.entity.Subscription;
 import com.misim.entity.User;
-import com.misim.entity.Video;
+import com.misim.entity.VideoCatalog;
 import com.misim.entity.VideoCategory;
 import com.misim.entity.VideoFile;
 import com.misim.entity.WatchingInfo;
@@ -17,27 +17,14 @@ import com.misim.repository.VideoFileRepository;
 import com.misim.repository.VideoRepository;
 import com.misim.repository.WatchingInfoRepository;
 import com.misim.util.Base64Convertor;
-import com.misim.util.TimeUtil;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class VideoService {
-
-    @Value("upload.path")
-    private String UPLOAD_PATH;
 
     private final VideoRepository videoRepository;
     private final VideoFileRepository videoFileRepository;
@@ -48,50 +35,6 @@ public class VideoService {
     private final ReactionService reactionService;
     private final WatchingInfoService watchingInfoService;
     private final ViewIncreaseRequestService viewIncreaseRequestService;
-
-    public String uploadVideos(MultipartFile file) {
-
-        String uploadDir = makeFolder();
-
-        String saveFileName = createFileName(file.getOriginalFilename());
-
-        String saveFile = uploadDir + File.separator + saveFileName;
-
-        Path saveFilePath = Paths.get(saveFile);
-
-        try {
-            file.transferTo(saveFilePath);
-        } catch (IOException e) {
-            e.fillInStackTrace();
-            throw new MitubeException(MitubeErrorCode.NOT_CREATED_FILE);
-        }
-
-        VideoFile videoFile = videoFileRepository.save(VideoFile.builder().path(saveFile).build());
-
-        return Base64Convertor.encode(videoFile.getId());
-    }
-
-    private String makeFolder() {
-
-        String folderStr = UPLOAD_PATH + File.separator + TimeUtil.getNow()
-            .format(DateTimeFormatter.ofPattern("yyyy_MM_dd"));
-
-        Path folder = Paths.get(folderStr);
-
-        if (!Files.exists(folder)) {
-            try {
-                Files.createDirectories(folder);
-            } catch (IOException e) {
-                throw new MitubeException(MitubeErrorCode.NOT_CREATED_DIR);
-            }
-        }
-
-        return folderStr;
-    }
-
-    private String createFileName(String originalFilename) {
-        return UUID.randomUUID() + "_" + originalFilename;
-    }
 
     public void createVideos(CreateVideoRequest createVideoRequest) {
 
@@ -117,44 +60,45 @@ public class VideoService {
 
         User user = userRepository.findByNickname(createVideoRequest.getNickname());
 
-        Video video = Video.builder()
+        VideoCatalog videoCatalog = VideoCatalog.builder()
             .title(createVideoRequest.getTitle())
             .description(createVideoRequest.getDescription())
-            .user(user)
             .videoFile(videoFile)
             .categoryId(createVideoRequest.getCategoryId())
-            .thumbnailUrl("")
             .build();
 
         // 비디오 저장
-        videoRepository.save(video);
+        videoRepository.save(videoCatalog);
+    }
+
+    public VideoCatalog getVideo(Long videoId) {
+        return videoRepository.findById(videoId)
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
     }
 
     public WatchingVideoResponse startWatchingVideo(Long videoId) {
 
-        Video video = videoRepository.findById(videoId)
+        VideoCatalog videoCatalog = videoRepository.findById(videoId)
             .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
 
-        video.incrementViewCount();
-
         return WatchingVideoResponse.builder()
-            .title(video.getTitle())
-            .description(video.getDescription())
-            .views(video.getViewCount())
-            .createdDate(video.getCreatedDate())
+            .title(videoCatalog.getTitle())
+            .description(videoCatalog.getDescription())
+            .createdDate(videoCatalog.getCreatedDate())
             .videoLink(null)
             .build();
     }
 
+    //추후 수정
     @Async
     public void incrementView(Long videoId) {
 
-        Video video = videoRepository.findById(videoId)
-            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
-
-        video.incrementViewCount();
-
-        videoRepository.save(video);
+//        VideoCatalog videoCatalog = videoRepository.findById(videoId)
+//            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO));
+//
+//        videoCatalog.incrementViewCount();
+//
+//        videoRepository.save(videoCatalog);
     }
 
     public void updateWatchingVideo(Long videoId, Long userId, Long watchingTime) {
@@ -169,20 +113,20 @@ public class VideoService {
 
     public List<VideoResponse> getNewVideos() {
 
-        List<Video> videos = videoRepository.findTopTen();
+        List<VideoCatalog> videoCatalogs = videoRepository.findTopTen();
 
         // 유료 회원 여부 판단해서 광고
 
-        return VideoResponse.convertVideos(videos);
+        return VideoResponse.convertVideos(videoCatalogs);
     }
 
     public List<VideoResponse> getHotVideos() {
 
         List<Long> videoIds = viewIncreaseRequestService.getTopIncreasesForLastWeek();
 
-        List<Video> videos = videoRepository.findAllById(videoIds);
+        List<VideoCatalog> videoCatalogs = videoRepository.findAllById(videoIds);
 
-        return VideoResponse.convertVideos(videos);
+        return VideoResponse.convertVideos(videoCatalogs);
     }
 
     public List<VideoResponse> getWatchingVideos(Long userId) {
@@ -198,15 +142,16 @@ public class VideoService {
 
         List<WatchingInfo> watchingInfos = watchingInfoRepository.findLastTopTenByUserId(userId);
 
-        List<Video> videos = videoRepository.findAllById(
+        List<VideoCatalog> videoCatalogs = videoRepository.findAllById(
             watchingInfos.stream()
                 .map(WatchingInfo::getVideoId)
                 .toList()
         );
 
-        return VideoResponse.convertVideos(videos);
+        return VideoResponse.convertVideos(videoCatalogs);
     }
 
+    // 추후 수정
     public List<VideoResponse> getSubscribingChannelNewVideos(Long userId) {
 
         // 로그인하지 않은 사용자가 요청한 경우, 빈 리스트 반환
@@ -221,11 +166,12 @@ public class VideoService {
         List<Subscription> subscriptions = subscriptionRepository.findSubscriptionsBySubscriberId(
             userId);
 
-        List<Video> videos = subscriptions.stream()
-            .limit(10)
-            .map(s -> videoRepository.findTopByUserId(s.getChannel().getOwner().getId()))
-            .toList();
-
-        return VideoResponse.convertVideos(videos);
+//        List<VideoCatalog> videoCatalogs = subscriptions.stream()
+//            .limit(10)
+//            .map(s -> videoRepository.findTopByUserId(s.getChannel().getOwner().getId()))
+//            .toList();
+//
+//        return VideoResponse.convertVideos(videoCatalogs);
+        return null;
     }
 }

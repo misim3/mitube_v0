@@ -24,9 +24,7 @@ public class Comment extends BaseTimeEntity {
     @Setter
     private String content;
 
-    // 단방향 매핑
-    @ManyToOne
-    private Video video;
+    private Long videoCatalogId;
 
     private Long parentCommentId;
 
@@ -38,9 +36,9 @@ public class Comment extends BaseTimeEntity {
     private Boolean isActive;
 
     @Builder
-    public Comment(String content, Video video, Long parentCommentId, User user) {
+    public Comment(String content, Long videoCatalogId, Long parentCommentId, User user) {
         this.content = content;
-        this.video = video;
+        this.videoCatalogId = videoCatalogId;
         this.parentCommentId = parentCommentId;
         this.user = user;
         this.isActive = true;
