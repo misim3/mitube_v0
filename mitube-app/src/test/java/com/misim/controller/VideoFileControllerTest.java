@@ -74,7 +74,7 @@ class VideoFileControllerTest {
         // given
         Long videoId = 1L;
         VideoFile videoFile = new VideoFile("path/to/video.mp4");
-        VideoCatalog videoCatalog = new VideoCatalog("title", "description", videoFile, 0);
+        VideoCatalog videoCatalog = new VideoCatalog("title", "description", 0, videoFile, null);
         when(videoService.getVideo(videoId)).thenReturn(videoCatalog);
 
         byte[] videoContent = "test video content".getBytes();

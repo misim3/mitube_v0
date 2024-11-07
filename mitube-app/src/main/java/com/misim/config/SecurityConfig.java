@@ -24,7 +24,8 @@ public class SecurityConfig {
                 "/comments/**",
                 "/channels/**",
                 "/home",
-                "/videofiles/**"
+                "/videofiles/**",
+                "/videoMetadata/**"
             );
     }
 
