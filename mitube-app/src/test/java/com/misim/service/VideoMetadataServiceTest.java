@@ -44,6 +44,16 @@ class VideoMetadataServiceTest {
     }
 
     @Test
+    void read_throw_exception() {
+
+        Long id = 9999L;
+
+        assertThatThrownBy(() -> videoMetadataService.read(id))
+            .isInstanceOf(NoSuchElementException.class);
+
+    }
+
+    @Test
     void updateViewCount() {
 
         VideoMetadata metadata1 = videoMetadataService.create();
@@ -51,34 +61,91 @@ class VideoMetadataServiceTest {
         videoMetadataService.updateViewCount(metadata1.getId());
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
-
         assertThat(metadata2.getViewCount()).isGreaterThan(metadata1.getViewCount());
 
     }
 
     @Test
-    void updateLikeCount() {
+    void updateViewCount_throw_exception() {
 
+        Long id = 9999L;
+
+        assertThatThrownBy(() -> videoMetadataService.updateViewCount(id))
+            .isInstanceOf(NoSuchElementException.class);
+
+    }
+
+    @Test
+    void updateLikeCount_up() {
+
+        boolean isChecked = true;
         VideoMetadata metadata1 = videoMetadataService.create();
 
-        videoMetadataService.updateLikeCount(metadata1.getId(), true);
+        videoMetadataService.updateLikeCount(metadata1.getId(), isChecked);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
-
         assertThat(metadata2.getLikeCount()).isGreaterThan(metadata1.getLikeCount());
 
     }
 
     @Test
-    void updateDislikeCount() {
+    void updateLikeCount_down() {
 
+        boolean isChecked = false;
         VideoMetadata metadata1 = videoMetadataService.create();
 
-        videoMetadataService.updateDislikeCount(metadata1.getId(), true);
+        videoMetadataService.updateLikeCount(metadata1.getId(), isChecked);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        assertThat(metadata2.getLikeCount()).isLessThanOrEqualTo(metadata1.getLikeCount());
 
+    }
+
+    @Test
+    void updateLikeCount_throw_exception() {
+
+        Long id = 9999L;
+        boolean isChecked = true;
+
+        assertThatThrownBy(() -> videoMetadataService.updateLikeCount(id, isChecked))
+            .isInstanceOf(NoSuchElementException.class);
+
+    }
+
+    @Test
+    void updateDislikeCount_up() {
+
+        boolean isChecked = true;
+        VideoMetadata metadata1 = videoMetadataService.create();
+
+        videoMetadataService.updateDislikeCount(metadata1.getId(), isChecked);
+
+        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
         assertThat(metadata2.getDislikeCount()).isGreaterThan(metadata1.getDislikeCount());
+
+    }
+
+    @Test
+    void updateDislikeCount_down() {
+
+        boolean isChecked = false;
+        VideoMetadata metadata1 = videoMetadataService.create();
+
+        videoMetadataService.updateDislikeCount(metadata1.getId(), isChecked);
+
+        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        assertThat(metadata2.getDislikeCount()).isLessThanOrEqualTo(metadata1.getDislikeCount());
+
+    }
+
+    @Test
+    void updateDislikeCount_throw_exception() {
+
+        Long id = 9999L;
+        boolean isChecked = true;
+
+        assertThatThrownBy(() -> videoMetadataService.updateDislikeCount(id, isChecked))
+            .isInstanceOf(NoSuchElementException.class);
 
     }
 
@@ -91,6 +158,17 @@ class VideoMetadataServiceTest {
 
         assertThatThrownBy(() -> videoMetadataService.read(metadata1.getId()))
             .isInstanceOf(NoSuchElementException.class);
+
+    }
+
+    @Test
+    void delete_noSuchElement_not_throw_exception() {
+
+        Long id = 9999L;
+        assertThatThrownBy(() -> videoMetadataService.read(id))
+            .isInstanceOf(NoSuchElementException.class);
+
+        videoMetadataService.delete(id);
 
     }
 }
