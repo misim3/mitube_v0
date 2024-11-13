@@ -45,6 +45,7 @@ class VideoMetadataControllerTest {
         CommonResponse<MetadataResponse> commonResponse = response.as(
             new TypeRef<CommonResponse<MetadataResponse>>() {});
 
+        assertThat(commonResponse.getCode()).isEqualTo(200);
         assertThat(commonResponse.getBody().viewCount()).isEqualTo(metadata.getViewCount());
         assertThat(commonResponse.getBody().likeCount()).isEqualTo(metadata.getLikeCount());
         assertThat(commonResponse.getBody().dislikeCount()).isEqualTo(metadata.getDislikeCount());
@@ -56,7 +57,7 @@ class VideoMetadataControllerTest {
 
         Long id = 9999L;
 
-        ExtractableResponse<Response> response = RestAssured
+        RestAssured
             .given()
             .log()
             .all()
@@ -76,7 +77,7 @@ class VideoMetadataControllerTest {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
-        RestAssured
+        ExtractableResponse<Response> response = RestAssured
             .given()
                 .log()
                 .all()
@@ -88,6 +89,11 @@ class VideoMetadataControllerTest {
                 .all()
                 .statusCode(200)
                 .extract();
+
+        CommonResponse<?> commonResponse = response.as(
+            new TypeRef<CommonResponse<?>>() {});
+
+        assertThat(commonResponse.getCode()).isEqualTo(201);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
 
@@ -122,7 +128,7 @@ class VideoMetadataControllerTest {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
-        RestAssured
+        ExtractableResponse<Response> response = RestAssured
             .given()
                 .log()
                 .all()
@@ -135,6 +141,11 @@ class VideoMetadataControllerTest {
                 .all()
                 .statusCode(200)
                 .extract();
+
+        CommonResponse<?> commonResponse = response.as(
+            new TypeRef<CommonResponse<?>>() {});
+
+        assertThat(commonResponse.getCode()).isEqualTo(201);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
 
@@ -149,7 +160,7 @@ class VideoMetadataControllerTest {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
-        RestAssured
+        ExtractableResponse<Response> response = RestAssured
             .given()
             .log()
             .all()
@@ -162,6 +173,11 @@ class VideoMetadataControllerTest {
             .all()
             .statusCode(200)
             .extract();
+
+        CommonResponse<?> commonResponse = response.as(
+            new TypeRef<CommonResponse<?>>() {});
+
+        assertThat(commonResponse.getCode()).isEqualTo(201);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
 
@@ -197,7 +213,7 @@ class VideoMetadataControllerTest {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
-        RestAssured
+        ExtractableResponse<Response> response = RestAssured
             .given()
                 .log()
                 .all()
@@ -210,6 +226,11 @@ class VideoMetadataControllerTest {
                 .all()
                 .statusCode(200)
                 .extract();
+
+        CommonResponse<?> commonResponse = response.as(
+            new TypeRef<CommonResponse<?>>() {});
+
+        assertThat(commonResponse.getCode()).isEqualTo(201);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
 
@@ -224,7 +245,7 @@ class VideoMetadataControllerTest {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
-        RestAssured
+        ExtractableResponse<Response> response = RestAssured
             .given()
             .log()
             .all()
@@ -237,6 +258,11 @@ class VideoMetadataControllerTest {
             .all()
             .statusCode(200)
             .extract();
+
+        CommonResponse<?> commonResponse = response.as(
+            new TypeRef<CommonResponse<?>>() {});
+
+        assertThat(commonResponse.getCode()).isEqualTo(201);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
 
@@ -272,7 +298,7 @@ class VideoMetadataControllerTest {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
-        RestAssured
+        ExtractableResponse<Response> response = RestAssured
             .given()
                 .log()
                 .all()
@@ -285,6 +311,11 @@ class VideoMetadataControllerTest {
                 .statusCode(200)
                 .extract();
 
+        CommonResponse<?> commonResponse = response.as(
+            new TypeRef<CommonResponse<?>>() {});
+
+        assertThat(commonResponse.getCode()).isEqualTo(204);
+
         assertThatThrownBy(() -> videoMetadataService.read(metadata1.getId()))
             .isInstanceOf(NoSuchElementException.class);
 
@@ -296,7 +327,7 @@ class VideoMetadataControllerTest {
 
         Long id = 9999L;
 
-        RestAssured
+        ExtractableResponse<Response> response = RestAssured
             .given()
             .log()
             .all()
@@ -308,6 +339,11 @@ class VideoMetadataControllerTest {
             .all()
             .statusCode(200)
             .extract();
+
+        CommonResponse<?> commonResponse = response.as(
+            new TypeRef<CommonResponse<?>>() {});
+
+        assertThat(commonResponse.getCode()).isEqualTo(204);
 
     }
 }
