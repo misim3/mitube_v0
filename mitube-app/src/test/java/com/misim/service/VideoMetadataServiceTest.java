@@ -162,9 +162,10 @@ class VideoMetadataServiceTest {
     }
 
     @Test
-    void delete_noSuchElement_not_throw_exception() {
+    void delete_noSuchElement() {
 
         Long id = 9999L;
+
         assertThatThrownBy(() -> videoMetadataService.read(id))
             .isInstanceOf(NoSuchElementException.class);
 
