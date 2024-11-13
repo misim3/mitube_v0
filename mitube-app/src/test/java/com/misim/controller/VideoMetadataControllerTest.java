@@ -43,7 +43,8 @@ class VideoMetadataControllerTest {
                 .extract();
 
         CommonResponse<MetadataResponse> commonResponse = response.as(
-            new TypeRef<CommonResponse<MetadataResponse>>() {});
+            new TypeRef<>() {
+            });
 
         assertThat(commonResponse.getCode()).isEqualTo(200);
         assertThat(commonResponse.getBody().viewCount()).isEqualTo(metadata.getViewCount());
@@ -91,7 +92,8 @@ class VideoMetadataControllerTest {
                 .extract();
 
         CommonResponse<?> commonResponse = response.as(
-            new TypeRef<CommonResponse<?>>() {});
+            new TypeRef<>() {
+            });
 
         assertThat(commonResponse.getCode()).isEqualTo(201);
 
@@ -143,7 +145,8 @@ class VideoMetadataControllerTest {
                 .extract();
 
         CommonResponse<?> commonResponse = response.as(
-            new TypeRef<CommonResponse<?>>() {});
+            new TypeRef<>() {
+            });
 
         assertThat(commonResponse.getCode()).isEqualTo(201);
 
@@ -175,7 +178,8 @@ class VideoMetadataControllerTest {
             .extract();
 
         CommonResponse<?> commonResponse = response.as(
-            new TypeRef<CommonResponse<?>>() {});
+            new TypeRef<>() {
+            });
 
         assertThat(commonResponse.getCode()).isEqualTo(201);
 
@@ -228,7 +232,8 @@ class VideoMetadataControllerTest {
                 .extract();
 
         CommonResponse<?> commonResponse = response.as(
-            new TypeRef<CommonResponse<?>>() {});
+            new TypeRef<>() {
+            });
 
         assertThat(commonResponse.getCode()).isEqualTo(201);
 
@@ -260,7 +265,8 @@ class VideoMetadataControllerTest {
             .extract();
 
         CommonResponse<?> commonResponse = response.as(
-            new TypeRef<CommonResponse<?>>() {});
+            new TypeRef<>() {
+            });
 
         assertThat(commonResponse.getCode()).isEqualTo(201);
 
@@ -312,7 +318,8 @@ class VideoMetadataControllerTest {
                 .extract();
 
         CommonResponse<?> commonResponse = response.as(
-            new TypeRef<CommonResponse<?>>() {});
+            new TypeRef<>() {
+            });
 
         assertThat(commonResponse.getCode()).isEqualTo(204);
 
@@ -341,7 +348,8 @@ class VideoMetadataControllerTest {
             .extract();
 
         CommonResponse<?> commonResponse = response.as(
-            new TypeRef<CommonResponse<?>>() {});
+            new TypeRef<>() {
+            });
 
         assertThat(commonResponse.getCode()).isEqualTo(204);
 
