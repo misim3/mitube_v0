@@ -1,7 +1,9 @@
 package com.misim.exception;
 
+import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @Order(value = 1)
     @ExceptionHandler(MitubeException.class)
     public ResponseEntity<CommonResponse<?>> handleMitubeException(MitubeException e) {
 
@@ -21,7 +22,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(commonResponse);
     }
 
-    @Order(value = 2)
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<CommonResponse<?>> handleNoSuchElementException(NoSuchElementException e) {
+
+        log.error("Handler NoSuchElementException: {}", e.getMessage(), e);
+
+        CommonResponse<?> commonResponse = new CommonResponse<>(88888, "해당 데이터를 찾을 수 없습니다.", null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(commonResponse);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CommonResponse<?>> handleUnknownException(Exception e) {
 
