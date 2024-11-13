@@ -31,31 +31,48 @@ public class VideoMetadataController {
 
         return CommonResponse
             .<MetadataResponse>builder()
+            .code(200)
             .body(response)
             .build();
     }
 
     @PostMapping("/{videoMetadataId}/view")
-    public void addVideoMetadataViewCount(@PathVariable Long videoMetadataId) {
+    public CommonResponse<Void> addVideoMetadataViewCount(@PathVariable Long videoMetadataId) {
 
         videoMetadataService.updateViewCount(videoMetadataId);
+
+        return CommonResponse.<Void>builder()
+            .code(201)
+            .build();
     }
 
     @PostMapping("/{videoMetadataId}/like")
-    public void addVideoMetadataLikeCount(@PathVariable Long videoMetadataId, @RequestParam Boolean isChecked) {
+    public CommonResponse<Void> addVideoMetadataLikeCount(@PathVariable Long videoMetadataId, @RequestParam Boolean isChecked) {
 
         videoMetadataService.updateLikeCount(videoMetadataId, isChecked);
+
+        return CommonResponse.<Void>builder()
+            .code(201)
+            .build();
     }
 
     @PostMapping("/{videoMetadataId}/dislike")
-    public void addVideoMetadataDislikeCount(@PathVariable Long videoMetadataId, @RequestParam Boolean isChecked) {
+    public CommonResponse<Void> addVideoMetadataDislikeCount(@PathVariable Long videoMetadataId, @RequestParam Boolean isChecked) {
 
         videoMetadataService.updateDislikeCount(videoMetadataId, isChecked);
+
+        return CommonResponse.<Void>builder()
+            .code(201)
+            .build();
     }
 
     @DeleteMapping("/{videoMetadataId}")
-    public void deleteVideoMetadata(@PathVariable Long videoMetadataId) {
+    public CommonResponse<Void> deleteVideoMetadata(@PathVariable Long videoMetadataId) {
 
         videoMetadataService.delete(videoMetadataId);
+
+        return CommonResponse.<Void>builder()
+            .code(204)
+            .build();
     }
 }
