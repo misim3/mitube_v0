@@ -52,6 +52,26 @@ class VideoMetadataControllerTest {
     }
 
     @Test
+    void getVideoMetadata_notFound() {
+
+        Long id = 9999L;
+
+        ExtractableResponse<Response> response = RestAssured
+            .given()
+            .log()
+            .all()
+            .pathParam("videoMetadataId", id)
+            .when()
+            .get("/videoMetadata/{videoMetadataId}")
+            .then()
+            .log()
+            .all()
+            .statusCode(404)
+            .extract();
+
+    }
+
+    @Test
     void addVideoMetadataViewCount() {
 
         VideoMetadata metadata1 = videoMetadataService.create();
@@ -78,7 +98,27 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataLikeCount() {
+    void addVideoMetadataViewCount_notFound() {
+
+        Long id = 9999L;
+
+        RestAssured
+            .given()
+            .log()
+            .all()
+            .pathParam("videoMetadataId", id)
+            .when()
+            .post("/videoMetadata/{videoMetadataId}/view")
+            .then()
+            .log()
+            .all()
+            .statusCode(404)
+            .extract();
+
+    }
+
+    @Test
+    void addVideoMetadataLikeCount_up() {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
@@ -101,10 +141,59 @@ class VideoMetadataControllerTest {
         assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isGreaterThan(metadata1.getLikeCount());
         assertThat(metadata2.getDislikeCount()).isEqualTo(metadata1.getDislikeCount());
+
     }
 
     @Test
-    void addVideoMetadataDislikeCount() {
+    void addVideoMetadataLikeCount_down() {
+
+        VideoMetadata metadata1 = videoMetadataService.create();
+
+        RestAssured
+            .given()
+            .log()
+            .all()
+            .pathParam("videoMetadataId", metadata1.getId())
+            .queryParam("isChecked", false)
+            .when()
+            .post("/videoMetadata/{videoMetadataId}/like")
+            .then()
+            .log()
+            .all()
+            .statusCode(200)
+            .extract();
+
+        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+
+        assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
+        assertThat(metadata2.getLikeCount()).isLessThanOrEqualTo(metadata1.getLikeCount());
+        assertThat(metadata2.getDislikeCount()).isEqualTo(metadata1.getDislikeCount());
+
+    }
+
+    @Test
+    void addVideoMetadataLikeCount_notFound() {
+
+        Long id = 9999L;
+
+        RestAssured
+            .given()
+            .log()
+            .all()
+            .pathParam("videoMetadataId", id)
+            .queryParam("isChecked", true)
+            .when()
+            .post("/videoMetadata/{videoMetadataId}/like")
+            .then()
+            .log()
+            .all()
+            .statusCode(404)
+            .extract();
+
+    }
+
+    @Test
+    void addVideoMetadataDislikeCount_up() {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
@@ -131,6 +220,54 @@ class VideoMetadataControllerTest {
     }
 
     @Test
+    void addVideoMetadataDislikeCount_down() {
+
+        VideoMetadata metadata1 = videoMetadataService.create();
+
+        RestAssured
+            .given()
+            .log()
+            .all()
+            .pathParam("videoMetadataId", metadata1.getId())
+            .queryParam("isChecked", false)
+            .when()
+            .post("/videoMetadata/{videoMetadataId}/dislike")
+            .then()
+            .log()
+            .all()
+            .statusCode(200)
+            .extract();
+
+        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+
+        assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
+        assertThat(metadata2.getLikeCount()).isEqualTo(metadata1.getLikeCount());
+        assertThat(metadata2.getDislikeCount()).isLessThanOrEqualTo(metadata1.getDislikeCount());
+
+    }
+
+    @Test
+    void addVideoMetadataDislikeCount_notFound() {
+
+        Long id = 9999L;
+
+        RestAssured
+            .given()
+            .log()
+            .all()
+            .pathParam("videoMetadataId", id)
+            .queryParam("isChecked", true)
+            .when()
+            .post("/videoMetadata/{videoMetadataId}/dislike")
+            .then()
+            .log()
+            .all()
+            .statusCode(404)
+            .extract();
+
+    }
+
+    @Test
     void deleteVideoMetadata() {
 
         VideoMetadata metadata1 = videoMetadataService.create();
@@ -150,6 +287,27 @@ class VideoMetadataControllerTest {
 
         assertThatThrownBy(() -> videoMetadataService.read(metadata1.getId()))
             .isInstanceOf(NoSuchElementException.class);
+
+    }
+
+
+    @Test
+    void deleteVideoMetadata_noSuchElement() {
+
+        Long id = 9999L;
+
+        RestAssured
+            .given()
+            .log()
+            .all()
+            .pathParam("videoMetadataId", id)
+            .when()
+            .delete("/videoMetadata/{videoMetadataId}")
+            .then()
+            .log()
+            .all()
+            .statusCode(200)
+            .extract();
 
     }
 }
