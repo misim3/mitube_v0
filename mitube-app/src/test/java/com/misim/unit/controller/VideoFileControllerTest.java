@@ -1,4 +1,4 @@
-package com.misim.controller;
+package com.misim.unit.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.misim.controller.VideoFileController;
 import com.misim.entity.VideoCatalog;
 import com.misim.entity.VideoFile;
 import com.misim.exception.MitubeErrorCode;

@@ -1,9 +1,10 @@
-package com.misim.service;
+package com.misim.integration.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.misim.entity.VideoMetadata;
+import com.misim.service.VideoMetadataService;
 import java.util.NoSuchElementException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class VideoMetadataServiceTest {
+class VideoMetadataServiceIntegrationTest {
 
     @Autowired
     private VideoMetadataService videoMetadataService;
