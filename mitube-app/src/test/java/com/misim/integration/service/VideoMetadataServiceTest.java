@@ -14,7 +14,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-class VideoMetadataServiceIntegrationTest {
+class VideoMetadataServiceTest {
 
     @Autowired
     private VideoMetadataService videoMetadataService;
