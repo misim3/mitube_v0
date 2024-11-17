@@ -2,7 +2,9 @@ package com.misim.unit.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,6 +14,7 @@ import com.misim.controller.model.Response.MetadataResponse;
 import com.misim.entity.VideoMetadata;
 import com.misim.exception.CommonResponse;
 import com.misim.service.VideoMetadataService;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,7 +45,7 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void getVideoMetadata() {
+    void getVideoMetadata_shouldReturnResponse_whenIdExists() {
 
         when(videoMetadataService.read(videoMetadataId)).thenReturn(metadata);
 
@@ -58,7 +61,16 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataViewCount() {
+    void getVideoMetadata_shouldThrowException_whenIdDoesNotExist() {
+
+        when(videoMetadataService.read(99999L)).thenThrow(new EntityNotFoundException());
+
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataController.getVideoMetadata(99999L));
+
+    }
+
+    @Test
+    void addVideoMetadataViewCount_shouldReturnResponse_whenIdExists() {
 
         doNothing().when(videoMetadataService).updateViewCount(videoMetadataId);
 
@@ -71,7 +83,16 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataLikeCount_up() {
+    void addVideoMetadataViewCount_shouldThrowException_whenIdDoesNotExist() {
+
+        doThrow(EntityNotFoundException.class).when(videoMetadataService).updateViewCount(99999L);
+
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataController.addVideoMetadataViewCount(99999L));
+
+    }
+
+    @Test
+    void addVideoMetadataLikeCountUp_shouldReturnResponse_whenIdExists() {
 
         doNothing().when(videoMetadataService).updateLikeCount(videoMetadataId, true);
 
@@ -84,7 +105,7 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataLikeCount_down() {
+    void addVideoMetadataLikeCountDown_shouldReturnResponse_whenIdExists() {
 
         doNothing().when(videoMetadataService).updateLikeCount(videoMetadataId, false);
 
@@ -97,7 +118,18 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataDislikeCount_up() {
+    void addVideoMetadataLikeCount_shouldThrowException_whenIdDoesNotExist() {
+
+        doThrow(EntityNotFoundException.class).when(videoMetadataService).updateLikeCount(99999L, true);
+        doThrow(EntityNotFoundException.class).when(videoMetadataService).updateLikeCount(99999L, false);
+
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataController.addVideoMetadataLikeCount(99999L, true));
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataController.addVideoMetadataLikeCount(99999L, false));
+
+    }
+
+    @Test
+    void addVideoMetadataDislikeCountUp_shouldReturnResponse_whenIdExists() {
 
         doNothing().when(videoMetadataService).updateDislikeCount(videoMetadataId, true);
 
@@ -110,7 +142,7 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataDislikeCount_down() {
+    void addVideoMetadataDislikeCountDown_shouldThrowException_whenIdDoesNotExist() {
 
         doNothing().when(videoMetadataService).updateDislikeCount(videoMetadataId, false);
 
@@ -123,7 +155,18 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void deleteVideoMetadata() {
+    void addVideoMetadataDislikeCount_shouldThrowException_whenIdExists() {
+
+        doThrow(EntityNotFoundException.class).when(videoMetadataService).updateDislikeCount(99999L, true);
+        doThrow(EntityNotFoundException.class).when(videoMetadataService).updateDislikeCount(99999L, false);
+
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataController.addVideoMetadataDislikeCount(99999L, true));
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataController.addVideoMetadataDislikeCount(99999L, false));
+
+    }
+
+    @Test
+    void deleteVideoMetadata_shouldReturnResponse() {
 
         doNothing().when(videoMetadataService).delete(videoMetadataId);
 
