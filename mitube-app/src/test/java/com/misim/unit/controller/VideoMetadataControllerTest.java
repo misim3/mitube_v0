@@ -29,7 +29,6 @@ class VideoMetadataControllerTest {
     private VideoMetadata metadata;
 
     private final Long videoMetadataId = 1L;
-    private boolean isChecked; // enum으로 변경해서 활용하는 쪽 고려.
 
     @BeforeEach
     void setUp() {
@@ -70,9 +69,9 @@ class VideoMetadataControllerTest {
     @Test
     void addVideoMetadataLikeCount_up() {
 
-        doNothing().when(videoMetadataService).updateLikeCount(videoMetadataId, isChecked);
+        doNothing().when(videoMetadataService).updateLikeCount(videoMetadataId, true);
 
-        CommonResponse<Void> response = videoMetadataController.addVideoMetadataLikeCount(videoMetadataId, isChecked);
+        CommonResponse<Void> response = videoMetadataController.addVideoMetadataLikeCount(videoMetadataId, true);
 
         assertNotNull(response);
         assertEquals(201, response.getCode());
@@ -82,11 +81,9 @@ class VideoMetadataControllerTest {
     @Test
     void addVideoMetadataLikeCount_down() {
 
-        isChecked = false;
+        doNothing().when(videoMetadataService).updateLikeCount(videoMetadataId, false);
 
-        doNothing().when(videoMetadataService).updateLikeCount(videoMetadataId, isChecked);
-
-        CommonResponse<Void> response = videoMetadataController.addVideoMetadataLikeCount(videoMetadataId, isChecked);
+        CommonResponse<Void> response = videoMetadataController.addVideoMetadataLikeCount(videoMetadataId, false);
 
         assertNotNull(response);
         assertEquals(201, response.getCode());
@@ -96,11 +93,9 @@ class VideoMetadataControllerTest {
     @Test
     void addVideoMetadataDislikeCount_up() {
 
-        isChecked = true;
+        doNothing().when(videoMetadataService).updateDislikeCount(videoMetadataId, true);
 
-        doNothing().when(videoMetadataService).updateDislikeCount(videoMetadataId, isChecked);
-
-        CommonResponse<Void> response = videoMetadataController.addVideoMetadataDislikeCount(videoMetadataId, isChecked);
+        CommonResponse<Void> response = videoMetadataController.addVideoMetadataDislikeCount(videoMetadataId, true);
 
         assertNotNull(response);
         assertEquals(201, response.getCode());
@@ -110,12 +105,9 @@ class VideoMetadataControllerTest {
     @Test
     void addVideoMetadataDislikeCount_down() {
 
-        var videoMetadataId = 1L;
-        var isChecked = false;
+        doNothing().when(videoMetadataService).updateDislikeCount(videoMetadataId, false);
 
-        doNothing().when(videoMetadataService).updateDislikeCount(videoMetadataId, isChecked);
-
-        CommonResponse<Void> response = videoMetadataController.addVideoMetadataDislikeCount(videoMetadataId, isChecked);
+        CommonResponse<Void> response = videoMetadataController.addVideoMetadataDislikeCount(videoMetadataId, false);
 
         assertNotNull(response);
         assertEquals(201, response.getCode());
@@ -124,8 +116,6 @@ class VideoMetadataControllerTest {
 
     @Test
     void deleteVideoMetadata() {
-
-        var videoMetadataId = 1L;
 
         doNothing().when(videoMetadataService).delete(videoMetadataId);
 
