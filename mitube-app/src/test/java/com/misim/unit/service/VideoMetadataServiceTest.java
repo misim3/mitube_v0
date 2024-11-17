@@ -3,6 +3,7 @@ package com.misim.unit.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -215,6 +216,8 @@ public class VideoMetadataServiceTest {
 
     @Test
     void delete_shouldDeleteMetadataById() {
+
+        doNothing().when(videoMetadataRepository).deleteById(1L);
 
         videoMetadataRepository.deleteById(1L);
 
