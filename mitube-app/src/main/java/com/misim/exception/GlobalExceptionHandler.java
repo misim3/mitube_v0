@@ -1,5 +1,6 @@
 package com.misim.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,12 +22,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(e.getErrorCode().getHttpStatus()).body(commonResponse);
     }
 
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<CommonResponse<?>> handleNoSuchElementException(NoSuchElementException e) {
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<CommonResponse<?>> handleEntityNotFoundException(EntityNotFoundException e) {
 
-        log.error("Handler NoSuchElementException: {}", e.getMessage(), e);
+        log.error("Handler EntityNotFoundException: {}", e.getMessage(), e);
 
-        CommonResponse<?> commonResponse = new CommonResponse<>(88888, "해당 데이터를 찾을 수 없습니다.", null);
+        CommonResponse<?> commonResponse = new CommonResponse<>(88888, "해당 ID 값을 가지는 엔티티를 찾을 수 없습니다.", null);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(commonResponse);
     }
 

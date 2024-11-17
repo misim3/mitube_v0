@@ -2,6 +2,7 @@ package com.misim.service;
 
 import com.misim.entity.VideoMetadata;
 import com.misim.repository.VideoMetadataRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,34 +27,34 @@ public class VideoMetadataService {
     public VideoMetadata read(Long id) {
 
         return videoMetadataRepository.findById(id)
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(EntityNotFoundException::new);
     }
 
     public Long readViewCount(Long id) {
 
         return videoMetadataRepository.findById(id)
-            .orElseThrow(NoSuchElementException::new)
+            .orElseThrow(EntityNotFoundException::new)
             .getViewCount();
     }
 
     public Long readLikeCount(Long id) {
 
         return videoMetadataRepository.findById(id)
-            .orElseThrow(NoSuchElementException::new)
+            .orElseThrow(EntityNotFoundException::new)
             .getLikeCount();
     }
 
     public Long readDislikeCount(Long id) {
 
         return videoMetadataRepository.findById(id)
-            .orElseThrow(NoSuchElementException::new)
+            .orElseThrow(EntityNotFoundException::new)
             .getDislikeCount();
     }
 
     public void updateViewCount(Long id) {
 
         VideoMetadata metadata = videoMetadataRepository.findById(id)
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(EntityNotFoundException::new);
 
         metadata.incrementViewCount();
 
@@ -63,7 +64,7 @@ public class VideoMetadataService {
     public void updateLikeCount(Long id, boolean isChecked) {
 
         VideoMetadata metadata = videoMetadataRepository.findById(id)
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(EntityNotFoundException::new);
 
         if (isChecked) {
             metadata.incrementLikeCount();
@@ -77,7 +78,7 @@ public class VideoMetadataService {
     public void updateDislikeCount(Long id, boolean isChecked) {
 
         VideoMetadata metadata = videoMetadataRepository.findById(id)
-            .orElseThrow(NoSuchElementException::new);
+            .orElseThrow(EntityNotFoundException::new);
 
         if (isChecked) {
             metadata.incrementDislikeCount();

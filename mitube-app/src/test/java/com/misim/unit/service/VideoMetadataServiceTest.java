@@ -12,7 +12,7 @@ import static org.mockito.ArgumentMatchers.any;
 import com.misim.entity.VideoMetadata;
 import com.misim.repository.VideoMetadataRepository;
 import com.misim.service.VideoMetadataService;
-import java.util.NoSuchElementException;
+import jakarta.persistence.EntityNotFoundException;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,7 +75,7 @@ public class VideoMetadataServiceTest {
 
         when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.read(videoMetadataId));
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.read(videoMetadataId));
 
     }
 
@@ -96,7 +96,7 @@ public class VideoMetadataServiceTest {
 
         when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.readViewCount(videoMetadataId));
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.readViewCount(videoMetadataId));
 
     }
 
@@ -117,7 +117,7 @@ public class VideoMetadataServiceTest {
 
         when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.readLikeCount(videoMetadataId));
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.readLikeCount(videoMetadataId));
 
     }
 
@@ -138,7 +138,7 @@ public class VideoMetadataServiceTest {
 
         when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.readDislikeCount(videoMetadataId));
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.readDislikeCount(videoMetadataId));
 
     }
 
@@ -160,7 +160,7 @@ public class VideoMetadataServiceTest {
 
         when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateViewCount(videoMetadataId));
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.updateViewCount(videoMetadataId));
 
     }
 
@@ -185,8 +185,8 @@ public class VideoMetadataServiceTest {
 
         when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateLikeCount(videoMetadataId, true));
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateLikeCount(videoMetadataId, false));
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.updateLikeCount(videoMetadataId, true));
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.updateLikeCount(videoMetadataId, false));
 
     }
 
@@ -211,8 +211,8 @@ public class VideoMetadataServiceTest {
 
         when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateDislikeCount(videoMetadataId, true));
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateDislikeCount(videoMetadataId, false));
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.updateDislikeCount(videoMetadataId, true));
+        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.updateDislikeCount(videoMetadataId, false));
 
     }
 
