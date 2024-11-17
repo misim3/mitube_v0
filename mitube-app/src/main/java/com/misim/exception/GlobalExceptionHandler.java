@@ -1,7 +1,6 @@
 package com.misim.exception;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -3,7 +3,6 @@ package com.misim.service;
 import com.misim.entity.VideoMetadata;
 import com.misim.repository.VideoMetadataRepository;
 import jakarta.persistence.EntityNotFoundException;
-import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
