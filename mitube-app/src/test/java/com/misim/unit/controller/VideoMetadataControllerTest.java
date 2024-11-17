@@ -3,6 +3,8 @@ package com.misim.unit.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.misim.controller.VideoMetadataController;
@@ -51,6 +53,7 @@ class VideoMetadataControllerTest {
         assertEquals(metadata.getViewCount(), response.getBody().viewCount());
         assertEquals(metadata.getLikeCount(), response.getBody().likeCount());
         assertEquals(metadata.getDislikeCount(), response.getBody().dislikeCount());
+        verify(videoMetadataService, times(1)).read(videoMetadataId);
 
     }
 
@@ -63,6 +66,7 @@ class VideoMetadataControllerTest {
 
         assertNotNull(response);
         assertEquals(201, response.getCode());
+        verify(videoMetadataService, times(1)).updateViewCount(videoMetadataId);
 
     }
 
@@ -75,6 +79,7 @@ class VideoMetadataControllerTest {
 
         assertNotNull(response);
         assertEquals(201, response.getCode());
+        verify(videoMetadataService, times(1)).updateLikeCount(videoMetadataId, true);
 
     }
 
@@ -87,6 +92,7 @@ class VideoMetadataControllerTest {
 
         assertNotNull(response);
         assertEquals(201, response.getCode());
+        verify(videoMetadataService, times(1)).updateLikeCount(videoMetadataId, false);
 
     }
 
@@ -99,6 +105,7 @@ class VideoMetadataControllerTest {
 
         assertNotNull(response);
         assertEquals(201, response.getCode());
+        verify(videoMetadataService, times(1)).updateDislikeCount(videoMetadataId, true);
 
     }
 
@@ -111,6 +118,7 @@ class VideoMetadataControllerTest {
 
         assertNotNull(response);
         assertEquals(201, response.getCode());
+        verify(videoMetadataService, times(1)).updateDislikeCount(videoMetadataId, false);
 
     }
 
@@ -123,5 +131,7 @@ class VideoMetadataControllerTest {
 
         assertNotNull(response);
         assertEquals(204, response.getCode());
+        verify(videoMetadataService, times(1)).delete(videoMetadataId);
+
     }
 }
