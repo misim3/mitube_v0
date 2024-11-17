@@ -32,6 +32,8 @@ public class VideoMetadataServiceTest {
 
     private VideoMetadata metadata;
 
+    private final Long videoMetadataId = 1L;
+
     @BeforeEach
     void setUp() {
         metadata = VideoMetadata.builder()
@@ -59,94 +61,94 @@ public class VideoMetadataServiceTest {
     @Test
     void read_shouldReturnMetadata_whenIdExists() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.of(metadata));
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.of(metadata));
 
-        VideoMetadata result = videoMetadataService.read(1L);
+        VideoMetadata result = videoMetadataService.read(videoMetadataId);
 
         assertNotNull(result);
-        verify(videoMetadataRepository).findById(1L);
+        verify(videoMetadataRepository).findById(videoMetadataId);
 
     }
 
     @Test
     void read_shouldThrowException_whenIdNotExists() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.empty());
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.read(1L));
+        assertThrows(NoSuchElementException.class, () -> videoMetadataService.read(videoMetadataId));
 
     }
 
     @Test
     void readViewCount_shouldReturnViewCount_whenIdExists() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.of(metadata));
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.of(metadata));
 
-        Long viewCount = videoMetadataService.readViewCount(1L);
+        Long viewCount = videoMetadataService.readViewCount(videoMetadataId);
 
         assertEquals(0L, viewCount);
-        verify(videoMetadataRepository).findById(1L);
+        verify(videoMetadataRepository).findById(videoMetadataId);
 
     }
 
     @Test
     void readViewCount_shouldReturnViewCount_whenIdNotExists() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.empty());
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.readViewCount(1L));
+        assertThrows(NoSuchElementException.class, () -> videoMetadataService.readViewCount(videoMetadataId));
 
     }
 
     @Test
     void readLikeCount_shouldReturnLikeCount_whenIdExists() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.of(metadata));
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.of(metadata));
 
-        Long likeCount = videoMetadataService.readLikeCount(1L);
+        Long likeCount = videoMetadataService.readLikeCount(videoMetadataId);
 
         assertEquals(0L, likeCount);
-        verify(videoMetadataRepository).findById(1L);
+        verify(videoMetadataRepository).findById(videoMetadataId);
 
     }
 
     @Test
     void readViewCount_shouldReturnLikeCount_whenIdNotExists() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.empty());
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.readLikeCount(1L));
+        assertThrows(NoSuchElementException.class, () -> videoMetadataService.readLikeCount(videoMetadataId));
 
     }
 
     @Test
     void readDislikeCount_shouldReturnDislikeCount_whenIdExists() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.of(metadata));
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.of(metadata));
 
-        Long dislikeCount = videoMetadataService.readDislikeCount(1L);
+        Long dislikeCount = videoMetadataService.readDislikeCount(videoMetadataId);
 
         assertEquals(0L, dislikeCount);
-        verify(videoMetadataRepository).findById(1L);
+        verify(videoMetadataRepository).findById(videoMetadataId);
 
     }
 
     @Test
     void readViewCount_shouldReturnDislikeCount_whenIdNotExists() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.empty());
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.readDislikeCount(1L));
+        assertThrows(NoSuchElementException.class, () -> videoMetadataService.readDislikeCount(videoMetadataId));
 
     }
 
     @Test
     void updateViewCount_shouldIncrementViewCount() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.of(metadata));
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.of(metadata));
         when(videoMetadataRepository.save(any(VideoMetadata.class))).thenReturn(metadata);
 
-        videoMetadataService.updateViewCount(1L);
+        videoMetadataService.updateViewCount(videoMetadataId);
 
         assertEquals(1L, metadata.getViewCount());
         verify(videoMetadataRepository).save(metadata);
@@ -156,22 +158,22 @@ public class VideoMetadataServiceTest {
     @Test
     void updateViewCount_shouldIncrementViewCount_whenIdNotExists() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.empty());
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateViewCount(1L));
+        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateViewCount(videoMetadataId));
 
     }
 
     @Test
     void updateLikeCount_shouldIncrementOrDecrementLikeCount() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.of(metadata));
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.of(metadata));
         when(videoMetadataRepository.save(any(VideoMetadata.class))).thenReturn(metadata);
 
-        videoMetadataService.updateLikeCount(1L, true);
+        videoMetadataService.updateLikeCount(videoMetadataId, true);
         assertEquals(1L, metadata.getLikeCount());
 
-        videoMetadataService.updateLikeCount(1L, false);
+        videoMetadataService.updateLikeCount(videoMetadataId, false);
         assertEquals(0L, metadata.getLikeCount());
 
         verify(videoMetadataRepository, times(2)).save(metadata);
@@ -181,23 +183,23 @@ public class VideoMetadataServiceTest {
     @Test
     void updateViewCount_shouldIncrementLikeCount_whenIdNotExists() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.empty());
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateLikeCount(1L, true));
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateLikeCount(1L, false));
+        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateLikeCount(videoMetadataId, true));
+        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateLikeCount(videoMetadataId, false));
 
     }
 
     @Test
     void updateDislikeCount_shouldIncrementOrDecrementDislikeCount() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.of(metadata));
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.of(metadata));
         when(videoMetadataRepository.save(any(VideoMetadata.class))).thenReturn(metadata);
 
-        videoMetadataService.updateDislikeCount(1L, true);
+        videoMetadataService.updateDislikeCount(videoMetadataId, true);
         assertEquals(1L, metadata.getDislikeCount());
 
-        videoMetadataService.updateDislikeCount(1L, false);
+        videoMetadataService.updateDislikeCount(videoMetadataId, false);
         assertEquals(0L, metadata.getDislikeCount());
 
         verify(videoMetadataRepository, times(2)).save(metadata);
@@ -207,21 +209,21 @@ public class VideoMetadataServiceTest {
     @Test
     void updateViewCount_shouldIncrementDislikeCount_whenIdNotExists() {
 
-        when(videoMetadataRepository.findById(1L)).thenReturn(Optional.empty());
+        when(videoMetadataRepository.findById(videoMetadataId)).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateDislikeCount(1L, true));
-        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateDislikeCount(1L, false));
+        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateDislikeCount(videoMetadataId, true));
+        assertThrows(NoSuchElementException.class, () -> videoMetadataService.updateDislikeCount(videoMetadataId, false));
 
     }
 
     @Test
     void delete_shouldDeleteMetadataById() {
 
-        doNothing().when(videoMetadataRepository).deleteById(1L);
+        doNothing().when(videoMetadataRepository).deleteById(videoMetadataId);
 
-        videoMetadataRepository.deleteById(1L);
+        videoMetadataRepository.deleteById(videoMetadataId);
 
-        verify(videoMetadataRepository).deleteById(1L);
+        verify(videoMetadataRepository).deleteById(videoMetadataId);
 
     }
 }
