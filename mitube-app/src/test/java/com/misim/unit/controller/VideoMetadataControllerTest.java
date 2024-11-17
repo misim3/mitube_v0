@@ -2,6 +2,7 @@ package com.misim.unit.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 import com.misim.controller.VideoMetadataController;
@@ -27,6 +28,9 @@ class VideoMetadataControllerTest {
 
     private VideoMetadata metadata;
 
+    private final Long videoMetadataId = 1L;
+    private boolean isChecked; // enum으로 변경해서 활용하는 쪽 고려.
+
     @BeforeEach
     void setUp() {
         metadata = VideoMetadata.builder()
@@ -39,9 +43,9 @@ class VideoMetadataControllerTest {
     @Test
     void getVideoMetadata() {
 
-        when(videoMetadataService.read(1L)).thenReturn(metadata);
+        when(videoMetadataService.read(videoMetadataId)).thenReturn(metadata);
 
-        CommonResponse<MetadataResponse> response = videoMetadataController.getVideoMetadata(1L);
+        CommonResponse<MetadataResponse> response = videoMetadataController.getVideoMetadata(videoMetadataId);
 
         assertNotNull(response);
         assertEquals(200, response.getCode());
@@ -49,5 +53,85 @@ class VideoMetadataControllerTest {
         assertEquals(metadata.getLikeCount(), response.getBody().likeCount());
         assertEquals(metadata.getDislikeCount(), response.getBody().dislikeCount());
 
+    }
+
+    @Test
+    void addVideoMetadataViewCount() {
+
+        doNothing().when(videoMetadataService).updateViewCount(videoMetadataId);
+
+        CommonResponse<Void> response = videoMetadataController.addVideoMetadataViewCount(videoMetadataId);
+
+        assertNotNull(response);
+        assertEquals(201, response.getCode());
+
+    }
+
+    @Test
+    void addVideoMetadataLikeCount_up() {
+
+        doNothing().when(videoMetadataService).updateLikeCount(videoMetadataId, isChecked);
+
+        CommonResponse<Void> response = videoMetadataController.addVideoMetadataLikeCount(videoMetadataId, isChecked);
+
+        assertNotNull(response);
+        assertEquals(201, response.getCode());
+
+    }
+
+    @Test
+    void addVideoMetadataLikeCount_down() {
+
+        isChecked = false;
+
+        doNothing().when(videoMetadataService).updateLikeCount(videoMetadataId, isChecked);
+
+        CommonResponse<Void> response = videoMetadataController.addVideoMetadataLikeCount(videoMetadataId, isChecked);
+
+        assertNotNull(response);
+        assertEquals(201, response.getCode());
+
+    }
+
+    @Test
+    void addVideoMetadataDislikeCount_up() {
+
+        isChecked = true;
+
+        doNothing().when(videoMetadataService).updateDislikeCount(videoMetadataId, isChecked);
+
+        CommonResponse<Void> response = videoMetadataController.addVideoMetadataDislikeCount(videoMetadataId, isChecked);
+
+        assertNotNull(response);
+        assertEquals(201, response.getCode());
+
+    }
+
+    @Test
+    void addVideoMetadataDislikeCount_down() {
+
+        var videoMetadataId = 1L;
+        var isChecked = false;
+
+        doNothing().when(videoMetadataService).updateDislikeCount(videoMetadataId, isChecked);
+
+        CommonResponse<Void> response = videoMetadataController.addVideoMetadataDislikeCount(videoMetadataId, isChecked);
+
+        assertNotNull(response);
+        assertEquals(201, response.getCode());
+
+    }
+
+    @Test
+    void deleteVideoMetadata() {
+
+        var videoMetadataId = 1L;
+
+        doNothing().when(videoMetadataService).delete(videoMetadataId);
+
+        CommonResponse<Void> response = videoMetadataController.deleteVideoMetadata(videoMetadataId);
+
+        assertNotNull(response);
+        assertEquals(204, response.getCode());
     }
 }
