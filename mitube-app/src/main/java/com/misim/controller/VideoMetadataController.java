@@ -4,6 +4,7 @@ import com.misim.controller.model.Response.MetadataResponse;
 import com.misim.entity.VideoMetadata;
 import com.misim.exception.CommonResponse;
 import com.misim.service.VideoMetadataService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +32,7 @@ public class VideoMetadataController {
 
         return CommonResponse
             .<MetadataResponse>builder()
-            .code(200)
+            .httpStatus(HttpStatus.OK)
             .body(response)
             .build();
     }
@@ -42,7 +43,7 @@ public class VideoMetadataController {
         videoMetadataService.updateViewCount(videoMetadataId);
 
         return CommonResponse.<Void>builder()
-            .code(201)
+            .httpStatus(HttpStatus.CREATED)
             .build();
     }
 
@@ -52,7 +53,7 @@ public class VideoMetadataController {
         videoMetadataService.updateLikeCount(videoMetadataId, isChecked);
 
         return CommonResponse.<Void>builder()
-            .code(201)
+            .httpStatus(HttpStatus.CREATED)
             .build();
     }
 
@@ -62,7 +63,7 @@ public class VideoMetadataController {
         videoMetadataService.updateDislikeCount(videoMetadataId, isChecked);
 
         return CommonResponse.<Void>builder()
-            .code(201)
+            .httpStatus(HttpStatus.CREATED)
             .build();
     }
 
@@ -72,7 +73,7 @@ public class VideoMetadataController {
         videoMetadataService.delete(videoMetadataId);
 
         return CommonResponse.<Void>builder()
-            .code(204)
+            .httpStatus(HttpStatus.NO_CONTENT)
             .build();
     }
 }

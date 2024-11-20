@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
 
 @ExtendWith(MockitoExtension.class)
 class VideoMetadataControllerTest {
@@ -53,7 +54,7 @@ class VideoMetadataControllerTest {
         CommonResponse<MetadataResponse> response = videoMetadataController.getVideoMetadata(EXISTING_VIDEO_METADATA_ID);
 
         assertNotNull(response);
-        assertEquals(200, response.getCode());
+        assertEquals(HttpStatus.OK, response.getHttpStatus());
         assertEquals(metadata.getViewCount(), response.getBody().viewCount());
         assertEquals(metadata.getLikeCount(), response.getBody().likeCount());
         assertEquals(metadata.getDislikeCount(), response.getBody().dislikeCount());
@@ -78,7 +79,7 @@ class VideoMetadataControllerTest {
         CommonResponse<Void> response = videoMetadataController.addVideoMetadataViewCount(EXISTING_VIDEO_METADATA_ID);
 
         assertNotNull(response);
-        assertEquals(201, response.getCode());
+        assertEquals(HttpStatus.CREATED, response.getHttpStatus());
         verify(videoMetadataService, times(1)).updateViewCount(EXISTING_VIDEO_METADATA_ID);
 
     }
@@ -100,7 +101,7 @@ class VideoMetadataControllerTest {
         CommonResponse<Void> response = videoMetadataController.addVideoMetadataLikeCount(EXISTING_VIDEO_METADATA_ID, true);
 
         assertNotNull(response);
-        assertEquals(201, response.getCode());
+        assertEquals(HttpStatus.CREATED, response.getHttpStatus());
         verify(videoMetadataService, times(1)).updateLikeCount(EXISTING_VIDEO_METADATA_ID, true);
 
     }
@@ -113,7 +114,7 @@ class VideoMetadataControllerTest {
         CommonResponse<Void> response = videoMetadataController.addVideoMetadataLikeCount(EXISTING_VIDEO_METADATA_ID, false);
 
         assertNotNull(response);
-        assertEquals(201, response.getCode());
+        assertEquals(HttpStatus.CREATED, response.getHttpStatus());
         verify(videoMetadataService, times(1)).updateLikeCount(EXISTING_VIDEO_METADATA_ID, false);
 
     }
@@ -137,7 +138,7 @@ class VideoMetadataControllerTest {
         CommonResponse<Void> response = videoMetadataController.addVideoMetadataDislikeCount(EXISTING_VIDEO_METADATA_ID, true);
 
         assertNotNull(response);
-        assertEquals(201, response.getCode());
+        assertEquals(HttpStatus.CREATED, response.getHttpStatus());
         verify(videoMetadataService, times(1)).updateDislikeCount(EXISTING_VIDEO_METADATA_ID, true);
 
     }
@@ -150,7 +151,7 @@ class VideoMetadataControllerTest {
         CommonResponse<Void> response = videoMetadataController.addVideoMetadataDislikeCount(EXISTING_VIDEO_METADATA_ID, false);
 
         assertNotNull(response);
-        assertEquals(201, response.getCode());
+        assertEquals(HttpStatus.CREATED, response.getHttpStatus());
         verify(videoMetadataService, times(1)).updateDislikeCount(EXISTING_VIDEO_METADATA_ID, false);
 
     }
@@ -174,7 +175,7 @@ class VideoMetadataControllerTest {
         CommonResponse<Void> response = videoMetadataController.deleteVideoMetadata(EXISTING_VIDEO_METADATA_ID);
 
         assertNotNull(response);
-        assertEquals(204, response.getCode());
+        assertEquals(HttpStatus.NO_CONTENT, response.getHttpStatus());
         verify(videoMetadataService, times(1)).delete(EXISTING_VIDEO_METADATA_ID);
 
     }

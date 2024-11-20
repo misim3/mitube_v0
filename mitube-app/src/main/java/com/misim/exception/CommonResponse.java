@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
@@ -15,8 +16,8 @@ import lombok.Setter;
 @Schema(description = "응답 결과")
 public class CommonResponse<T> {
 
-    @Schema(description = "응답 코드")
-    private int code;
+    @Schema(description = "응답 Http 상태 코드")
+    private HttpStatus httpStatus;
 
     @Schema(description = "응답 메시지")
     private String message;

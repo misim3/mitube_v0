@@ -11,10 +11,11 @@ import io.restassured.RestAssured;
 import io.restassured.common.mapper.TypeRef;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import java.util.NoSuchElementException;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -46,7 +47,7 @@ class VideoMetadataControllerTest {
             new TypeRef<>() {
             });
 
-        assertThat(commonResponse.getCode()).isEqualTo(200);
+        assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.OK);
         assertThat(commonResponse.getBody().viewCount()).isEqualTo(metadata.getViewCount());
         assertThat(commonResponse.getBody().likeCount()).isEqualTo(metadata.getLikeCount());
         assertThat(commonResponse.getBody().dislikeCount()).isEqualTo(metadata.getDislikeCount());
@@ -58,7 +59,7 @@ class VideoMetadataControllerTest {
 
         Long id = 9999L;
 
-        RestAssured
+        CommonResponse<?> response = RestAssured
             .given()
             .log()
             .all()
@@ -68,8 +69,13 @@ class VideoMetadataControllerTest {
             .then()
             .log()
             .all()
-            .statusCode(404)
-            .extract();
+            .statusCode(200)
+            .extract()
+            .as(CommonResponse.class);
+
+        assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getMessage()).isEqualTo("해당 ID 값을 가지는 엔티티를 찾을 수 없습니다.");
+        assertThat(response.getBody()).isEqualTo(88888);
 
     }
 
@@ -95,7 +101,7 @@ class VideoMetadataControllerTest {
             new TypeRef<>() {
             });
 
-        assertThat(commonResponse.getCode()).isEqualTo(201);
+        assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
 
@@ -110,7 +116,7 @@ class VideoMetadataControllerTest {
 
         Long id = 9999L;
 
-        RestAssured
+        CommonResponse<?> response = RestAssured
             .given()
             .log()
             .all()
@@ -120,8 +126,13 @@ class VideoMetadataControllerTest {
             .then()
             .log()
             .all()
-            .statusCode(404)
-            .extract();
+            .statusCode(200)
+            .extract()
+            .as(CommonResponse.class);
+
+        assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getMessage()).isEqualTo("해당 ID 값을 가지는 엔티티를 찾을 수 없습니다.");
+        assertThat(response.getBody()).isEqualTo(88888);
 
     }
 
@@ -148,7 +159,7 @@ class VideoMetadataControllerTest {
             new TypeRef<>() {
             });
 
-        assertThat(commonResponse.getCode()).isEqualTo(201);
+        assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
 
@@ -181,7 +192,7 @@ class VideoMetadataControllerTest {
             new TypeRef<>() {
             });
 
-        assertThat(commonResponse.getCode()).isEqualTo(201);
+        assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
 
@@ -196,7 +207,7 @@ class VideoMetadataControllerTest {
 
         Long id = 9999L;
 
-        RestAssured
+        CommonResponse<?> response = RestAssured
             .given()
             .log()
             .all()
@@ -207,8 +218,13 @@ class VideoMetadataControllerTest {
             .then()
             .log()
             .all()
-            .statusCode(404)
-            .extract();
+            .statusCode(200)
+            .extract()
+            .as(CommonResponse.class);
+
+        assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getMessage()).isEqualTo("해당 ID 값을 가지는 엔티티를 찾을 수 없습니다.");
+        assertThat(response.getBody()).isEqualTo(88888);
 
     }
 
@@ -235,7 +251,7 @@ class VideoMetadataControllerTest {
             new TypeRef<>() {
             });
 
-        assertThat(commonResponse.getCode()).isEqualTo(201);
+        assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
 
@@ -268,7 +284,7 @@ class VideoMetadataControllerTest {
             new TypeRef<>() {
             });
 
-        assertThat(commonResponse.getCode()).isEqualTo(201);
+        assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
         VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
 
@@ -283,7 +299,7 @@ class VideoMetadataControllerTest {
 
         Long id = 9999L;
 
-        RestAssured
+        CommonResponse<?> response = RestAssured
             .given()
             .log()
             .all()
@@ -294,8 +310,13 @@ class VideoMetadataControllerTest {
             .then()
             .log()
             .all()
-            .statusCode(404)
-            .extract();
+            .statusCode(200)
+            .extract()
+            .as(CommonResponse.class);
+
+        assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getMessage()).isEqualTo("해당 ID 값을 가지는 엔티티를 찾을 수 없습니다.");
+        assertThat(response.getBody()).isEqualTo(88888);
 
     }
 
@@ -321,10 +342,10 @@ class VideoMetadataControllerTest {
             new TypeRef<>() {
             });
 
-        assertThat(commonResponse.getCode()).isEqualTo(204);
+        assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.NO_CONTENT);
 
         assertThatThrownBy(() -> videoMetadataService.read(metadata1.getId()))
-            .isInstanceOf(NoSuchElementException.class);
+            .isInstanceOf(EntityNotFoundException.class);
 
     }
 
@@ -351,7 +372,7 @@ class VideoMetadataControllerTest {
             new TypeRef<>() {
             });
 
-        assertThat(commonResponse.getCode()).isEqualTo(204);
+        assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.NO_CONTENT);
 
     }
 }
