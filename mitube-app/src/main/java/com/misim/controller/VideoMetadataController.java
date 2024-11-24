@@ -26,7 +26,7 @@ public class VideoMetadataController {
     @GetMapping("/{videoMetadataId}")
     public CommonResponse<MetadataResponse> getVideoMetadata(@PathVariable Long videoMetadataId) {
 
-        VideoMetadata metadata = videoMetadataService.read(videoMetadataId);
+        VideoMetadata metadata = videoMetadataService.readById(videoMetadataId);
 
         MetadataResponse response = new MetadataResponse(metadata.getViewCount(), metadata.getLikeCount(), metadata.getDislikeCount());
 
@@ -40,7 +40,7 @@ public class VideoMetadataController {
     @PostMapping("/{videoMetadataId}/view")
     public CommonResponse<Void> addVideoMetadataViewCount(@PathVariable Long videoMetadataId) {
 
-        videoMetadataService.updateViewCount(videoMetadataId);
+        videoMetadataService.updateViewCountById(videoMetadataId);
 
         return CommonResponse.<Void>builder()
             .httpStatus(HttpStatus.CREATED)
@@ -50,7 +50,7 @@ public class VideoMetadataController {
     @PostMapping("/{videoMetadataId}/like")
     public CommonResponse<Void> addVideoMetadataLikeCount(@PathVariable Long videoMetadataId, @RequestParam Boolean isChecked) {
 
-        videoMetadataService.updateLikeCount(videoMetadataId, isChecked);
+        videoMetadataService.updateLikeCountById(videoMetadataId, isChecked);
 
         return CommonResponse.<Void>builder()
             .httpStatus(HttpStatus.CREATED)
@@ -60,7 +60,7 @@ public class VideoMetadataController {
     @PostMapping("/{videoMetadataId}/dislike")
     public CommonResponse<Void> addVideoMetadataDislikeCount(@PathVariable Long videoMetadataId, @RequestParam Boolean isChecked) {
 
-        videoMetadataService.updateDislikeCount(videoMetadataId, isChecked);
+        videoMetadataService.updateDislikeCountById(videoMetadataId, isChecked);
 
         return CommonResponse.<Void>builder()
             .httpStatus(HttpStatus.CREATED)
@@ -70,7 +70,7 @@ public class VideoMetadataController {
     @DeleteMapping("/{videoMetadataId}")
     public CommonResponse<Void> deleteVideoMetadata(@PathVariable Long videoMetadataId) {
 
-        videoMetadataService.delete(videoMetadataId);
+        videoMetadataService.deleteById(videoMetadataId);
 
         return CommonResponse.<Void>builder()
             .httpStatus(HttpStatus.NO_CONTENT)

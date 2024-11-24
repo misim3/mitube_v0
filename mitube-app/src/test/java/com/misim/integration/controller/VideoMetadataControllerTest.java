@@ -30,7 +30,7 @@ class VideoMetadataControllerTest {
     @Test
     void getVideoMetadata_shouldReturnResponse_whenIdExists() {
 
-        VideoMetadata metadata = videoMetadataService.create();
+        VideoMetadata metadata = videoMetadataService.createNewVideoMetadata();
 
         ExtractableResponse<Response> response = RestAssured
             .given()
@@ -82,7 +82,7 @@ class VideoMetadataControllerTest {
     @Test
     void addVideoMetadataViewCount_shouldReturnResponse_whenIdExists() {
 
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
         ExtractableResponse<Response> response = RestAssured
             .given()
@@ -103,7 +103,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
-        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
 
         assertThat(metadata2.getViewCount()).isGreaterThan(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isEqualTo(metadata1.getLikeCount());
@@ -137,7 +137,7 @@ class VideoMetadataControllerTest {
     @Test
     void addVideoMetadataLikeCountUp_shouldReturnResponse_whenIdExists() {
 
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
         ExtractableResponse<Response> response = RestAssured
             .given()
@@ -159,7 +159,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
-        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
 
         assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isGreaterThan(metadata1.getLikeCount());
@@ -170,7 +170,7 @@ class VideoMetadataControllerTest {
     @Test
     void addVideoMetadataLikeCountDown_shouldReturnResponse_whenIdExists() {
 
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
         ExtractableResponse<Response> response = RestAssured
             .given()
@@ -192,7 +192,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
-        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
 
         assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isLessThanOrEqualTo(metadata1.getLikeCount());
@@ -251,7 +251,7 @@ class VideoMetadataControllerTest {
     @Test
     void addVideoMetadataDislikeCountUp_shouldReturnResponse_whenIdExists() {
 
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
         ExtractableResponse<Response> response = RestAssured
             .given()
@@ -273,7 +273,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
-        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
 
         assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isEqualTo(metadata1.getLikeCount());
@@ -284,7 +284,7 @@ class VideoMetadataControllerTest {
     @Test
     void addVideoMetadataDislikeCountDown_shouldReturnResponse_whenIdExists() {
 
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
         ExtractableResponse<Response> response = RestAssured
             .given()
@@ -306,7 +306,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
-        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
 
         assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isEqualTo(metadata1.getLikeCount());
@@ -365,7 +365,7 @@ class VideoMetadataControllerTest {
     @Test
     void deleteVideoMetadata_shouldReturnResponse_whenIdExists() {
 
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
         ExtractableResponse<Response> response = RestAssured
             .given()
@@ -386,7 +386,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        assertThatThrownBy(() -> videoMetadataService.read(metadata1.getId()))
+        assertThatThrownBy(() -> videoMetadataService.readById(metadata1.getId()))
             .isInstanceOf(EntityNotFoundException.class);
 
     }
@@ -414,7 +414,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        assertThatThrownBy(() -> videoMetadataService.read(NON_EXISTENT_VIDEO_METADATA_ID))
+        assertThatThrownBy(() -> videoMetadataService.readById(NON_EXISTENT_VIDEO_METADATA_ID))
             .isInstanceOf(EntityNotFoundException.class);
 
     }

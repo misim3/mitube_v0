@@ -20,9 +20,9 @@ class VideoMetadataServiceTest {
     private VideoMetadataService videoMetadataService;
 
     @Test
-    void create() {
+    void createNewVideoMetadata() {
 
-        VideoMetadata metadata = videoMetadataService.create();
+        VideoMetadata metadata = videoMetadataService.createNewVideoMetadata();
 
         assertThat(metadata.getViewCount()).isEqualTo(0);
         assertThat(metadata.getLikeCount()).isEqualTo(0);
@@ -31,11 +31,11 @@ class VideoMetadataServiceTest {
     }
 
     @Test
-    void read() {
+    void readById() {
 
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
-        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
 
         assertThat(metadata1.getId()).isEqualTo(metadata2.getId());
         assertThat(metadata1.getViewCount()).isEqualTo(metadata2.getViewCount());
@@ -45,132 +45,132 @@ class VideoMetadataServiceTest {
     }
 
     @Test
-    void read_throw_exception() {
+    void read_ById_throw_exception() {
 
         Long id = 9999L;
 
-        assertThatThrownBy(() -> videoMetadataService.read(id))
+        assertThatThrownBy(() -> videoMetadataService.readById(id))
             .isInstanceOf(NoSuchElementException.class);
 
     }
 
     @Test
-    void updateViewCount() {
+    void updateViewCountById() {
 
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
-        videoMetadataService.updateViewCount(metadata1.getId());
+        videoMetadataService.updateViewCountById(metadata1.getId());
 
-        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
         assertThat(metadata2.getViewCount()).isGreaterThan(metadata1.getViewCount());
 
     }
 
     @Test
-    void updateViewCount_throw_exception() {
+    void updateViewCount_ById_throw_exception() {
 
         Long id = 9999L;
 
-        assertThatThrownBy(() -> videoMetadataService.updateViewCount(id))
+        assertThatThrownBy(() -> videoMetadataService.updateViewCountById(id))
             .isInstanceOf(NoSuchElementException.class);
 
     }
 
     @Test
-    void updateLikeCount_up() {
+    void updateLikeCount_ById_up() {
 
         boolean isChecked = true;
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
-        videoMetadataService.updateLikeCount(metadata1.getId(), isChecked);
+        videoMetadataService.updateLikeCountById(metadata1.getId(), isChecked);
 
-        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
         assertThat(metadata2.getLikeCount()).isGreaterThan(metadata1.getLikeCount());
 
     }
 
     @Test
-    void updateLikeCount_down() {
+    void updateLikeCount_ById_down() {
 
         boolean isChecked = false;
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
-        videoMetadataService.updateLikeCount(metadata1.getId(), isChecked);
+        videoMetadataService.updateLikeCountById(metadata1.getId(), isChecked);
 
-        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
         assertThat(metadata2.getLikeCount()).isLessThanOrEqualTo(metadata1.getLikeCount());
 
     }
 
     @Test
-    void updateLikeCount_throw_exception() {
+    void updateLikeCount_ById_throw_exception() {
 
         Long id = 9999L;
         boolean isChecked = true;
 
-        assertThatThrownBy(() -> videoMetadataService.updateLikeCount(id, isChecked))
+        assertThatThrownBy(() -> videoMetadataService.updateLikeCountById(id, isChecked))
             .isInstanceOf(NoSuchElementException.class);
 
     }
 
     @Test
-    void updateDislikeCount_up() {
+    void updateDislikeCount_ById_up() {
 
         boolean isChecked = true;
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
-        videoMetadataService.updateDislikeCount(metadata1.getId(), isChecked);
+        videoMetadataService.updateDislikeCountById(metadata1.getId(), isChecked);
 
-        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
         assertThat(metadata2.getDislikeCount()).isGreaterThan(metadata1.getDislikeCount());
 
     }
 
     @Test
-    void updateDislikeCount_down() {
+    void updateDislikeCount_ById_down() {
 
         boolean isChecked = false;
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
-        videoMetadataService.updateDislikeCount(metadata1.getId(), isChecked);
+        videoMetadataService.updateDislikeCountById(metadata1.getId(), isChecked);
 
-        VideoMetadata metadata2 = videoMetadataService.read(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
         assertThat(metadata2.getDislikeCount()).isLessThanOrEqualTo(metadata1.getDislikeCount());
 
     }
 
     @Test
-    void updateDislikeCount_throw_exception() {
+    void updateDislikeCount_ById_throw_exception() {
 
         Long id = 9999L;
         boolean isChecked = true;
 
-        assertThatThrownBy(() -> videoMetadataService.updateDislikeCount(id, isChecked))
+        assertThatThrownBy(() -> videoMetadataService.updateDislikeCountById(id, isChecked))
             .isInstanceOf(NoSuchElementException.class);
 
     }
 
     @Test
-    void delete() {
+    void deleteById() {
 
-        VideoMetadata metadata1 = videoMetadataService.create();
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
-        videoMetadataService.delete(metadata1.getId());
+        videoMetadataService.deleteById(metadata1.getId());
 
-        assertThatThrownBy(() -> videoMetadataService.read(metadata1.getId()))
+        assertThatThrownBy(() -> videoMetadataService.readById(metadata1.getId()))
             .isInstanceOf(NoSuchElementException.class);
 
     }
 
     @Test
-    void delete_noSuchElement() {
+    void delete_ById_noSuchElement() {
 
         Long id = 9999L;
 
-        assertThatThrownBy(() -> videoMetadataService.read(id))
+        assertThatThrownBy(() -> videoMetadataService.readById(id))
             .isInstanceOf(NoSuchElementException.class);
 
-        videoMetadataService.delete(id);
+        videoMetadataService.deleteById(id);
 
     }
 }

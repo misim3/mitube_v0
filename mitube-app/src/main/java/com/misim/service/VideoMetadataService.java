@@ -12,7 +12,7 @@ public class VideoMetadataService {
 
     private final VideoMetadataRepository videoMetadataRepository;
 
-    public VideoMetadata create() {
+    public VideoMetadata createNewVideoMetadata() {
 
         VideoMetadata metadata = VideoMetadata.builder()
             .viewCount(0L)
@@ -23,34 +23,34 @@ public class VideoMetadataService {
         return videoMetadataRepository.save(metadata);
     }
 
-    public VideoMetadata read(Long id) {
+    public VideoMetadata readById(Long id) {
 
         return videoMetadataRepository.findById(id)
             .orElseThrow(EntityNotFoundException::new);
     }
 
-    public Long readViewCount(Long id) {
+    public Long readViewCountById(Long id) {
 
         return videoMetadataRepository.findById(id)
             .orElseThrow(EntityNotFoundException::new)
             .getViewCount();
     }
 
-    public Long readLikeCount(Long id) {
+    public Long readLikeCountById(Long id) {
 
         return videoMetadataRepository.findById(id)
             .orElseThrow(EntityNotFoundException::new)
             .getLikeCount();
     }
 
-    public Long readDislikeCount(Long id) {
+    public Long readDislikeCountById(Long id) {
 
         return videoMetadataRepository.findById(id)
             .orElseThrow(EntityNotFoundException::new)
             .getDislikeCount();
     }
 
-    public void updateViewCount(Long id) {
+    public void updateViewCountById(Long id) {
 
         VideoMetadata metadata = videoMetadataRepository.findById(id)
             .orElseThrow(EntityNotFoundException::new);
@@ -60,7 +60,7 @@ public class VideoMetadataService {
         videoMetadataRepository.save(metadata);
     }
 
-    public void updateLikeCount(Long id, boolean isChecked) {
+    public void updateLikeCountById(Long id, boolean isChecked) {
 
         VideoMetadata metadata = videoMetadataRepository.findById(id)
             .orElseThrow(EntityNotFoundException::new);
@@ -74,7 +74,7 @@ public class VideoMetadataService {
         videoMetadataRepository.save(metadata);
     }
 
-    public void updateDislikeCount(Long id, boolean isChecked) {
+    public void updateDislikeCountById(Long id, boolean isChecked) {
 
         VideoMetadata metadata = videoMetadataRepository.findById(id)
             .orElseThrow(EntityNotFoundException::new);
@@ -88,7 +88,7 @@ public class VideoMetadataService {
         videoMetadataRepository.save(metadata);
     }
 
-    public void delete(Long id) {
+    public void deleteById(Long id) {
 
         videoMetadataRepository.deleteById(id);
     }
