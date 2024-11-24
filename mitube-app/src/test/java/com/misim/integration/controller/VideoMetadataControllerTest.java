@@ -103,7 +103,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
-        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readVideoMetadataById(metadata1.getId());
 
         assertThat(metadata2.getViewCount()).isGreaterThan(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isEqualTo(metadata1.getLikeCount());
@@ -159,7 +159,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
-        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readVideoMetadataById(metadata1.getId());
 
         assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isGreaterThan(metadata1.getLikeCount());
@@ -192,7 +192,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
-        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readVideoMetadataById(metadata1.getId());
 
         assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isLessThanOrEqualTo(metadata1.getLikeCount());
@@ -273,7 +273,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
-        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readVideoMetadataById(metadata1.getId());
 
         assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isEqualTo(metadata1.getLikeCount());
@@ -306,7 +306,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
 
-        VideoMetadata metadata2 = videoMetadataService.readById(metadata1.getId());
+        VideoMetadata metadata2 = videoMetadataService.readVideoMetadataById(metadata1.getId());
 
         assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isEqualTo(metadata1.getLikeCount());
@@ -386,7 +386,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        assertThatThrownBy(() -> videoMetadataService.readById(metadata1.getId()))
+        assertThatThrownBy(() -> videoMetadataService.readVideoMetadataById(metadata1.getId()))
             .isInstanceOf(EntityNotFoundException.class);
 
     }
@@ -414,7 +414,7 @@ class VideoMetadataControllerTest {
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        assertThatThrownBy(() -> videoMetadataService.readById(NON_EXISTENT_VIDEO_METADATA_ID))
+        assertThatThrownBy(() -> videoMetadataService.readVideoMetadataById(NON_EXISTENT_VIDEO_METADATA_ID))
             .isInstanceOf(EntityNotFoundException.class);
 
     }

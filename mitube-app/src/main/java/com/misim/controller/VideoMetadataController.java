@@ -26,7 +26,7 @@ public class VideoMetadataController {
     @GetMapping("/{videoMetadataId}")
     public CommonResponse<MetadataResponse> getVideoMetadata(@PathVariable Long videoMetadataId) {
 
-        VideoMetadata metadata = videoMetadataService.readById(videoMetadataId);
+        VideoMetadata metadata = videoMetadataService.readVideoMetadataById(videoMetadataId);
 
         MetadataResponse response = new MetadataResponse(metadata.getViewCount(), metadata.getLikeCount(), metadata.getDislikeCount());
 
@@ -48,9 +48,9 @@ public class VideoMetadataController {
     }
 
     @PostMapping("/{videoMetadataId}/like")
-    public CommonResponse<Void> addVideoMetadataLikeCount(@PathVariable Long videoMetadataId, @RequestParam Boolean isChecked) {
+    public CommonResponse<Void> addVideoMetadataLikeCount(@PathVariable Long videoMetadataId, @RequestParam Boolean checked) {
 
-        videoMetadataService.updateLikeCountById(videoMetadataId, isChecked);
+        videoMetadataService.updateLikeCountById(videoMetadataId, checked);
 
         return CommonResponse.<Void>builder()
             .httpStatus(HttpStatus.CREATED)
@@ -58,9 +58,9 @@ public class VideoMetadataController {
     }
 
     @PostMapping("/{videoMetadataId}/dislike")
-    public CommonResponse<Void> addVideoMetadataDislikeCount(@PathVariable Long videoMetadataId, @RequestParam Boolean isChecked) {
+    public CommonResponse<Void> addVideoMetadataDislikeCount(@PathVariable Long videoMetadataId, @RequestParam Boolean checked) {
 
-        videoMetadataService.updateDislikeCountById(videoMetadataId, isChecked);
+        videoMetadataService.updateDislikeCountById(videoMetadataId, checked);
 
         return CommonResponse.<Void>builder()
             .httpStatus(HttpStatus.CREATED)

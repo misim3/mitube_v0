@@ -23,7 +23,7 @@ public class VideoMetadataService {
         return videoMetadataRepository.save(metadata);
     }
 
-    public VideoMetadata readById(Long id) {
+    public VideoMetadata readVideoMetadataById(Long id) {
 
         return videoMetadataRepository.findById(id)
             .orElseThrow(EntityNotFoundException::new);
@@ -39,12 +39,12 @@ public class VideoMetadataService {
         videoMetadataRepository.save(metadata);
     }
 
-    public void updateLikeCountById(Long id, boolean isChecked) {
+    public void updateLikeCountById(Long id, boolean checked) {
 
         VideoMetadata metadata = videoMetadataRepository.findById(id)
             .orElseThrow(EntityNotFoundException::new);
 
-        if (isChecked) {
+        if (checked) {
             metadata.incrementLikeCount();
         } else {
             metadata.decrementLikeCount();
@@ -53,12 +53,12 @@ public class VideoMetadataService {
         videoMetadataRepository.save(metadata);
     }
 
-    public void updateDislikeCountById(Long id, boolean isChecked) {
+    public void updateDislikeCountById(Long id, boolean checked) {
 
         VideoMetadata metadata = videoMetadataRepository.findById(id)
             .orElseThrow(EntityNotFoundException::new);
 
-        if (isChecked) {
+        if (checked) {
             metadata.incrementDislikeCount();
         } else {
             metadata.decrementDislikeCount();

@@ -49,7 +49,7 @@ class VideoMetadataControllerTest {
     @Test
     void getVideoMetadata_shouldReturnResponse_whenIdExists() {
 
-        when(videoMetadataService.readById(EXISTING_VIDEO_METADATA_ID)).thenReturn(metadata);
+        when(videoMetadataService.readVideoMetadataById(EXISTING_VIDEO_METADATA_ID)).thenReturn(metadata);
 
         CommonResponse<MetadataResponse> response = videoMetadataController.getVideoMetadata(EXISTING_VIDEO_METADATA_ID);
 
@@ -58,14 +58,14 @@ class VideoMetadataControllerTest {
         assertEquals(metadata.getViewCount(), response.getBody().viewCount());
         assertEquals(metadata.getLikeCount(), response.getBody().likeCount());
         assertEquals(metadata.getDislikeCount(), response.getBody().dislikeCount());
-        verify(videoMetadataService, times(1)).readById(EXISTING_VIDEO_METADATA_ID);
+        verify(videoMetadataService, times(1)).readVideoMetadataById(EXISTING_VIDEO_METADATA_ID);
 
     }
 
     @Test
     void getVideoMetadata_shouldThrowException_whenIdDoesNotExist() {
 
-        when(videoMetadataService.readById(NON_EXISTENT_VIDEO_METADATA_ID)).thenThrow(new EntityNotFoundException());
+        when(videoMetadataService.readVideoMetadataById(NON_EXISTENT_VIDEO_METADATA_ID)).thenThrow(new EntityNotFoundException());
 
         assertThrows(EntityNotFoundException.class, () -> videoMetadataController.getVideoMetadata(NON_EXISTENT_VIDEO_METADATA_ID));
 
