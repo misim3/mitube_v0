@@ -93,7 +93,7 @@ class VideoMetadataServiceTest {
     }
 
     @Test
-    void updateLikeCountById_shouldDecrementLikeCount_whenIdExists() {
+    void updateLikeCountById_shouldDecrementLikeCount_whenIdExistsAndLikeCountIsZero() {
 
         VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
@@ -102,8 +102,29 @@ class VideoMetadataServiceTest {
         VideoMetadata metadata2 = videoMetadataService.readVideoMetadataById(metadata1.getId());
         assertThat(metadata2.getId()).isEqualTo(metadata1.getId());
         assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
-        assertThat(metadata2.getLikeCount()).isLessThanOrEqualTo(metadata1.getLikeCount());
+        assertThat(metadata2.getLikeCount()).isEqualTo(metadata1.getLikeCount());
         assertThat(metadata2.getDislikeCount()).isEqualTo(metadata1.getDislikeCount());
+
+    }
+
+    @Test
+    void updateLikeCountById_shouldDecrementLikeCount_whenIdExistsAndLikeCountIsGreaterThanZero() {
+
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
+        videoMetadataService.updateLikeCountById(metadata1.getId(), true);
+        VideoMetadata metadata2 = videoMetadataService.readVideoMetadataById(metadata1.getId());
+        assertThat(metadata2.getId()).isEqualTo(metadata1.getId());
+        assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
+        assertThat(metadata2.getLikeCount()).isGreaterThan(metadata1.getLikeCount());
+        assertThat(metadata2.getDislikeCount()).isEqualTo(metadata1.getDislikeCount());
+
+        videoMetadataService.updateLikeCountById(metadata1.getId(), false);
+
+        VideoMetadata metadata3 = videoMetadataService.readVideoMetadataById(metadata1.getId());
+        assertThat(metadata3.getId()).isEqualTo(metadata2.getId());
+        assertThat(metadata3.getViewCount()).isEqualTo(metadata2.getViewCount());
+        assertThat(metadata3.getLikeCount()).isLessThan(metadata2.getLikeCount());
+        assertThat(metadata3.getDislikeCount()).isEqualTo(metadata2.getDislikeCount());
 
     }
 
@@ -131,7 +152,7 @@ class VideoMetadataServiceTest {
     }
 
     @Test
-    void updateDislikeCountById_shouldDecrementDislikeCount_whenIdExists() {
+    void updateLikeCountById_shouldDecrementDislikeCount_whenIdExistsAndDislikeCountIsZero() {
 
         VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
 
@@ -141,7 +162,28 @@ class VideoMetadataServiceTest {
         assertThat(metadata2.getId()).isEqualTo(metadata1.getId());
         assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
         assertThat(metadata2.getLikeCount()).isEqualTo(metadata1.getLikeCount());
-        assertThat(metadata2.getDislikeCount()).isLessThanOrEqualTo(metadata1.getDislikeCount());
+        assertThat(metadata2.getDislikeCount()).isEqualTo(metadata1.getDislikeCount());
+
+    }
+
+    @Test
+    void updateLikeCountById_shouldDecrementDislikeCount_whenIdExistsAndDislikeCountIsGreaterThanZero() {
+
+        VideoMetadata metadata1 = videoMetadataService.createNewVideoMetadata();
+        videoMetadataService.updateDislikeCountById(metadata1.getId(), true);
+        VideoMetadata metadata2 = videoMetadataService.readVideoMetadataById(metadata1.getId());
+        assertThat(metadata2.getId()).isEqualTo(metadata1.getId());
+        assertThat(metadata2.getViewCount()).isEqualTo(metadata1.getViewCount());
+        assertThat(metadata2.getLikeCount()).isEqualTo(metadata1.getLikeCount());
+        assertThat(metadata2.getDislikeCount()).isGreaterThan(metadata1.getDislikeCount());
+
+        videoMetadataService.updateDislikeCountById(metadata1.getId(), false);
+
+        VideoMetadata metadata3 = videoMetadataService.readVideoMetadataById(metadata1.getId());
+        assertThat(metadata3.getId()).isEqualTo(metadata2.getId());
+        assertThat(metadata3.getViewCount()).isEqualTo(metadata2.getViewCount());
+        assertThat(metadata3.getLikeCount()).isEqualTo(metadata2.getLikeCount());
+        assertThat(metadata3.getDislikeCount()).isLessThan(metadata2.getDislikeCount());
 
     }
 
