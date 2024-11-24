@@ -161,7 +161,7 @@ public class VideoMetadataServiceTest {
     }
 
     @Test
-    void deleteById_shouldDeleteById_whenIdExists() {
+    void deleteMetadataById_shouldDeleteMetadataMetadata_whenIdExists() {
 
         doNothing().when(videoMetadataRepository).deleteById(EXISTING_VIDEO_METADATA_ID);
 

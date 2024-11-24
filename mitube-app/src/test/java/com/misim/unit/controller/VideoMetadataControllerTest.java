@@ -184,26 +184,26 @@ class VideoMetadataControllerTest {
     @Test
     void deleteVideoMetadata_shouldReturnResponse_whenIdExists() {
 
-        doNothing().when(videoMetadataService).deleteById(EXISTING_VIDEO_METADATA_ID);
+        doNothing().when(videoMetadataService).deleteMetadataById(EXISTING_VIDEO_METADATA_ID);
 
         CommonResponse<Void> response = videoMetadataController.deleteVideoMetadata(EXISTING_VIDEO_METADATA_ID);
 
         assertNotNull(response);
         assertEquals(HttpStatus.NO_CONTENT, response.getHttpStatus());
-        verify(videoMetadataService, times(1)).deleteById(EXISTING_VIDEO_METADATA_ID);
+        verify(videoMetadataService, times(1)).deleteMetadataById(EXISTING_VIDEO_METADATA_ID);
 
     }
 
     @Test
     void deleteVideoMetadata_shouldReturnResponse_whenIdDoesNotExist() {
 
-        doNothing().when(videoMetadataService).deleteById(NON_EXISTENT_VIDEO_METADATA_ID);
+        doNothing().when(videoMetadataService).deleteMetadataById(NON_EXISTENT_VIDEO_METADATA_ID);
 
         CommonResponse<Void> response = videoMetadataController.deleteVideoMetadata(NON_EXISTENT_VIDEO_METADATA_ID);
 
         assertNotNull(response);
         assertEquals(HttpStatus.NO_CONTENT, response.getHttpStatus());
-        verify(videoMetadataService, times(1)).deleteById(NON_EXISTENT_VIDEO_METADATA_ID);
+        verify(videoMetadataService, times(1)).deleteMetadataById(NON_EXISTENT_VIDEO_METADATA_ID);
 
     }
 }

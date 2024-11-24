@@ -70,7 +70,7 @@ public class VideoMetadataController {
     @DeleteMapping("/{videoMetadataId}")
     public CommonResponse<Void> deleteVideoMetadata(@PathVariable Long videoMetadataId) {
 
-        videoMetadataService.deleteById(videoMetadataId);
+        videoMetadataService.deleteMetadataById(videoMetadataId);
 
         return CommonResponse.<Void>builder()
             .httpStatus(HttpStatus.NO_CONTENT)

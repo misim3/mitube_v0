@@ -67,7 +67,7 @@ public class VideoMetadataService {
         videoMetadataRepository.save(metadata);
     }
 
-    public void deleteById(Long id) {
+    public void deleteMetadataById(Long id) {
 
         videoMetadataRepository.deleteById(id);
     }
