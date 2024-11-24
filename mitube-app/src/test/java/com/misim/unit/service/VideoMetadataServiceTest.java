@@ -81,69 +81,6 @@ public class VideoMetadataServiceTest {
     }
 
     @Test
-    void readByIdViewCount_shouldReturnViewCount_whenIdExists() {
-
-        when(videoMetadataRepository.findById(EXISTING_VIDEO_METADATA_ID)).thenReturn(Optional.of(metadata));
-
-        Long viewCount = videoMetadataService.readViewCountById(EXISTING_VIDEO_METADATA_ID);
-
-        assertEquals(0L, viewCount);
-        verify(videoMetadataRepository).findById(EXISTING_VIDEO_METADATA_ID);
-
-    }
-
-    @Test
-    void readByIdViewCount_shouldReturnViewCount_whenIdNotExists() {
-
-        when(videoMetadataRepository.findById(NON_EXISTENT_VIDEO_METADATA_ID)).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.readViewCountById(NON_EXISTENT_VIDEO_METADATA_ID));
-
-    }
-
-    @Test
-    void readByIdLikeCount_shouldReturnLikeCount_whenIdExists() {
-
-        when(videoMetadataRepository.findById(EXISTING_VIDEO_METADATA_ID)).thenReturn(Optional.of(metadata));
-
-        Long likeCount = videoMetadataService.readLikeCountById(EXISTING_VIDEO_METADATA_ID);
-
-        assertEquals(0L, likeCount);
-        verify(videoMetadataRepository).findById(EXISTING_VIDEO_METADATA_ID);
-
-    }
-
-    @Test
-    void readByIdViewCount_shouldReturnLikeCount_whenIdNotExists() {
-
-        when(videoMetadataRepository.findById(NON_EXISTENT_VIDEO_METADATA_ID)).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.readLikeCountById(NON_EXISTENT_VIDEO_METADATA_ID));
-
-    }
-
-    @Test
-    void readByIdDislikeCount_shouldReturnDislikeCount_whenIdExists() {
-
-        when(videoMetadataRepository.findById(EXISTING_VIDEO_METADATA_ID)).thenReturn(Optional.of(metadata));
-
-        Long dislikeCount = videoMetadataService.readDislikeCountById(EXISTING_VIDEO_METADATA_ID);
-
-        assertEquals(0L, dislikeCount);
-        verify(videoMetadataRepository).findById(EXISTING_VIDEO_METADATA_ID);
-
-    }
-
-    @Test
-    void readByIdViewCount_shouldReturnDislikeCount_whenIdNotExists() {
-
-        when(videoMetadataRepository.findById(NON_EXISTENT_VIDEO_METADATA_ID)).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () -> videoMetadataService.readDislikeCountById(NON_EXISTENT_VIDEO_METADATA_ID));
-
-    }
-
-    @Test
     void updateViewCount_shouldIncrementViewCountById() {
 
         when(videoMetadataRepository.findById(EXISTING_VIDEO_METADATA_ID)).thenReturn(Optional.of(metadata));

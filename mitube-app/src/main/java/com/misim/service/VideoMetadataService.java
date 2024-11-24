@@ -29,27 +29,6 @@ public class VideoMetadataService {
             .orElseThrow(EntityNotFoundException::new);
     }
 
-    public Long readViewCountById(Long id) {
-
-        return videoMetadataRepository.findById(id)
-            .orElseThrow(EntityNotFoundException::new)
-            .getViewCount();
-    }
-
-    public Long readLikeCountById(Long id) {
-
-        return videoMetadataRepository.findById(id)
-            .orElseThrow(EntityNotFoundException::new)
-            .getLikeCount();
-    }
-
-    public Long readDislikeCountById(Long id) {
-
-        return videoMetadataRepository.findById(id)
-            .orElseThrow(EntityNotFoundException::new)
-            .getDislikeCount();
-    }
-
     public void updateViewCountById(Long id) {
 
         VideoMetadata metadata = videoMetadataRepository.findById(id)
