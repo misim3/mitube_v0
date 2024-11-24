@@ -120,12 +120,19 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataLikeCount_shouldThrowException_whenIdDoesNotExist() {
+    void addVideoMetadataLikeCountUp_shouldThrowException_whenIdDoesNotExist() {
 
         doThrow(EntityNotFoundException.class).when(videoMetadataService).updateLikeCount(NON_EXISTENT_VIDEO_METADATA_ID, true);
-        doThrow(EntityNotFoundException.class).when(videoMetadataService).updateLikeCount(NON_EXISTENT_VIDEO_METADATA_ID, false);
 
         assertThrows(EntityNotFoundException.class, () -> videoMetadataController.addVideoMetadataLikeCount(NON_EXISTENT_VIDEO_METADATA_ID, true));
+
+    }
+
+    @Test
+    void addVideoMetadataLikeCountDown_shouldThrowException_whenIdDoesNotExist() {
+
+        doThrow(EntityNotFoundException.class).when(videoMetadataService).updateLikeCount(NON_EXISTENT_VIDEO_METADATA_ID, false);
+
         assertThrows(EntityNotFoundException.class, () -> videoMetadataController.addVideoMetadataLikeCount(NON_EXISTENT_VIDEO_METADATA_ID, false));
 
     }
@@ -144,7 +151,7 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataDislikeCountDown_shouldThrowException_whenIdDoesNotExist() {
+    void addVideoMetadataDislikeCountDown_shouldReturnResponse_whenIdExists() {
 
         doNothing().when(videoMetadataService).updateDislikeCount(EXISTING_VIDEO_METADATA_ID, false);
 
@@ -157,18 +164,25 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataDislikeCount_shouldThrowException_whenIdExists() {
+    void addVideoMetadataDislikeCountUp_shouldThrowException_whenIdDoesNotExist() {
 
         doThrow(EntityNotFoundException.class).when(videoMetadataService).updateDislikeCount(NON_EXISTENT_VIDEO_METADATA_ID, true);
-        doThrow(EntityNotFoundException.class).when(videoMetadataService).updateDislikeCount(NON_EXISTENT_VIDEO_METADATA_ID, false);
 
         assertThrows(EntityNotFoundException.class, () -> videoMetadataController.addVideoMetadataDislikeCount(NON_EXISTENT_VIDEO_METADATA_ID, true));
+
+    }
+
+    @Test
+    void addVideoMetadataDislikeCountDown_shouldThrowException_whenIdDoesNotExist() {
+
+        doThrow(EntityNotFoundException.class).when(videoMetadataService).updateDislikeCount(NON_EXISTENT_VIDEO_METADATA_ID, false);
+
         assertThrows(EntityNotFoundException.class, () -> videoMetadataController.addVideoMetadataDislikeCount(NON_EXISTENT_VIDEO_METADATA_ID, false));
 
     }
 
     @Test
-    void deleteVideoMetadata_shouldReturnResponse() {
+    void deleteVideoMetadata_shouldReturnResponse_whenIdExists() {
 
         doNothing().when(videoMetadataService).delete(EXISTING_VIDEO_METADATA_ID);
 
@@ -177,6 +191,19 @@ class VideoMetadataControllerTest {
         assertNotNull(response);
         assertEquals(HttpStatus.NO_CONTENT, response.getHttpStatus());
         verify(videoMetadataService, times(1)).delete(EXISTING_VIDEO_METADATA_ID);
+
+    }
+
+    @Test
+    void deleteVideoMetadata_shouldReturnResponse_whenIdDoesNotExist() {
+
+        doNothing().when(videoMetadataService).delete(NON_EXISTENT_VIDEO_METADATA_ID);
+
+        CommonResponse<Void> response = videoMetadataController.deleteVideoMetadata(NON_EXISTENT_VIDEO_METADATA_ID);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.NO_CONTENT, response.getHttpStatus());
+        verify(videoMetadataService, times(1)).delete(NON_EXISTENT_VIDEO_METADATA_ID);
 
     }
 }

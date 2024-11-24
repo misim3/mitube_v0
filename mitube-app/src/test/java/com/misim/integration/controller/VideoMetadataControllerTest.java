@@ -25,8 +25,10 @@ class VideoMetadataControllerTest {
     @Autowired
     private VideoMetadataService videoMetadataService;
 
+    private static final Long NON_EXISTENT_VIDEO_METADATA_ID = 99999L;
+
     @Test
-    void getVideoMetadata() {
+    void getVideoMetadata_shouldReturnResponse_whenIdExists() {
 
         VideoMetadata metadata = videoMetadataService.create();
 
@@ -55,23 +57,21 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void getVideoMetadata_notFound() {
-
-        Long id = 9999L;
+    void getVideoMetadata_shouldThrowException_whenIdDoesNotExist() {
 
         CommonResponse<?> response = RestAssured
             .given()
-            .log()
-            .all()
-            .pathParam("videoMetadataId", id)
+                .log()
+                .all()
+                .pathParam("videoMetadataId", NON_EXISTENT_VIDEO_METADATA_ID)
             .when()
-            .get("/videoMetadata/{videoMetadataId}")
+                .get("/videoMetadata/{videoMetadataId}")
             .then()
-            .log()
-            .all()
-            .statusCode(200)
-            .extract()
-            .as(CommonResponse.class);
+                .log()
+                .all()
+                .statusCode(200)
+                .extract()
+                .as(CommonResponse.class);
 
         assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getMessage()).isEqualTo("해당 ID 값을 가지는 엔티티를 찾을 수 없습니다.");
@@ -80,7 +80,7 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataViewCount() {
+    void addVideoMetadataViewCount_shouldReturnResponse_whenIdExists() {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
@@ -112,23 +112,21 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataViewCount_notFound() {
-
-        Long id = 9999L;
+    void addVideoMetadataViewCount_shouldThrowException_whenIdDoesNotExist() {
 
         CommonResponse<?> response = RestAssured
             .given()
-            .log()
-            .all()
-            .pathParam("videoMetadataId", id)
+                .log()
+                .all()
+                .pathParam("videoMetadataId", NON_EXISTENT_VIDEO_METADATA_ID)
             .when()
-            .post("/videoMetadata/{videoMetadataId}/view")
+                .post("/videoMetadata/{videoMetadataId}/view")
             .then()
-            .log()
-            .all()
-            .statusCode(200)
-            .extract()
-            .as(CommonResponse.class);
+                .log()
+                .all()
+                .statusCode(200)
+                .extract()
+                .as(CommonResponse.class);
 
         assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getMessage()).isEqualTo("해당 ID 값을 가지는 엔티티를 찾을 수 없습니다.");
@@ -137,7 +135,7 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataLikeCount_up() {
+    void addVideoMetadataLikeCountUp_shouldReturnResponse_whenIdExists() {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
@@ -170,23 +168,23 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataLikeCount_down() {
+    void addVideoMetadataLikeCountDown_shouldReturnResponse_whenIdExists() {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
         ExtractableResponse<Response> response = RestAssured
             .given()
-            .log()
-            .all()
-            .pathParam("videoMetadataId", metadata1.getId())
-            .queryParam("isChecked", false)
+                .log()
+                .all()
+                .pathParam("videoMetadataId", metadata1.getId())
+                .queryParam("isChecked", false)
             .when()
-            .post("/videoMetadata/{videoMetadataId}/like")
+                .post("/videoMetadata/{videoMetadataId}/like")
             .then()
-            .log()
-            .all()
-            .statusCode(200)
-            .extract();
+                .log()
+                .all()
+                .statusCode(200)
+                .extract();
 
         CommonResponse<?> commonResponse = response.as(
             new TypeRef<>() {
@@ -203,24 +201,22 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataLikeCount_notFound() {
-
-        Long id = 9999L;
+    void addVideoMetadataLikeCountUp_shouldThrowException_whenIdDoesNotExist() {
 
         CommonResponse<?> response = RestAssured
             .given()
-            .log()
-            .all()
-            .pathParam("videoMetadataId", id)
-            .queryParam("isChecked", true)
+                .log()
+                .all()
+                .pathParam("videoMetadataId", NON_EXISTENT_VIDEO_METADATA_ID)
+                .queryParam("isChecked", true)
             .when()
-            .post("/videoMetadata/{videoMetadataId}/like")
+                .post("/videoMetadata/{videoMetadataId}/like")
             .then()
-            .log()
-            .all()
-            .statusCode(200)
-            .extract()
-            .as(CommonResponse.class);
+                .log()
+                .all()
+                .statusCode(200)
+                .extract()
+                .as(CommonResponse.class);
 
         assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getMessage()).isEqualTo("해당 ID 값을 가지는 엔티티를 찾을 수 없습니다.");
@@ -229,7 +225,31 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataDislikeCount_up() {
+    void addVideoMetadataLikeCountDown_shouldThrowException_whenIdDoesNotExist() {
+
+        CommonResponse<?> response = RestAssured
+            .given()
+                .log()
+                .all()
+                .pathParam("videoMetadataId", NON_EXISTENT_VIDEO_METADATA_ID)
+                .queryParam("isChecked", false)
+            .when()
+                .post("/videoMetadata/{videoMetadataId}/like")
+            .then()
+                .log()
+                .all()
+                .statusCode(200)
+                .extract()
+                .as(CommonResponse.class);
+
+        assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getMessage()).isEqualTo("해당 ID 값을 가지는 엔티티를 찾을 수 없습니다.");
+        assertThat(response.getBody()).isEqualTo(88888);
+
+    }
+
+    @Test
+    void addVideoMetadataDislikeCountUp_shouldReturnResponse_whenIdExists() {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
@@ -262,23 +282,23 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataDislikeCount_down() {
+    void addVideoMetadataDislikeCountDown_shouldReturnResponse_whenIdExists() {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
         ExtractableResponse<Response> response = RestAssured
             .given()
-            .log()
-            .all()
-            .pathParam("videoMetadataId", metadata1.getId())
-            .queryParam("isChecked", false)
+                .log()
+                .all()
+                .pathParam("videoMetadataId", metadata1.getId())
+                .queryParam("isChecked", false)
             .when()
-            .post("/videoMetadata/{videoMetadataId}/dislike")
+                .post("/videoMetadata/{videoMetadataId}/dislike")
             .then()
-            .log()
-            .all()
-            .statusCode(200)
-            .extract();
+                .log()
+                .all()
+                .statusCode(200)
+                .extract();
 
         CommonResponse<?> commonResponse = response.as(
             new TypeRef<>() {
@@ -295,24 +315,22 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void addVideoMetadataDislikeCount_notFound() {
-
-        Long id = 9999L;
+    void addVideoMetadataDislikeCountUp_shouldThrowException_whenIdDoesNotExist() {
 
         CommonResponse<?> response = RestAssured
             .given()
-            .log()
-            .all()
-            .pathParam("videoMetadataId", id)
-            .queryParam("isChecked", true)
+                .log()
+                .all()
+                .pathParam("videoMetadataId", NON_EXISTENT_VIDEO_METADATA_ID)
+                .queryParam("isChecked", true)
             .when()
-            .post("/videoMetadata/{videoMetadataId}/dislike")
+                .post("/videoMetadata/{videoMetadataId}/dislike")
             .then()
-            .log()
-            .all()
-            .statusCode(200)
-            .extract()
-            .as(CommonResponse.class);
+                .log()
+                .all()
+                .statusCode(200)
+                .extract()
+                .as(CommonResponse.class);
 
         assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(response.getMessage()).isEqualTo("해당 ID 값을 가지는 엔티티를 찾을 수 없습니다.");
@@ -321,7 +339,31 @@ class VideoMetadataControllerTest {
     }
 
     @Test
-    void deleteVideoMetadata() {
+    void addVideoMetadataDislikeCountDown_shouldThrowException_whenIdDoesNotExist() {
+
+        CommonResponse<?> response = RestAssured
+            .given()
+                .log()
+                .all()
+                .pathParam("videoMetadataId", NON_EXISTENT_VIDEO_METADATA_ID)
+                .queryParam("isChecked", false)
+            .when()
+                .post("/videoMetadata/{videoMetadataId}/dislike")
+            .then()
+                .log()
+                .all()
+                .statusCode(200)
+                .extract()
+                .as(CommonResponse.class);
+
+        assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getMessage()).isEqualTo("해당 ID 값을 가지는 엔티티를 찾을 수 없습니다.");
+        assertThat(response.getBody()).isEqualTo(88888);
+
+    }
+
+    @Test
+    void deleteVideoMetadata_shouldReturnResponse_whenIdExists() {
 
         VideoMetadata metadata1 = videoMetadataService.create();
 
@@ -351,28 +393,29 @@ class VideoMetadataControllerTest {
 
 
     @Test
-    void deleteVideoMetadata_noSuchElement() {
-
-        Long id = 9999L;
+    void deleteVideoMetadata_shouldReturnResponse_whenIdDoesNotExist() {
 
         ExtractableResponse<Response> response = RestAssured
             .given()
-            .log()
-            .all()
-            .pathParam("videoMetadataId", id)
+                .log()
+                .all()
+                .pathParam("videoMetadataId", NON_EXISTENT_VIDEO_METADATA_ID)
             .when()
-            .delete("/videoMetadata/{videoMetadataId}")
+                .delete("/videoMetadata/{videoMetadataId}")
             .then()
-            .log()
-            .all()
-            .statusCode(200)
-            .extract();
+                .log()
+                .all()
+                .statusCode(200)
+                .extract();
 
         CommonResponse<?> commonResponse = response.as(
             new TypeRef<>() {
             });
 
         assertThat(commonResponse.getHttpStatus()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        assertThatThrownBy(() -> videoMetadataService.read(NON_EXISTENT_VIDEO_METADATA_ID))
+            .isInstanceOf(EntityNotFoundException.class);
 
     }
 }
