@@ -36,7 +36,7 @@ public class VideoFileService {
     }
 
 
-    public String uploadVideos(MultipartFile file) {
+    public String uploadVideo(MultipartFile file) {
 
         String uploadDir = makeFolder();
 
@@ -78,5 +78,10 @@ public class VideoFileService {
 
     private String createFileName(String originalFilename) {
         return UUID.randomUUID() + "_" + originalFilename;
+    }
+
+    public void deleteVideoFileById(Long id) {
+
+        videoFileRepository.deleteById(id);
     }
 }

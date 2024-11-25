@@ -10,6 +10,7 @@ import com.misim.service.VideoService;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,13 +33,13 @@ public class VideoFileController {
 
     // videofiles/upload -> videos/create -> videofils/{videoId} 전체 과정 테스트 통과
     @PostMapping("/upload")
-    public CommonResponse<UploadVideosResponse> uploadVideos(@RequestPart MultipartFile file) {
+    public CommonResponse<UploadVideosResponse> uploadVideo(@RequestPart MultipartFile file) {
 
         // 파일 검사
         checkFile(file);
 
         // 비디오 업로드
-        String id = videoFileService.uploadVideos(file);
+        String id = videoFileService.uploadVideo(file);
 
         UploadVideosResponse uploadVideosResponse = new UploadVideosResponse();
         uploadVideosResponse.setId(id);
@@ -56,8 +57,16 @@ public class VideoFileController {
         }
     }
 
+    @DeleteMapping("/{videofileId}")
+    public ResponseEntity<Void> deleteVideo(@PathVariable Long videofileId) {
+
+        videoFileService.deleteVideoFileById(videofileId);
+
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/{videoId}")
-    public ResponseEntity<Resource> stream(@PathVariable Long videoId) {
+    public ResponseEntity<Resource> streamVideo(@PathVariable Long videoId) {
 
         VideoCatalog videoCatalog = videoService.getVideo(videoId);
 

@@ -48,30 +48,30 @@ class VideoFileControllerTest {
     private VideoService videoService;
 
     @Test
-    void testUploadVideos_success() throws Exception {
+    void testUploadVideo_success() throws Exception {
 
         MockMultipartFile mockFile = new MockMultipartFile("file", "video.mp4", MediaType.MULTIPART_FORM_DATA_VALUE, "video content".getBytes());
-        when(videoFileService.uploadVideos(any(MultipartFile.class))).thenReturn("123");
+        when(videoFileService.uploadVideo(any(MultipartFile.class))).thenReturn("123");
 
         mockMvc.perform(multipart(HttpMethod.POST, "/videofiles/upload").file(mockFile).with(csrf()))
             .andExpect(status().isOk());
 
-        verify(videoFileService).uploadVideos(any(MultipartFile.class));
+        verify(videoFileService).uploadVideo(any(MultipartFile.class));
     }
 
     @Test
-    void testUploadVideos_EmptyFile() throws Exception {
+    void testUploadVideo_EmptyFile() throws Exception {
 
         MockMultipartFile emptyFile = new MockMultipartFile("file", "", MediaType.MULTIPART_FORM_DATA_VALUE, "".getBytes());
 
         mockMvc.perform(multipart("/videofiles/upload").file(emptyFile).with(csrf()))
             .andExpect(status().isBadRequest());
 
-        verify(videoFileService, org.mockito.Mockito.never()).uploadVideos(any(MultipartFile.class));
+        verify(videoFileService, org.mockito.Mockito.never()).uploadVideo(any(MultipartFile.class));
     }
 
     @Test
-    void testStreamVideo_Success() throws Exception {
+    void testStreamVideoVideo_Success() throws Exception {
         // given
         Long videoId = 1L;
         VideoFile videoFile = new VideoFile("path/to/video.mp4");
@@ -94,7 +94,7 @@ class VideoFileControllerTest {
     }
 
     @Test
-    void testStreamVideo_VideoNotFound() throws Exception {
+    void testStreamVideoVideo_VideoNotFound() throws Exception {
         // given
         doThrow(new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO)).when(videoService).getVideo(1L);
 
