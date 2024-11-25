@@ -82,6 +82,19 @@ public class VideoFileService {
 
     public void deleteVideoFileById(Long id) {
 
-        videoFileRepository.deleteById(id);
+        VideoFile videoFile = videoFileRepository.findById(id)
+            .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO_FILE));
+
+        try {
+
+            Files.deleteIfExists(Path.of(videoFile.getPath()));
+
+        } catch (IOException e) {
+
+            throw new MitubeException(MitubeErrorCode.NOT_FOUND_FILE_PATH);
+
+        }
+
+        videoFileRepository.delete(videoFile);
     }
 }

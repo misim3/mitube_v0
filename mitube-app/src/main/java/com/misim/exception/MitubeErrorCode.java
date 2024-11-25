@@ -50,6 +50,7 @@ public enum MitubeErrorCode implements ErrorCode {
     INVALID_CATEGORY(HttpStatus.BAD_REQUEST, "비디오 카테고리 형식에 맞지 않습니다.", 10609),
     NOT_FOUND_VIDEO(HttpStatus.NOT_FOUND, "비디오를 찾을 수 없습니다.", 10610),
     NOT_FOUND_WATCHING_INFO(HttpStatus.NOT_FOUND, "시청 정보를 찾을 수 없습니다.", 10611),
+    NOT_FOUND_FILE_PATH(HttpStatus.INTERNAL_SERVER_ERROR, "영상 파일 경로가 옳지 않습니다.", 10612),
 
     INVALID_LOCAL_DATETIME(HttpStatus.BAD_REQUEST, "잘못된 LocalDateTime 형식입니다.", 10700),
 
