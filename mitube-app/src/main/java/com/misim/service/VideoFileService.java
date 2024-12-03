@@ -69,6 +69,7 @@ public class VideoFileService {
             try {
                 Files.createDirectories(folder);
             } catch (IOException e) {
+                e.fillInStackTrace();
                 throw new MitubeException(MitubeErrorCode.NOT_CREATED_DIR);
             }
         }
@@ -86,13 +87,10 @@ public class VideoFileService {
             .orElseThrow(() -> new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO_FILE));
 
         try {
-
             Files.deleteIfExists(Path.of(videoFile.getPath()));
-
         } catch (IOException e) {
-
+            e.fillInStackTrace();
             throw new MitubeException(MitubeErrorCode.NOT_FOUND_FILE_PATH);
-
         }
 
         videoFileRepository.delete(videoFile);
