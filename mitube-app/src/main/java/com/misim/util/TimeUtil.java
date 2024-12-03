@@ -18,9 +18,7 @@ public class TimeUtil {
 
     public static String formatLocalDateTimeNow() {
         LocalDateTime localDateTime = getNow();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(
-            "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
-        return localDateTime.format(formatter);
+        return formatLocalDateTime(localDateTime);
     }
 
     public static LocalDateTime parseStringToLocalDateTime(String dateTimeString) {
