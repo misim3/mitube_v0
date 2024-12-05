@@ -1,5 +1,6 @@
 package com.misim.unit.service;
 
+import static com.misim.util.TimeUtil.getNow;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -68,12 +69,12 @@ class VideoFileServiceTest {
             MockedStatic<Base64Convertor> base64ConvertorMock = mockStatic(Base64Convertor.class)
         ) {
 
-            when(TimeUtil.getNow()).thenReturn(mockDateTime);
+            timeUtilMock.when(TimeUtil::getNow).thenReturn(mockDateTime);
 
-            when(Paths.get(anyString())).thenReturn(mockPath);
+            pathsMock.when(() -> Paths.get(anyString())).thenReturn(mockPath);
 
-            when(Files.exists(mockPath)).thenReturn(false);
-            when(Files.createDirectories(any(Path.class))).thenReturn(mockPath);
+            filesMock.when(() -> Files.exists(mockPath)).thenReturn(false);
+            filesMock.when(() -> Files.createDirectories(any(Path.class))).thenReturn(mockPath);
 
             when(mockMultipartFile.getOriginalFilename()).thenReturn(originalFilename);
 
@@ -83,14 +84,19 @@ class VideoFileServiceTest {
 
             when(mockVideoFile.getId()).thenReturn(1L);
 
-            when(Base64Convertor.encode(anyLong())).thenReturn(String.valueOf(1L));
+            base64ConvertorMock.when(() -> Base64Convertor.encode(anyLong())).thenReturn(String.valueOf(1L));
 
             String encodedId = videoFileService.uploadVideo(mockMultipartFile);
 
+            timeUtilMock.verify(TimeUtil::getNow, times(1));
+            pathsMock.verify(() -> Paths.get(anyString()), times(2));
+            filesMock.verify(() -> Files.exists(mockPath), times(1));
+            filesMock.verify(() -> Files.createDirectories(mockPath), times(1));
             verify(mockMultipartFile, times(1)).getOriginalFilename();
             verify(mockMultipartFile, times(1)).transferTo(any(Path.class));
             verify(videoFileRepository, times(1)).save(any(VideoFile.class));
             verify(mockVideoFile, times(1)).getId();
+            base64ConvertorMock.verify(() -> Base64Convertor.encode(anyLong()), times(1));
             assertThat(encodedId).isEqualTo(String.valueOf(1L));
 
         }
@@ -104,12 +110,18 @@ class VideoFileServiceTest {
             MockedStatic<Paths> pathsMock = mockStatic(Paths.class);
             MockedStatic<Files> filesMock = mockStatic(Files.class)
         ) {
-            when(TimeUtil.getNow()).thenReturn(mockDateTime);
-            when(Paths.get(anyString())).thenReturn(mockPath);
-            when(Files.exists(mockPath)).thenReturn(false);
-            when(Files.createDirectories(any(Path.class))).thenThrow(IOException.class);
+
+            timeUtilMock.when(TimeUtil::getNow).thenReturn(mockDateTime);
+            pathsMock.when(() -> Paths.get(anyString())).thenReturn(mockPath);
+            filesMock.when(() -> Files.exists(mockPath)).thenReturn(false);
+            filesMock.when(() -> Files.createDirectories(any(Path.class))).thenThrow(IOException.class);
 
             assertThrows(MitubeException.class, () -> videoFileService.uploadVideo(mockMultipartFile));
+
+            timeUtilMock.verify(TimeUtil::getNow, times(1));
+            pathsMock.verify(() -> Paths.get(anyString()), times(1));
+            filesMock.verify(() -> Files.exists(mockPath), times(1));
+            filesMock.verify(() -> Files.createDirectories(mockPath), times(1));
 
         }
 
@@ -120,22 +132,30 @@ class VideoFileServiceTest {
 
         String originalFilename = "test.mp4";
 
-        mockStatic(TimeUtil.class);
-        when(TimeUtil.getNow()).thenReturn(mockDateTime);
-        mockStatic(Paths.class);
-        when(Paths.get(anyString())).thenReturn(mockPath);
-        mockStatic(Files.class);
-        when(Files.exists(mockPath)).thenReturn(false);
-        when(Files.createDirectories(any(Path.class))).thenReturn(mockPath);
+        try (MockedStatic<TimeUtil> timeUtilMock = mockStatic(TimeUtil.class);
+            MockedStatic<Paths> pathsMock = mockStatic(Paths.class);
+            MockedStatic<Files> filesMock = mockStatic(Files.class)
+        ) {
 
-        when(mockMultipartFile.getOriginalFilename()).thenReturn(originalFilename);
+            timeUtilMock.when(TimeUtil::getNow).thenReturn(mockDateTime);
+            pathsMock.when(() -> Paths.get(anyString())).thenReturn(mockPath);
+            filesMock.when(() -> Files.exists(mockPath)).thenReturn(false);
+            filesMock.when(() -> Files.createDirectories(any(Path.class))).thenReturn(mockPath);
 
-        doThrow(IOException.class).when(mockMultipartFile).transferTo(mockPath);
+            when(mockMultipartFile.getOriginalFilename()).thenReturn(originalFilename);
 
-        assertThrows(MitubeException.class, () -> videoFileService.uploadVideo(mockMultipartFile));
+            doThrow(IOException.class).when(mockMultipartFile).transferTo(mockPath);
 
-        verify(mockMultipartFile, times(1)).getOriginalFilename();
-        verify(mockMultipartFile, times(1)).transferTo(any(Path.class));
+            assertThrows(MitubeException.class, () -> videoFileService.uploadVideo(mockMultipartFile));
+
+            timeUtilMock.verify(TimeUtil::getNow, times(1));
+            pathsMock.verify(() -> Paths.get(anyString()), times(2));
+            filesMock.verify(() -> Files.exists(mockPath), times(1));
+            filesMock.verify(() -> Files.createDirectories(mockPath), times(1));
+            verify(mockMultipartFile, times(1)).getOriginalFilename();
+            verify(mockMultipartFile, times(1)).transferTo(any(Path.class));
+
+        }
 
     }
 
@@ -153,8 +173,7 @@ class VideoFileServiceTest {
     @Test
     void deleteVideoFileById_shouldDelete_whenIdExists() {
 
-        when(videoFileRepository.findById(EXISTING_VIDEO_FILE_ID)).thenReturn(
-            Optional.of(mockVideoFile));
+//        when(videoFileRepository.findById(EXISTING_VIDEO_FILE_ID)).thenReturn(Optional.of(mockVideoFile));
 
 
     }
