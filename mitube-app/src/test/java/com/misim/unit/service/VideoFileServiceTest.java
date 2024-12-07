@@ -1,6 +1,5 @@
 package com.misim.unit.service;
 
-import static com.misim.util.TimeUtil.getNow;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -25,6 +24,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -53,10 +53,10 @@ class VideoFileServiceTest {
     private static final Long EXISTING_VIDEO_FILE_ID = 1L;
     private static final Long NON_EXISTENT_VIDEO_FILE_ID = 99999L;
 
-//    @BeforeEach
-//    void setUp() {
-//        ReflectionTestUtils.setField(videoFileService, "UPLOAD_PATH", "mock/upload/path");
-//    }
+    @BeforeEach
+    void setUp() {
+        ReflectionTestUtils.setField(videoFileService, "UPLOAD_PATH", "mock/upload/path");
+    }
 
     @Test
     void uploadVideo_shouldSaveFileAndReturnEncodedId() throws IOException {
@@ -162,19 +162,77 @@ class VideoFileServiceTest {
     @Test
     void getFileResource_shouldReturnResource() {
 
-        String path = "test_path";
-
-        Resource resource = videoFileService.getFileResource(path);
+        Resource resource = videoFileService.getFileResource(String.valueOf(mockPath));
 
         assertThat(resource).isNotNull();
+        assertThat(resource).isInstanceOf(FileSystemResource.class);
+        assertThat(resource.getFilename()).isEqualTo(String.valueOf(mockPath));
 
     }
 
     @Test
-    void deleteVideoFileById_shouldDelete_whenIdExists() {
+    void deleteVideoFileById_shouldDeleteFile_whenIdExistsAndRightPath() {
 
-//        when(videoFileRepository.findById(EXISTING_VIDEO_FILE_ID)).thenReturn(Optional.of(mockVideoFile));
+        String mockPathString = "mock_path";
 
+        when(videoFileRepository.findById(EXISTING_VIDEO_FILE_ID)).thenReturn(Optional.of(mockVideoFile));
+        when(mockVideoFile.getPath()).thenReturn(mockPathString);
+        doNothing().when(videoFileRepository).delete(mockVideoFile);
+
+        try (MockedStatic<Path> pathMock = mockStatic(Path.class);
+            MockedStatic<Files> filesMock = mockStatic(Files.class)
+        ) {
+
+            pathMock.when(() -> Path.of(anyString())).thenReturn(mockPath);
+            filesMock.when(() -> Files.deleteIfExists(mockPath)).thenReturn(true);
+
+            videoFileService.deleteVideoFileById(EXISTING_VIDEO_FILE_ID);
+
+            pathMock.verify(() -> Paths.get(anyString()), times(1));
+            filesMock.verify(() -> Files.deleteIfExists(mockPath), times(1));
+
+        }
+
+        verify(videoFileRepository, times(1)).findById(EXISTING_VIDEO_FILE_ID);
+        verify(mockVideoFile, times(1)).getPath();
+        verify(videoFileRepository, times(1)).delete(mockVideoFile);
+
+    }
+
+    @Test
+    void deleteVideoFileById_shouldThrowException_whenIdDoesNotExist() {
+
+        when(videoFileRepository.findById(NON_EXISTENT_VIDEO_FILE_ID)).thenReturn(Optional.empty());
+
+        assertThrows(MitubeException.class, () -> videoFileService.deleteVideoFileById(NON_EXISTENT_VIDEO_FILE_ID));
+
+        verify(videoFileRepository, times(1)).findById(NON_EXISTENT_VIDEO_FILE_ID);
+
+    }
+
+    @Test
+    void deleteVideoFileById_shouldDeleteFile_whenIdExistsAndWrongPath() {
+
+        String mockPathString = "mock_path";
+
+        when(videoFileRepository.findById(EXISTING_VIDEO_FILE_ID)).thenReturn(Optional.of(mockVideoFile));
+        when(mockVideoFile.getPath()).thenReturn(mockPathString);
+
+        try (MockedStatic<Path> pathMock = mockStatic(Path.class);
+            MockedStatic<Files> filesMock = mockStatic(Files.class)
+        ) {
+
+            pathMock.when(() -> Path.of(anyString())).thenReturn(mockPath);
+            filesMock.when(() -> Files.deleteIfExists(mockPath)).thenThrow(IOException.class);
+
+            assertThrows(MitubeException.class, () -> videoFileService.deleteVideoFileById(EXISTING_VIDEO_FILE_ID));
+
+            pathMock.verify(() -> Path.of(anyString()), times(1));
+            filesMock.verify(() -> Files.deleteIfExists(mockPath), times(1));
+        }
+
+        verify(videoFileRepository, times(1)).findById(EXISTING_VIDEO_FILE_ID);
+        verify(mockVideoFile, times(1)).getPath();
 
     }
 }
