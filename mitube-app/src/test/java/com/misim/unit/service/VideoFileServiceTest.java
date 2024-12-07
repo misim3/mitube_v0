@@ -104,7 +104,7 @@ class VideoFileServiceTest {
     }
 
     @Test
-    void uploadVideo_shouldThrowException_whenFailToCreateDirectories() throws IOException {
+    void uploadVideo_shouldThrowException_whenFailToCreateDirectories() {
 
         try (MockedStatic<TimeUtil> timeUtilMock = mockStatic(TimeUtil.class);
             MockedStatic<Paths> pathsMock = mockStatic(Paths.class);
