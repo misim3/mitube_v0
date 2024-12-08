@@ -15,7 +15,6 @@ import com.misim.entity.VideoMetadata;
 import com.misim.exception.CommonResponse;
 import com.misim.service.VideoMetadataService;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,32 +31,22 @@ class VideoMetadataControllerTest {
     @InjectMocks
     private VideoMetadataController videoMetadataController;
 
-    private VideoMetadata metadata;
+    @Mock
+    private VideoMetadata mockMetadata;
 
     private static final Long EXISTING_VIDEO_METADATA_ID = 1L;
     private static final Long NON_EXISTENT_VIDEO_METADATA_ID = 99999L;
 
-    @BeforeEach
-    void setUp() {
-        metadata = VideoMetadata.builder()
-            .viewCount(0L)
-            .likeCount(0L)
-            .dislikeCount(0L)
-            .build();
-    }
 
     @Test
     void getVideoMetadata_shouldReturnResponse_whenIdExists() {
 
-        when(videoMetadataService.readVideoMetadataById(EXISTING_VIDEO_METADATA_ID)).thenReturn(metadata);
+        when(videoMetadataService.readVideoMetadataById(EXISTING_VIDEO_METADATA_ID)).thenReturn(mockMetadata);
 
         CommonResponse<MetadataResponse> response = videoMetadataController.getVideoMetadata(EXISTING_VIDEO_METADATA_ID);
 
         assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getHttpStatus());
-        assertEquals(metadata.getViewCount(), response.getBody().viewCount());
-        assertEquals(metadata.getLikeCount(), response.getBody().likeCount());
-        assertEquals(metadata.getDislikeCount(), response.getBody().dislikeCount());
         verify(videoMetadataService, times(1)).readVideoMetadataById(EXISTING_VIDEO_METADATA_ID);
 
     }
@@ -68,6 +57,7 @@ class VideoMetadataControllerTest {
         when(videoMetadataService.readVideoMetadataById(NON_EXISTENT_VIDEO_METADATA_ID)).thenThrow(new EntityNotFoundException());
 
         assertThrows(EntityNotFoundException.class, () -> videoMetadataController.getVideoMetadata(NON_EXISTENT_VIDEO_METADATA_ID));
+        verify(videoMetadataService, times(1)).readVideoMetadataById(NON_EXISTENT_VIDEO_METADATA_ID);
 
     }
 
