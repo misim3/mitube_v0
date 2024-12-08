@@ -8,6 +8,7 @@ import com.misim.exception.MitubeException;
 import com.misim.service.VideoFileService;
 import com.misim.service.VideoService;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,6 +47,7 @@ public class VideoFileController {
 
         return CommonResponse
             .<UploadVideosResponse>builder()
+            .httpStatus(HttpStatus.CREATED)
             .body(uploadVideosResponse)
             .build();
     }
