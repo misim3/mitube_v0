@@ -171,7 +171,7 @@ class VideoFileServiceTest {
     }
 
     @Test
-    void deleteVideoFileById_shouldDeleteFile_whenIdExistsAndRightPath() {
+    void deleteVideoFileById_shouldDeleteFile_whenIdExists() {
 
         String mockPathString = "mock_path";
 
@@ -211,7 +211,7 @@ class VideoFileServiceTest {
     }
 
     @Test
-    void deleteVideoFileById_shouldDeleteFile_whenIdExistsAndWrongPath() {
+    void deleteVideoFileById_shouldThrowException_whenFileDoesNotExist() {
 
         String mockPathString = "mock_path";
 
