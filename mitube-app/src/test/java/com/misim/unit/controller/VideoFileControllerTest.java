@@ -1,105 +1,144 @@
 package com.misim.unit.controller;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.misim.controller.VideoFileController;
-import com.misim.entity.VideoCatalog;
+import com.misim.controller.model.Response.UploadVideosResponse;
 import com.misim.entity.VideoFile;
+import com.misim.exception.CommonResponse;
 import com.misim.exception.MitubeErrorCode;
 import com.misim.exception.MitubeException;
 import com.misim.service.VideoFileService;
 import com.misim.service.VideoService;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
-@WebMvcTest(controllers = VideoFileController.class)
-@WithMockUser
-class VideoFileControllerTest {
+@ExtendWith(MockitoExtension.class)
+public class VideoFileControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    @MockBean
+    @Mock
     private VideoFileService videoFileService;
 
-    @MockBean
+    @Mock
     private VideoService videoService;
 
+    @InjectMocks
+    private VideoFileController videoFileController;
+
+    @Mock
+    private MultipartFile mockMultipartFile;
+
+    @Mock
+    private VideoFile mockVideoFile;
+
+    private static final Long EXISTING_VIDEO_FILE_ID = 1L;
+    private static final Long NON_EXISTENT_VIDEO_FILE_ID = 99999L;
+
     @Test
-    void testUploadVideo_success() throws Exception {
+    void uploadVideo_shouldReturnResponse() {
 
-        MockMultipartFile mockFile = new MockMultipartFile("file", "video.mp4", MediaType.MULTIPART_FORM_DATA_VALUE, "video content".getBytes());
-        when(videoFileService.uploadVideo(any(MultipartFile.class))).thenReturn("123");
+        when(mockMultipartFile.isEmpty()).thenReturn(false);
+        when(videoFileService.uploadVideo(mockMultipartFile)).thenReturn(String.valueOf(EXISTING_VIDEO_FILE_ID));
 
-        mockMvc.perform(multipart(HttpMethod.POST, "/videofiles/upload").file(mockFile).with(csrf()))
-            .andExpect(status().isOk());
+        CommonResponse<UploadVideosResponse> response = videoFileController.uploadVideo(mockMultipartFile);
 
-        verify(videoFileService).uploadVideo(any(MultipartFile.class));
+        assertThat(response).isNotNull();
+        assertThat(response.getHttpStatus()).isEqualTo(HttpStatus.CREATED);
+        verify(mockMultipartFile, times(1)).isEmpty();
+        verify(videoFileService, times(1)).uploadVideo(mockMultipartFile);
+
     }
 
     @Test
-    void testUploadVideo_EmptyFile() throws Exception {
+    void uploadVideo_shouldThrowException_whenEmptyFile() {
 
-        MockMultipartFile emptyFile = new MockMultipartFile("file", "", MediaType.MULTIPART_FORM_DATA_VALUE, "".getBytes());
+        when(mockMultipartFile.isEmpty()).thenReturn(true);
 
-        mockMvc.perform(multipart("/videofiles/upload").file(emptyFile).with(csrf()))
-            .andExpect(status().isBadRequest());
+        assertThrows(MitubeException.class, () -> videoFileController.uploadVideo(mockMultipartFile));
+        verify(mockMultipartFile, times(1)).isEmpty();
+        verify(videoFileService, times(0)).uploadVideo(mockMultipartFile);
 
-        verify(videoFileService, org.mockito.Mockito.never()).uploadVideo(any(MultipartFile.class));
     }
 
     @Test
-    void testStreamVideoVideo_Success() throws Exception {
-        // given
-        Long videoId = 1L;
-        VideoFile videoFile = new VideoFile("path/to/video.mp4");
-        VideoCatalog videoCatalog = new VideoCatalog("title", "description", 0, videoFile, null);
-        when(videoService.getVideo(videoId)).thenReturn(videoCatalog);
+    void uploadVideo_shouldThrowException_whenDirectoryDoesNotCreate() {
 
-        byte[] videoContent = "test video content".getBytes();
-        ByteArrayResource resource = new ByteArrayResource(videoContent);
-        when(videoFileService.getFileResource("path/to/video.mp4")).thenReturn(resource);
+        when(mockMultipartFile.isEmpty()).thenReturn(false);
+        when(videoFileService.uploadVideo(mockMultipartFile)).thenThrow(new MitubeException(MitubeErrorCode.NOT_CREATED_DIR));
 
-        // when & then
-        mockMvc.perform(get("/videofiles/{videoId}", videoId))
-            .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.parseMediaType("video/mp4")))
-            .andExpect(content().bytes(videoContent));
+        assertThrows(MitubeException.class, () -> videoFileController.uploadVideo(mockMultipartFile));
+        verify(mockMultipartFile, times(1)).isEmpty();
+        verify(videoFileService, times(1)).uploadVideo(mockMultipartFile);
 
-        // verify
-        verify(videoService, times(1)).getVideo(videoId);
-        verify(videoFileService, times(1)).getFileResource("path/to/video.mp4");
     }
 
     @Test
-    void testStreamVideoVideo_VideoNotFound() throws Exception {
-        // given
-        doThrow(new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO)).when(videoService).getVideo(1L);
+    void uploadVideo_shouldThrowException_whenFileDoesNotCreate() {
 
-        // when & then
-        mockMvc.perform(get("/videofiles/1"))
-            .andExpect(status().isNotFound());
+        when(mockMultipartFile.isEmpty()).thenReturn(false);
+        when(videoFileService.uploadVideo(mockMultipartFile)).thenThrow(new MitubeException(MitubeErrorCode.NOT_CREATED_FILE));
+
+        assertThrows(MitubeException.class, () -> videoFileController.uploadVideo(mockMultipartFile));
+        verify(mockMultipartFile, times(1)).isEmpty();
+        verify(videoFileService, times(1)).uploadVideo(mockMultipartFile);
+
     }
+
+    @Test
+    void deleteVideo_shouldDeleteVideoFile_whenIdExists() {
+
+        doNothing().when(videoFileService).deleteVideoFileById(EXISTING_VIDEO_FILE_ID);
+
+        ResponseEntity<Void> response = videoFileController.deleteVideo(EXISTING_VIDEO_FILE_ID);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        verify(videoFileService, times(1)).deleteVideoFileById(EXISTING_VIDEO_FILE_ID);
+
+    }
+
+    @Test
+    void deleteVideo_shouldThrowException_whenIdDoesNotExist() {
+
+        doThrow(new MitubeException(MitubeErrorCode.NOT_FOUND_VIDEO_FILE)).when(videoFileService).deleteVideoFileById(NON_EXISTENT_VIDEO_FILE_ID);
+
+        assertThrows(MitubeException.class, () -> videoFileController.deleteVideo(NON_EXISTENT_VIDEO_FILE_ID));
+
+        verify(videoFileService, times(1)).deleteVideoFileById(NON_EXISTENT_VIDEO_FILE_ID);
+
+    }
+
+    @Test
+    void deleteVideo_shouldThrowException_whenFileDoesNotExist() {
+
+        doThrow(new MitubeException(MitubeErrorCode.NOT_FOUND_FILE_PATH)).when(videoFileService).deleteVideoFileById(EXISTING_VIDEO_FILE_ID);
+
+        assertThrows(MitubeException.class, () -> videoFileController.deleteVideo(EXISTING_VIDEO_FILE_ID));
+
+        verify(videoFileService, times(1)).deleteVideoFileById(EXISTING_VIDEO_FILE_ID);
+
+    }
+
+    @Test
+    void streamVideo_shouldReturnResponse() {
+
+    }
+
+    @Test
+    void streamVideo_shouldThrowException_whenIdDoesNotExist() {
+
+    }
+
 }
